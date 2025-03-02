@@ -1,0 +1,3 @@
+{   
+  "connectionString": "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=kpistoragenumberone;AccountKey=nthL6OZmDYYosD7p/Ju70xw3G1Hs7bd9LhoEaLHpkWifkq3/XqAGsV6Z3klRdJqbKXIOhcEZaylP+AStsa6E0w==;BlobEndpoint=https://kpistoragenumberone.blob.core.windows.net/;FileEndpoint=https://kpistoragenumberone.file.core.windows.net/;QueueEndpoint=https://kpistoragenumberone.queue.core.windows.net/;TableEndpoint=https://kpistoragenumberone.table.core.windows.net/"
+}

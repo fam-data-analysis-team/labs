@@ -34,4 +34,5 @@ dt <- dt %>%
 # Remove unnecessary columns
 dt <- dt %>% select(!c(unit, longitude, latitude, siteid))
 
+dir.create("data/processed", recursive = TRUE)
 write_csv(dt, "data/processed/air_quality_tidy.csv")
