@@ -39,5 +39,8 @@ reform_date <- as.Date("21-11-2017", "%d-%m-%Y")
 dt <- dt %>% add_column(
   after_reform = ifelse(dt$date >= reform_date, TRUE, FALSE))
 
+# Normalize winddirec - make 360 deg to be 0 deg
+dt$winddirec <- dt$winddirec %>% replace(dt$winddirec == 360, 0)
+
 dir.create("data/processed", recursive = TRUE)
 saveRDS(dt, "data/processed/air_quality_tidy.RDS")
