@@ -16,7 +16,7 @@ dt <- dt %>% mutate(
   sitename = as.factor(sitename),
   county = as.factor(county),
   pollutant = as.factor(pollutant),
-  status = as.factor(status)
+  status = factor(status, levels=c("Good", "Moderate", "Unhealthy for Sensitive Groups", "Unhealthy", "Very Unhealthy", "Hazardous"))
 )
 
 # Replace code numbers with NA
@@ -35,4 +35,4 @@ dt <- dt %>%
 dt <- dt %>% select(!c(unit, longitude, latitude, siteid))
 
 dir.create("data/processed", recursive = TRUE)
-write_csv(dt, "data/processed/air_quality_tidy.csv")
+saveRDS(dt, "data/processed/air_quality_tidy.RDS")
