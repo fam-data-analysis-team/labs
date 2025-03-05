@@ -34,5 +34,10 @@ dt <- dt %>%
 # Remove unnecessary columns
 dt <- dt %>% select(!c(unit, longitude, latitude, siteid))
 
+# See notes/air_quality_reform.md
+reform_date <- as.Date("21-11-2017", "%d-%m-%Y")
+dt <- dt %>% add_column(
+  after_reform = ifelse(dt$date >= reform_date, TRUE, FALSE))
+
 dir.create("data/processed", recursive = TRUE)
 saveRDS(dt, "data/processed/air_quality_tidy.RDS")
