@@ -32,7 +32,7 @@ dt <- dt %>%
   ))
 
 # Remove unnecessary columns
-dt <- dt %>% select(!c(unit, longitude, latitude, siteid))
+dt <- dt %>% select(!c(pollutant, unit, longitude, latitude, siteid, o3_8hr, co_8hr, pm2.5_avg, pm10_avg, so2_avg))
 
 # See notes/air_quality_reform.md
 reform_date <- as.Date("21-11-2017", "%d-%m-%Y")
