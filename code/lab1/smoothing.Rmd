@@ -1,0 +1,239 @@
+Завантажимо датасет:
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(anytime)
+
+df <- readRDS("data/processed/air_quality_tidy.rds")
+```
+
+Порахуємо статистику по кількості `sitename` в `county`:
+
+```{r}
+summary(aggregate(sitename ~ date + county, data = df, FUN = length)$sitename)
+```
+
+Згрупуємо по `(date; county)` та порахуємо MAD в кожній групі:
+
+```{r}
+df_devs <- df %>%
+  group_by(date, county) %>%
+  summarise(across(
+    c(aqi, so2, co, o3, 'pm2.5', pm10, no2, nox, no, windspeed, winddirec), 
+    ~mad(.x, na.rm = TRUE))
+  )
+```
+
+Дескрептивні статистики:
+
+```{r}
+summary_vars <- c("aqi", "so2", "co", "o3", "pm2.5", "pm10", "no2", "nox", "no", "windspeed", "winddirec")
+
+summary(df_devs[summary_vars])
+```
+
+Знайдемо кількість викидів:
+
+```{r}
+summary_vars %>% sapply(function (var) {
+  row <- df_devs[[var]]
+  m <- median(row, na.rm = TRUE)
+  ma <- 3 * mad(row, na.rm = TRUE)
+
+  sum(row < m - ma | row > m + ma, na.rm = TRUE)
+})
+```
+
+QQ-графіки:
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+plot_qq <- function(var) {
+  ggplot(df_devs,aes(sample=df_devs[[var]], group=county)) +
+    xlab("Normal distribution quantiles") +  
+    ylab(var) +
+    stat_qq() +
+    stat_qq_line() +
+    theme_bw()
+}
+
+p <- patchwork::wrap_plots(
+  plot_qq("aqi"),
+  plot_qq("so2"),
+  plot_qq("no"),
+  plot_qq("co"),
+  plot_qq("o3"),
+  plot_qq("pm2.5"),
+  plot_qq("pm10"),
+  plot_qq("no2"),
+  plot_qq("nox"),
+  plot_qq("no"),
+  plot_qq("windspeed"),
+  plot_qq("winddirec")
+, ncol=3, nrow=4)
+
+ggsave('plots/smoothing/qq.png', plot=p)
+
+```
+
+Графіки щільності. Використаємо `log` через викиди:
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+plot_density <- function(var) {
+  ggplot(df_devs,aes(x=log(df_devs[[var]]), group=county)) +
+    xlab(paste("ln(", var, ")", collapse=TRUE)) +  
+    ylab("Density") +
+    geom_density() +
+    theme_bw() +
+    theme(legend.position="none")
+}
+
+p <- patchwork::wrap_plots(
+  plot_density("aqi"),
+  plot_density("so2"),
+  plot_density("no"),
+  plot_density("co"),
+  plot_density("o3"),
+  plot_density("pm2.5"),
+  plot_density("pm10"),
+  plot_density("no2"),
+  plot_density("nox"),
+  plot_density("no"),
+  plot_density("windspeed"),
+  plot_density("winddirec")
+, ncol=3, nrow=4)
+
+ggsave('plots/smoothing/density.png', plot=p)
+```
+
+Box plots (x - дата):
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+plot_box_date <- function(var) {
+  ggplot(df_devs,aes(x=date, y=log(df_devs[[var]]), group=county)) +
+    xlab("Date") +
+    ylab(paste("ln(", var, ")", sep="")) +  
+    geom_boxplot() +
+    theme_bw()
+}
+
+p <- patchwork::wrap_plots(
+  plot_box_date("aqi"),
+  plot_box_date("so2"),
+  plot_box_date("no"),
+  plot_box_date("co"),
+  plot_box_date("o3"),
+  plot_box_date("pm2.5"),
+  plot_box_date("pm10"),
+  plot_box_date("no2"),
+  plot_box_date("nox"),
+  plot_box_date("no"),
+  plot_box_date("windspeed"),
+  plot_box_date("winddirec")
+, ncol=3, nrow=4)
+
+ggsave('plots/smoothing/boxplot-date.png', plot=p, width=15, height=15)
+```
+
+Box plots (x - регіон):
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+plot_box <- function(var) {
+  ggplot(df_devs,aes(x=county, y=log(df_devs[[var]]))) +
+    xlab("County") +
+    ylab(paste("ln(", var, ")", sep="")) +  
+    geom_boxplot() +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+}
+
+p <- patchwork::wrap_plots(
+  plot_box("aqi"),
+  plot_box("so2"),
+  plot_box("no"),
+  plot_box("co"),
+  plot_box("o3"),
+  plot_box("pm2.5"),
+  plot_box("pm10"),
+  plot_box("no2"),
+  plot_box("nox"),
+  plot_box("no"),
+  plot_box("windspeed"),
+  plot_box("winddirec")
+, ncol=3, nrow=4)
+
+ggsave('plots/smoothing/boxplot-county.png', plot=p, width=15, height=15)
+```
+
+Зміна значення показників залежно від станції вимірювання якості не є великою. Виключення - це `winddirec`. 
+Ми не зможемо узагальнити значення змінної, тому в подальшому не будемо використовувати її в аналізі. 
+
+Згрупуємо за парою `(date: only date; county)` та порахуємо MAD в кожній групі:
+
+```{r}
+df_dc_devs <- df %>%
+  group_by(date = as.Date(date), county) %>%
+  summarise(across(
+    c(aqi, so2, co, o3, 'pm2.5', pm10, no2, nox, no, windspeed), 
+    ~mad(.x, na.rm = TRUE))
+  )
+```
+
+Дескрептивні статистики:
+
+```{r}
+dc_summary_vars <- c("aqi", "so2", "co", "o3", "pm2.5", "pm10", "no2", "nox", "no", "windspeed")
+
+summary(df_dc_devs[dc_summary_vars])
+```
+
+Box plots (x - регіон):
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(anytime)
+library(patchwork)
+
+plot_box <- function(var) {
+  ggplot(df_dc_devs,aes(x=county, y=log(df_dc_devs[[var]]))) +
+    xlab("County") +
+    ylab(paste("ln(", var, ")", sep="")) +  
+    geom_boxplot() +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+}
+
+p <- patchwork::wrap_plots(
+  plot_box("aqi"),
+  plot_box("so2"),
+  plot_box("no"),
+  plot_box("co"),
+  plot_box("o3"),
+  plot_box("pm2.5"),
+  plot_box("pm10"),
+  plot_box("no2"),
+  plot_box("nox"),
+  plot_box("no"),
+  plot_box("windspeed")
+, ncol=3, nrow=4)
+
+ggsave('plots/smoothing/boxplot-county-dc.png', plot=p, width=15, height=15)
+```
+
+Зміна розкиду всіх величин приблизно однакова по всім регіонам.
+
+Можемо зробити висновок, що розкид даних в багатьох стовбців (наприклад, `pm10`) занадто великий
+для згладження датасету.
