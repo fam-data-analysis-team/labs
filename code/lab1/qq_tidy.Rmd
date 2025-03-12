@@ -1,0 +1,36 @@
+```{r setup, include = FALSE}
+library(tidyverse)
+library(qqplotr)
+
+theme_set(theme_minimal())
+```
+
+# Завантаженя датасету з файлу
+
+```{r}
+df <- readRDS("../../data/processed/air_quality_tidy.RDS") %>% slice_sample(n=100000)
+```
+
+```{r}
+df_gathered <- gather(df %>% select(where(is.numeric)))
+```
+
+# QQ-графіки для нормального розподілу
+
+```{r}
+ggplot(df_gathered, aes(sample = value)) +
+  stat_qq_point() + stat_qq_line() + stat_qq_band() +
+  facet_wrap(~key, scales = "free") +
+  labs(x = "Квантилі нормального розподілу", y = "Квантилі розподілу колонки")
+```
+
+# QQ-графіки для логнормального розподілу
+
+Розподіл колонок (крім winddirect) ближче до логнормального, ніж нормального
+
+```{r}
+ggplot(df_gathered, aes(sample = log(value))) +
+  stat_qq_point() + stat_qq_line() + stat_qq_band() +
+  facet_wrap(~key, scales = "free") +
+  labs(x = "Квантилі нормального розподілу", y = "ln(Квантилі розподілу колонки)")
+```

@@ -1,0 +1,50 @@
+```{r setup, include = FALSE}
+library(tidyverse)
+
+theme_set(theme_minimal())
+```
+
+# Завантаженя датасету з файлу
+
+```{r}
+df <- readRDS("../../../data/processed/air_quality_tidy.RDS")
+```
+
+# Залежність aqi від часу доби
+
+```{r}
+df_daytime <- df %>%
+  mutate(
+    daytime = factor(
+      lubridate::hour(date) %/% 3,
+      labels = c("00-03", "03-06", "06-09", "09-12", "12-15", "15-18", "18-21", "21-24")
+    )
+  )
+```
+
+Якість повітря трохи покращується у другій половині дня
+
+```{r}
+df_daytime %>%
+  ggplot(aes(x = daytime, y = log(aqi))) +
+    geom_boxplot(na.rm = TRUE) +
+    labs(x = "Інтервал часу (год)", title = "Зміна якості повітря впродовж доби")
+```
+
+Графіки для кожного county
+
+```{r}
+for (i in unique(df_daytime$county)) {
+  print(
+    df_daytime %>%
+      filter(county == i) %>% 
+      ggplot(aes(x = daytime, y = log(aqi))) +
+        geom_boxplot(na.rm = TRUE) +
+        labs(
+          x = "Інтервал часу (год)",
+          title = sprintf("Зміна якості повітря впродовж доби (%s)", i)
+        )
+  )
+}
+```
+

@@ -1,0 +1,94 @@
+```{r setup, include = FALSE}
+library(tidyverse)
+library(ggh4x)
+library(qqplotr)
+
+theme_set(theme_minimal())
+```
+
+# Завантаженя датасетів з файлів
+
+```{r}
+df <- readRDS("../../data/processed/air_quality_tidy.RDS")
+df_smooth <- readRDS("../../data/processed/air_quality_smooth.RDS")
+```
+
+# Підсумкові характеристики числових змінних
+
+```{r}
+message("air_quality_tidy:")
+summary(df %>% select(where(is.numeric)))
+
+message("\nair_quality_smooth:")
+summary(df_smooth %>% select(where(is.numeric)))
+```
+
+# Гістограми числових колонок
+
+Довга форма датафреймів для побудови фацетованих діаграм
+
+```{r}
+df_gathered <- gather(df %>% select(where(is.numeric)))
+df_smooth_gathered <- gather(df_smooth %>% select(where(is.numeric)))
+```
+
+Гістограми всіх числових значень. Демострація викидів.
+
+```{r}
+ggplot(df_gathered, aes(value)) +
+  geom_histogram(bins = 100, na.rm = TRUE) +
+  facet_wrap(~key, scales = 'free') +
+  labs(x = "Значення", y = "Кількість")
+
+ggplot(df_gathered, aes(value)) +
+  geom_histogram(bins = 100, na.rm = TRUE) +
+  facet_wrap(~key, scales = 'free') +
+  coord_cartesian(ylim = c(0, 50)) +  # Збільшення масштабу по осі y
+  labs(x = "Значення", y = "Кількість")
+```
+
+Порівняння розподілів повного та згладженого датасетів.
+Найбільше змінився розподіл winddirec.
+Розподіл інших стовпців схожий на логнормальний.
+
+```{r}
+x_limits = list(
+  scale_x_continuous(limits = c(0, 200)),
+  scale_x_continuous(limits = c(0, 1)),
+  scale_x_continuous(limits = c(0, 10)),
+  scale_x_continuous(limits = c(0, 50)),
+  scale_x_continuous(limits = c(0, 50)),
+  scale_x_continuous(limits = c(0, 100)),
+  scale_x_continuous(limits = c(0, 100)),
+  scale_x_continuous(limits = c(0, 100)),
+  scale_x_continuous(limits = c(0, 10)),
+  scale_x_continuous(limits = c(0, 360)),
+  scale_x_continuous(limits = c(0, 10))
+)
+
+ggplot(df_gathered, aes(value)) +
+  geom_histogram(bins = 50, na.rm = TRUE) +
+  facet_wrap(~key, scales = 'free') +
+  facetted_pos_scales(x = x_limits) +  # Обмеження по x, щоб не заважали викиди
+  labs(x = "Значення", y = "Кількість")
+
+ggplot(df_smooth_gathered, aes(value)) +
+  geom_histogram(bins = 50, na.rm = TRUE) +
+  facet_wrap(~key, scales = 'free') +
+  facetted_pos_scales(x = x_limits) +  # Обмеження по x, для кращого порівняння
+  labs(x = "Значення", y = "Кількість")
+```
+
+Гістограми логаритмованих значень
+
+```{r}
+ggplot(df_gathered %>% filter(key != "winddirec"), aes(log(value))) +
+  geom_histogram(bins = 50, na.rm = TRUE) +
+  facet_wrap(~key, scales = 'free') +
+  labs(x = "log(значення)", y = "Кількість")
+
+ggplot(df_smooth_gathered %>% filter(key != "winddirec"), aes(log(value))) +
+  geom_histogram(bins = 50, na.rm = TRUE) +
+  facet_wrap(~key, scales = 'free') +
+  labs(x = "log(значення)", y = "Кількість")
+```
