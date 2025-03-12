@@ -1,0 +1,111 @@
+```{r setup, include = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(data.table)
+library(glue)
+
+dir.create("plots/outliers/", recursive = TRUE, showWarnings = FALSE)
+```
+
+Завантажимо датасет:
+
+```{r}
+library(tidyverse)
+
+df <- readRDS("data/processed/air_quality_trimmed.rds")
+```
+
+Знайдемо інтервали в яких ми будемо вважати, що значення не є викидом (фільтр Гампеля):
+
+```{r}
+outlier_ranges <- df %>%
+  select(where(is.numeric)) %>%
+  lapply(function(xs) {
+    m <- median(xs, na.rm = TRUE)
+    xmad <- mad(xs, na.rm = TRUE)
+
+    c(m - 3 * xmad, m + 3 * xmad)
+  }) %>%
+  data.frame()
+
+outlier_ranges
+```
+
+Знайдемо кількість викидів по кожній числовій змінній:
+
+```{r}
+df_ocount <- df %>%
+  select(where(is.numeric)) %>%
+  sapply(function(xs) {
+    m <- median(xs, na.rm = TRUE)
+    xmad <- mad(xs, na.rm = TRUE)
+
+    ((xs < m - 3 * xmad) | (xs > m + 3 * xmad)) %>% sum(na.rm = TRUE)
+  }) %>%
+  as.list() %>%
+  data.frame()
+```
+
+Знайдемо відносну кількість у %:
+
+```{r}
+df_ocount / length(df$date) * 100
+```
+
+Гістограма кількості викидів по кожній змінній:
+
+```{r}
+p <- df_ocount %>%
+  pivot_longer(everything(), names_to = "key", values_to = "value") %>%
+  ggplot(aes(x = key, y = value)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Змінна", y = "Кількість викидів")
+
+ggsave("plots/outliers/count-bar.png", p, width = 10)
+```
+
+Для кожної числової змінної побудуємо scatter plot, де X - дата, Y - значення змінної:
+
+```{r}
+p <- df %>%
+  select(where(is.numeric) | "date") %>%
+  pivot_longer(!date, names_to = "key", values_to = "value") %>%
+  group_by(key) %>%
+  mutate(
+    bo = median(value, na.rm = TRUE) - 3 * mad(value, na.rm = TRUE),
+    to = median(value, na.rm = TRUE) + 3 * mad(value, na.rm = TRUE)
+  ) %>%
+  filter(value < bo | value > to) %>% # Виберемо тільки викиди
+  group_by(key) %>%
+  ggplot(aes(x = date, y = value, group = 1)) +
+  facet_wrap(~key, scales = "free") +
+  geom_point() +
+  geom_hline(aes(yintercept = to), colour = "red", lwd = 1.5) + # Позначемо лінії відсічення
+  geom_hline(aes(yintercept = bo), colour = "red", lwd = 1.5) +
+  labs(x = "Дата", y = "Значення")
+
+ggsave("plots/outliers/scatter.png", p, width = 15, height = 15)
+```
+
+Кількість викидів залежно від регіону:
+
+```{r}
+p <- df %>%
+  group_by(county) %>%
+  summarise(across(
+    where(is.numeric),
+    function(xs) {
+      r <- outlier_ranges[[cur_column()]]
+
+      ((xs < r[1]) | (xs > r[2])) %>% sum(na.rm = TRUE)
+    }
+  )) %>%
+  pivot_longer(!county, names_to = "key", values_to = "value") %>%
+  ggplot(aes(x = county, y = value)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~key, scales = "free") +
+  labs(x = "Регіон", y = "Кількість викидів") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+ggsave("plots/outliers/count-bar-county.png", width = 15, height = 15)
+```
