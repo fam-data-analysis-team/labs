@@ -2,6 +2,8 @@
 library(tidyverse)
 
 theme_set(theme_minimal())
+dir.create("../../../plots/question3/", recursive = TRUE, showWarnings = FALSE)
+dir.create("../../../plots/question3/county-box/", recursive = TRUE, showWarnings = FALSE)
 ```
 
 # Завантаженя датасету з файлу
@@ -25,18 +27,19 @@ df_daytime <- df %>%
 Якість повітря трохи покращується у другій половині дня
 
 ```{r}
-df_daytime %>%
+p <- df_daytime %>%
   ggplot(aes(x = daytime, y = log(aqi))) +
     geom_boxplot(na.rm = TRUE) +
     labs(x = "Інтервал часу (год)", title = "Зміна якості повітря впродовж доби")
+
+ggsave("../../../plots/question3/box.png", p)
 ```
 
 Графіки для кожного county
 
 ```{r}
 for (i in unique(df_daytime$county)) {
-  print(
-    df_daytime %>%
+  p <- df_daytime %>%
       filter(county == i) %>% 
       ggplot(aes(x = daytime, y = log(aqi))) +
         geom_boxplot(na.rm = TRUE) +
@@ -44,7 +47,7 @@ for (i in unique(df_daytime$county)) {
           x = "Інтервал часу (год)",
           title = sprintf("Зміна якості повітря впродовж доби (%s)", i)
         )
-  )
+  ggsave(paste("../../../plots/question3/county-box/", i, ".png", sep = ""), p)
 }
 ```
 
