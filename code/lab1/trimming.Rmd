@@ -1,0 +1,25 @@
+Загрузимо датасет:
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(anytime)
+
+df <- readRDS("data/processed/air_quality_tidy.rds")
+```
+
+Згрупуємо датасат по роках та знайдемо кількість рядків в кожній групі:
+
+```{r}
+length_by_year <- df %>% count(df$date %>% format("%Y") %>% as.numeric())
+```
+
+Знайдемо кумулятивну суму з кінця, щоб визначити кількість даних, яка буде вибрана починаючи з відповідного року:
+
+```{r}
+within(length_by_year, {
+  n <- cumsum(length_by_year$n %>% rev()) %>% rev()
+})
+```
+
+Вибиремо датасет починаючи з 2023 року (1 232 994 з 5 882 208 рядків)
