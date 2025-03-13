@@ -1,0 +1,142 @@
+---
+Питання №1
+Чи впливає швидкість вітру (windspeed) на концентрацію частинок PM2.5 і PM10?
+---
+```{r setup, include = FALSE}
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(naniar)
+library(GGally)
+library(corrplot)
+library(gridExtra)
+library(ggpubr)
+
+theme_set(theme_minimal())
+dir.create("../../plots/question1/", recursive = TRUE, showWarnings = FALSE)
+```
+
+# Завантаженя датасету з файлу
+
+```{r}
+df <- readRDS("data/processed/air_quality_tidy.RDS") %>% slice_sample(n=100000)
+#df <- read_rds("data/processed/air_quality_tidy.RDS") %>% slice_sample(n=100000)
+```
+
+
+
+```{r}
+dt <- df %>%
+  filter(
+    !is.na(windspeed),
+    !is.na(`pm2.5`),
+    !is.na(pm10),
+    is.finite(windspeed),
+    is.finite(`pm2.5`),
+    is.finite(pm10)
+  )
+```
+
+# Вплив швидкості вітру на концентрацію частинок PM2.5 і PM10
+
+```{r}
+wind_speed_vs_pm <- ggplot(dt, aes(x = windspeed)) +
+  geom_point(aes(y = pm2.5, color = "PM2.5"), alpha = 0.5,na.rm = TRUE) +
+  geom_point(aes(y = pm10, color = "PM10"), alpha = 0.5,na.rm = TRUE) +
+  labs(title = "Вплив швидкості вітру на концентрацію частинок PM2.5 і PM10",
+       x = "Швидкість вітру (windspeed)",
+       y = "Концентрація частинок",
+       color = "Тип частинок") +
+  theme_minimal()
+
+ggsave("../../plots/question1/wind_speed_vs_pm.png", wind_speed_vs_pm)
+```
+
+# розподіл для pm2.5 (гістограма)
+
+```{r}
+pm2_5_gist <- ggplot(dt, aes(x = pm2.5)) +
+    geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+    labs(title = "Розподіл PM2.5", x = "PM2.5", y = "Частота") +
+    theme_minimal()
+
+ggsave("../../plots/question1/pm2_5_gist.png", pm2_5_gist)
+```
+
+# Кореляційна матриця
+```{r}
+corr_matrix <- cor(dt %>% select(where(is.numeric)), use = "complete.obs", method = "spearman")
+corr_matrix_plot <- corrplot(corr_matrix, method = "color", type = "upper", tl.cex = 0.7, addCoef.col = "black")
+
+ggsave("plots/question1/corr_matrix_plot.png", corr_matrix_plot)
+```
+
+# Діаграма розсіювання AQI ~ PM2.5
+
+```{r}
+aqi_pm2_5_diagram <- ggplot(dt, aes(x = pm2.5, y = aqi)) +
+    geom_point(alpha = 0.5, color = "blue") +
+    geom_smooth(method = "lm", col = "red") +
+    theme_minimal() +
+    labs(title = "Залежність AQI від PM2.5")
+
+ggsave(filename = "aqi_pm2_5_diagram.png", plot = aqi_pm2_5_diagram, path = "plots/question1" )
+```
+
+# Взаємозв’язок AQI, PM2.5, та інших забруднювачів
+
+```{r}
+aqi_pm_polutants <- ggplot(dt, aes(x = pm2.5, y = aqi, color = pollutant, size = co)) +
+    geom_point(alpha = 0.6) +
+    theme_minimal() +
+    labs(title = "Взаємозв’язок AQI, PM2.5, та інших забруднювачів")
+
+ggsave(filename = "aqi_pm_polutants.png", plot = aqi_pm_polutants, path = "plots/question1" )
+```
+
+# QQ-графік для PM2.5
+
+```{r}
+qq_pm2_5 <- ggqqplot(dt$`pm2.5`, conf.int = TRUE) +
+    labs(title = "QQ-графік для PM2.5") +
+    theme_minimal()
+
+ggsave(filename = "qq_pm2_5.png", plot = qq_pm2_5, path = "plots/question1/" )
+```
+
+# QQ-графік для PM10
+
+```{r}
+qq_pm10 <- ggqqplot(dt$`pm10`, conf.int = TRUE) +
+    labs(title = "QQ-графік для PM10") +
+    theme_minimal()
+
+ggsave(filename = "qq_pm10.png", plot = qq_pm10, path = "plots/question1/" )
+```
+
+# Scatter plot (вплив швидкості і напрямку вітру на PM2.5 і PM10 по регіонах)
+
+```{r}
+scatter_pm2_5_region <- ggplot(dt, aes(x = windspeed, y = pm2.5, color = winddirec)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~county) +
+  labs(title = "Вплив швидкості вітру на PM2.5 у різних регіонах",
+       x = "Швидкість вітру (windspeed)",
+       y = "PM2.5",
+       color = "Напрямок вітру") +
+  theme_minimal()
+
+ggsave(filename = "scatter_pm2_5_region.png", plot = scatter_pm2_5_region, path = "plots/question1/" )
+```
+
+```{r}
+scatter_pm10_region <- ggplot(dt, aes(x = windspeed, y = pm10, color = winddirec)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~county) +
+  labs(title = "Вплив швидкості вітру на PM10 у різних регіонах",
+       x = "Швидкість вітру (windspeed)",
+       y = "PM10",
+       color = "Напрямок вітру") +
+  theme_minimal()
+ggsave(filename = "scatter_pm10_region.png", plot = scatter_pm10_region, path = "plots/question1/" )
+```
