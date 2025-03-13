@@ -1,16 +1,25 @@
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(qqplotr)
+library(here)
 
-theme_set(theme_minimal())
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 20, 0, 0))
+  )
+)
 
-dir.create("../../plots/qq_tidy/", recursive = TRUE, showWarnings = FALSE)
+dir.create(here("plots", "qq_tidy"), recursive = TRUE, showWarnings = FALSE)
 ```
 
 # Завантаженя датасету з файлу
 
 ```{r}
-df <- readRDS("../../data/processed/air_quality_tidy.RDS") %>% slice_sample(n=100000)
+df <- readRDS(here("data", "processed", "air_quality_tidy.RDS")) %>% slice_sample(n=10000)
 ```
 
 ```{r}
@@ -21,11 +30,11 @@ df_gathered <- gather(df %>% select(where(is.numeric)))
 
 ```{r}
 p <- ggplot(df_gathered, aes(sample = value)) +
-  stat_qq_point() + stat_qq_line() + stat_qq_band() +
+  stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
   facet_wrap(~key, scales = "free") +
   labs(x = "Квантилі нормального розподілу", y = "Квантилі розподілу колонки")
 
-ggsave("../../plots/qq_tidy/qq.png", p)
+ggsave(here("plots", "qq_tidy", "qq.png"), p, bg = "white")
 ```
 
 # QQ-графіки для логнормального розподілу
@@ -34,9 +43,9 @@ ggsave("../../plots/qq_tidy/qq.png", p)
 
 ```{r}
 p <- ggplot(df_gathered, aes(sample = log(value))) +
-  stat_qq_point() + stat_qq_line() + stat_qq_band() +
+  stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
   facet_wrap(~key, scales = "free") +
   labs(x = "Квантилі нормального розподілу", y = "ln(Квантилі розподілу колонки)")
 
-ggsave("../../plots/qq_tidy/qq-log.png")
+ggsave(here("plots", "qq_tidy", "qq-log.png"), p, bg = "white")
 ```

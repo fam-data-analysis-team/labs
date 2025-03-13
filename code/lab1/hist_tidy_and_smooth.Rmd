@@ -2,17 +2,18 @@
 library(tidyverse)
 library(ggh4x)
 library(qqplotr)
+library(here)
 
 theme_set(theme_minimal())
 
-dir.create("../../plots/hist_tidy_and_smooth/", recursive = TRUE, showWarnings = FALSE)
+dir.create(here("plots", "hist_tidy_and_smooth"), recursive = TRUE, showWarnings = FALSE)
 ```
 
 # Завантаженя датасетів з файлів
 
 ```{r}
-df <- readRDS("../../data/processed/air_quality_tidy.RDS")
-df_smooth <- readRDS("../../data/processed/air_quality_smooth.RDS")
+df <- readRDS(here("data", "processed", "air_quality_tidy.RDS"))
+df_smooth <- readRDS(here("data", "processed", "air_quality_smooth.RDS"))
 ```
 
 # Підсумкові характеристики числових змінних
@@ -39,18 +40,18 @@ df_smooth_gathered <- gather(df_smooth %>% select(where(is.numeric)))
 ```{r}
 p <- ggplot(df_gathered, aes(value)) +
   geom_histogram(bins = 100, na.rm = TRUE) +
-  facet_wrap(~key, scales = 'free') +
+  facet_wrap(~key, scales = "free") +
   labs(x = "Значення", y = "Кількість")
 
-ggsave("../../plots/hist_tidy_and_smooth/hist1.png", p)
+ggsave(here("plots", "hist_tidy_and_smooth", "hist1.png"), p, bg = "white")
 
 p <- ggplot(df_gathered, aes(value)) +
   geom_histogram(bins = 100, na.rm = TRUE) +
-  facet_wrap(~key, scales = 'free') +
+  facet_wrap(~key, scales = "free") +
   coord_cartesian(ylim = c(0, 50)) +  # Збільшення масштабу по осі y
   labs(x = "Значення", y = "Кількість")
 
-ggsave("../../plots/hist_tidy_and_smooth/hist2.png", p)
+ggsave(here("plots", "hist_tidy_and_smooth", "hist2.png"), p, bg = "white")
 ```
 
 Порівняння розподілів повного та згладженого датасетів.
@@ -74,19 +75,19 @@ x_limits <- list(
 
 p <- ggplot(df_gathered, aes(value)) +
   geom_histogram(bins = 50, na.rm = TRUE) +
-  facet_wrap(~key, scales = 'free') +
+  facet_wrap(~key, scales = "free") +
   facetted_pos_scales(x = x_limits) +  # Обмеження по x, щоб не заважали викиди
   labs(x = "Значення", y = "Кількість")
 
-ggsave("../../plots/hist_tidy_and_smooth/hist3.png", p)
+ggsave(here("plots", "hist_tidy_and_smooth", "hist3.png"), p, bg = "white")
 
 p <- ggplot(df_smooth_gathered, aes(value)) +
   geom_histogram(bins = 50, na.rm = TRUE) +
-  facet_wrap(~key, scales = 'free') +
+  facet_wrap(~key, scales = "free") +
   facetted_pos_scales(x = x_limits) +  # Обмеження по x, для кращого порівняння
   labs(x = "Значення", y = "Кількість")
 
-ggsave("../../plots/hist_tidy_and_smooth/hist4.png", p)
+ggsave(here("plots", "hist_tidy_and_smooth", "hist4.png"), p, bg = "white")
 ```
 
 Гістограми логаритмованих значень
@@ -94,15 +95,15 @@ ggsave("../../plots/hist_tidy_and_smooth/hist4.png", p)
 ```{r}
 p <- ggplot(df_gathered %>% filter(key != "winddirec"), aes(log(value))) +
   geom_histogram(bins = 50, na.rm = TRUE) +
-  facet_wrap(~key, scales = 'free') +
+  facet_wrap(~key, scales = "free") +
   labs(x = "log(значення)", y = "Кількість")
 
-ggsave("../../plots/hist_tidy_and_smooth/hist-log.png", p)
+ggsave(here("plots", "hist_tidy_and_smooth", "hist-log.png"), p, bg = "white")
 
 p <- ggplot(df_smooth_gathered %>% filter(key != "winddirec"), aes(log(value))) +
   geom_histogram(bins = 50, na.rm = TRUE) +
-  facet_wrap(~key, scales = 'free') +
+  facet_wrap(~key, scales = "free") +
   labs(x = "log(значення)", y = "Кількість")
 
-ggsave("../../plots/hist_tidy_and_smooth/hist-log-smooth.png", p)
+ggsave(here("plots", "hist_tidy_and_smooth", "hist-log-smooth.png"), p, bg = "white")
 ```
