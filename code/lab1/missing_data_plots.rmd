@@ -1,0 +1,45 @@
+﻿---
+Побудова графіків з пропущеними даними
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(naniar)
+library(GGally)
+library(corrplot)
+library(gridExtra)
+library(ggpubr)
+
+theme_set(theme_minimal())
+dir.create("../../plots/", recursive = TRUE, showWarnings = FALSE)
+```
+
+# Підраховуємо кількість пропущених значень для кожного стовпця
+
+```{r}
+missing_data <- colSums(is.na(dt))
+```
+
+# Перетворюємо на таблицю для зручності
+```{r}
+mising_data <- data.frame(
+  Column = names(missing_data),
+  Missing = missing_data
+)
+```
+
+
+# Побудова діаграми
+```{r}
+ p <- ggplot(missing_data, aes(x = reorder(Column, Missing), y = Missing)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  coord_flip() +  # Поворот осі X для кращого вигляду
+  labs(title = "Кількість пропущених значень для кожного стовпця",
+       x = "Стовпець",
+       y = "Кількість пропущених значень") +
+  theme_minimal()
+ggsave("../../plots/missed_data.png", p)
+```
+
