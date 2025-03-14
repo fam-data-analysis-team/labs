@@ -1,0 +1,125 @@
+```{r setup, include = FALSE}
+library(tidyverse)
+library(here)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 18),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0))
+  )
+)
+
+dir.create(here("plots", "question7"), recursive = TRUE, showWarnings = FALSE)
+```
+
+Завантажимо датасет:
+
+```{r}
+df <- readRDS(here("data", "processed", "air_quality_trimmed.rds"))
+```
+
+Будемо розглядати зміни в показниках якості повітря в конкретну точку в часі (наприклад, 2023-06-28 11:00:00) в 
+конкретному регіоні (наприклад, Tainan). Таким чином, потрібно розглядати датасет згрупований за парою `(date; county)`, так як
+єдиним, що є різним у групі є `sitename`.
+
+Порахуємо статистику по кількості рядків в кожній групі:
+
+```{r}
+df_group_len <- df %>% count(date, county)
+
+summary(df_group_len$n)
+```
+
+Середня величина групи в кожному регіоні:
+
+```{r}
+p <- df_group_len %>%
+  group_by(county) %>%
+  summarise(mean = mean(n)) %>%
+  ungroup() %>%
+  ggplot(aes(x = county, y = mean)) +
+  geom_bar(stat = "identity") +
+  labs(x = "County", y = "Count") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+ggsave(
+  here("plots", "question7", "bar-count.png"),
+  plot = p,
+  bg = "white")
+```
+
+Для аналізу змін в групі, будемо використовувати Median absolute difference.
+
+```{r}
+df_mads <- df %>%
+  group_by(date, county) %>%
+  summarise(across(where(is.numeric), ~mad(.x, na.rm = TRUE)))
+```
+
+Дескрептивні статистики:
+
+```{r}
+summary(df_mads %>% ungroup() %>% select(where(is.numeric)))
+```
+
+```{r}
+df_mads_long <- df_mads %>%
+  pivot_longer(!"date" & !"county", names_to = "key", values_to = "value")
+```
+
+QQ-графіки:
+
+```{r}
+p <- df_mads_long %>%
+  ggplot(aes(sample = value)) +
+  labs(x = "Normal distribution quantiles", y = "MAD") +
+  stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
+  facet_wrap(~key, scales = "free")
+
+ggsave(
+  here("plots", "question7", "qq.png"),
+  plot = p,
+  width = 15, height = 15,
+  bg = "white")
+```
+
+Графіки щільності:
+
+```{r}
+p <- df_mads_long %>%
+  ggplot(aes(x = value)) +
+  labs(x = "MAD", y = "Density") +
+  geom_density() +
+  facet_wrap(~key, scales = "free")
+
+ggsave(
+  here("plots", "question7", "density.png"), 
+  plot = p, 
+  width = 15, height = 15,
+  bg = "white")
+```
+
+Box plots (x - регіон):
+
+```{r}
+p <- df_mads_long %>%
+  ggplot(aes(x = county, y = value)) +
+  labs(x = "County", y = "Value") +
+  geom_boxplot(outliers = FALSE) +
+  facet_wrap(~key, scales = "free") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+ggsave(
+  here("plots", "question7", "box-county.png"),
+  plot = p,
+  width = 20, height = 15,
+  bg = "white")
+```
+
+Найбільший MAD у `winddirec`. Це можна пояснити природною різницею напрямку вітру залежно від місця знахоження.
+
+На графіку видно, що зміна показників не є рівномірно розподілена по регіонам. В загальному можна зробити висновок, що для більшості 
+показників зміна значення залежно від станції вимірювання не є суттєвою.
