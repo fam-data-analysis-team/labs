@@ -3,16 +3,25 @@ library(tidyverse)
 library(ggplot2)
 library(data.table)
 library(glue)
+library(here)
 
-dir.create("plots/outliers/", recursive = TRUE, showWarnings = FALSE)
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 18),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0))
+  )
+)
+
+dir.create(here("plots", "outliers"), recursive = TRUE, showWarnings = FALSE)
 ```
 
 Завантажимо датасет:
 
 ```{r}
-library(tidyverse)
-
-df <- readRDS("data/processed/air_quality_trimmed.rds")
+df <- readRDS(here("data", "processed", "air_quality_trimmed.rds"))
 ```
 
 Знайдемо інтервали в яких ми будемо вважати, що значення не є викидом (фільтр Гампеля):
@@ -61,7 +70,7 @@ p <- df_ocount %>%
   geom_bar(stat = "identity") +
   labs(x = "Змінна", y = "Кількість викидів")
 
-ggsave("plots/outliers/count-bar.png", p, width = 10)
+ggsave(here("plots", "outliers", "count-bar.png"), p, width = 15)
 ```
 
 Для кожної числової змінної побудуємо scatter plot, де X - дата, Y - значення змінної:
@@ -80,11 +89,11 @@ p <- df %>%
   ggplot(aes(x = date, y = value, group = 1)) +
   facet_wrap(~key, scales = "free") +
   geom_point() +
-  geom_hline(aes(yintercept = to), colour = "red", lwd = 1.5) + # Позначемо лінії відсічення
+  geom_hline(aes(yintercept = to), colour = "red", lwd = 1.5) + # Позначимо лінії відсічення
   geom_hline(aes(yintercept = bo), colour = "red", lwd = 1.5) +
   labs(x = "Дата", y = "Значення")
 
-ggsave("plots/outliers/scatter.png", p, width = 15, height = 15)
+ggsave(here("plots", "outliers", "scatter.png"), p, width = 15, height = 15)
 ```
 
 Кількість викидів залежно від регіону:
@@ -107,5 +116,7 @@ p <- df %>%
   labs(x = "Регіон", y = "Кількість викидів") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
-ggsave("plots/outliers/count-bar-county.png", width = 15, height = 15)
+ggsave(
+  here("plots", "outliers", "count-bar-county.png"), 
+  width = 22, height = 15)
 ```

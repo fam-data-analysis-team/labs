@@ -19,6 +19,7 @@ dir.create(here("plots", "qq_tidy"), recursive = TRUE, showWarnings = FALSE)
 # Завантаженя датасету з файлу
 
 ```{r}
+set.seed(0)
 df <- readRDS(here("data", "processed", "air_quality_tidy.RDS")) %>% slice_sample(n=10000)
 ```
 
@@ -34,7 +35,7 @@ p <- ggplot(df_gathered, aes(sample = value)) +
   facet_wrap(~key, scales = "free") +
   labs(x = "Квантилі нормального розподілу", y = "Квантилі розподілу колонки")
 
-ggsave(here("plots", "qq_tidy", "qq.png"), p, bg = "white")
+ggsave(here("plots", "qq_tidy", "qq.png"), p, width = 12, height = 12, bg = "white")
 ```
 
 # QQ-графіки для логнормального розподілу
