@@ -1,0 +1,96 @@
+﻿---
+Питання №4
+Які регіони (county) мають найвищий середній рівень забруднення повітря (AQI) протягом року?
+---
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(naniar)
+library(GGally)
+library(corrplot)
+library(gridExtra)
+library(ggpubr)
+library(here)
+
+theme_set(theme_minimal())
+dir.create(here("plots", "question4"), recursive = TRUE, showWarnings = FALSE)
+```
+
+
+```{r}
+df <- readRDS(here("data", "processed", "air_quality_trimmed.rds")) %>% slice_sample(n=100000)
+```
+
+
+```{r}
+dt <- df %>%
+  filter(
+    !is.na(windspeed),
+    !is.na(pm2.5),
+    !is.na(pm10),
+    is.finite(windspeed),
+    is.finite(pm2.5),
+    is.finite(pm10)
+  )
+```
+
+# Аналіз середніх показників якості повітря по регіонам протягом року
+
+```{r}
+county_avg_AQI <- dt %>%
+  group_by(county) %>%
+  summarise(avg_AQI = mean(aqi, na.rm = TRUE)) %>%
+  arrange(desc(avg_AQI))
+
+p <- ggplot(county_avg_AQI, aes(x = reorder(county, -avg_AQI), y = avg_AQI)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Середній рівень AQI за регіонами",
+       x = "Регіон (county)",
+       y = "Середній AQI") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(here("plots", "question4", "avg_aqi_by_country.png"), p, bg = "white")
+
+```
+
+# Аналіз сезонних змін
+
+```{r}
+seasonal_change <- dt %>%
+  mutate(month = lubridate::month(date, label = TRUE)) %>%
+  ggplot(aes(x = month, y = aqi, fill = month)) +
+  geom_boxplot() +
+  labs(title = "Розподіл AQI по місяцях", x = "Місяць", y = "AQI") +
+  theme_minimal()
+
+ggsave("plots/question4/seasonal_change.png", seasonal_change)
+```
+
+```{r}
+taiwan <- st_read("https://datahub.io/core/geo-boundaries-taiwan/r/0.geojson")
+# Об'єднання даних з геопросторовими даними
+taiwan_map_with_data <- taiwan %>%
+  left_join(df, by = c("NAME_1" = "region"))
+
+# кольори для графіку
+my_colors <- brewer.pal(9, "Greens")
+my_colors <- colorRampPalette(my_colors)(30)
+
+#
+map_by_reg_aqi <- ggplot() +
+  geom_sf(data = taiwan_map_with_data, aes(fill = aqi), color = "black", size = 0.25) +
+  facet_wrap(~ after_reform, ncol = 2) +
+  scale_fill_viridis(option = "plasma", name = "AQI") +
+  labs(
+    title = "Якість повітря в залежності від регіону",
+    subtitle = "До та після реформи"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16),
+    plot.subtitle = element_text(hjust = 0.5, size = 12)
+  )
+ggsave(filename = "map_by_reg_aqi.png", plot = map_by_reg_aqi, path = "plots", width = 8, height = 6, dpi = 150)
+```
