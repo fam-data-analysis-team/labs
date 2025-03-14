@@ -1,0 +1,62 @@
+```{r setup, include = FALSE}
+library(tidyverse)
+library(here)
+library(ggh4x)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 18),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0))
+  )
+)
+
+dir.create(here("plots", "question6"), recursive = TRUE, showWarnings = FALSE)
+```
+
+Завантажимо датасет:
+
+```{r}
+df <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
+```
+
+Побудуємо діаграми розсіювання для кожної числової змінної:
+
+```{r} 
+df_smooth <- df %>%
+  select((where(is.numeric) & !("windspeed" | "winddirec")) | "date") %>%
+  group_by(date = as.Date(date)) %>%
+  summarise(across(where(is.numeric), ~ median(.x, na.rm = TRUE))) %>%
+  pivot_longer(!"date", names_to = "key", values_to = "value") %>%
+  group_by(key, ym = date %>% format("%Y-%m")) %>%
+  mutate(value_avg = mean(value)) %>%
+  ungroup()
+```
+
+```{r}
+p <- df_smooth %>%
+  ggplot() +
+  geom_line(aes(x = date, y = value), color = "black") +
+  geom_line(
+    aes(
+      x = ym %>% paste("-01", sep="") %>% as.Date("%Y-%m-%d"), 
+      y = value_avg, 
+    ),
+    color = "#f25309", 
+    lwd = 1.5) +
+  labs(x = "Date", y = "Value") +
+  facet_wrap(~key, scales = "free") +
+  facetted_pos_scales(y = c(
+    key == "aqi" ~ scale_y_continuous(limits = c(0, 120)),
+    key == "so2" ~ scale_y_continuous(limits = c(0, 4))
+  )) +
+  theme(legend.position = "none")
+
+ggsave(
+  here("plots", "question6", "line.png"), 
+  plot = p, 
+  width = 15, height = 15,
+  bg = "white")
+```
