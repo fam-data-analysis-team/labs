@@ -1,0 +1,117 @@
+﻿---
+Питання №2
+Як зміни в концентрації озону ($O_3$)  та $SO_2$ впливають на загальний рівень забруднення повітря (AQI)?
+Крім цього додано графіки інших забруднбвачів, для загального розуміння
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(naniar)
+library(GGally)
+library(corrplot)
+library(gridExtra)
+library(ggpubr)
+
+theme_set(theme_minimal())
+dir.create("../../plots/question2/", recursive = TRUE, showWarnings = FALSE)
+```
+
+
+```{r}
+df <- readRDS("data/processed/air_quality_trimmed.rds") %>% slice_sample(n=100000)
+```
+
+
+```{r}
+dt <- df %>%
+  filter(
+    !is.na(windspeed),
+    !is.na(`pm2.5`),
+    !is.na(pm10),
+    is.finite(windspeed),
+    is.finite(`pm2.5`),
+    is.finite(pm10)
+  )
+```
+
+
+# Для початкуу дамо відповідь на питання:
+# Чи є зв’язок між концентраціями різних забруднювачів? (кореляційна матриця)
+
+```{r}
+air_corr <- dt %>%
+  select(aqi, pm2.5, pm10, so2, nox, co, o3, windspeed) %>%
+  cor(use = "complete.obs")
+
+air_corr_matrix <- corrplot(air_corr, method = "color", type = "upper", tl.cex = 0.8, addCoef.col = "black")
+
+ggsave("../../plots/question2/air_corr_matrix.png", air_corr_matrix)
+```
+
+# Boxplot (аналіз викидів та розподілу всіх показників забруднення)
+
+```{r}
+boxplot_pollutants <- dt %>%
+  select(so2, nox, co, o3, no2, no) %>%
+  pivot_longer(cols = everything(), names_to = "pollutant", values_to = "value") %>%
+  ggplot(aes(x = pollutant, y = value, fill = pollutant)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  labs(title = "Розподіл забруднюючих речовин (Boxplot)", x = "Забруднювач", y = "Концентрація (log scale)") +
+  theme_minimal()
+
+ggsave("../../plots/question2/boxplot_pollutants.png", boxplot_pollutants)
+```
+
+# розподіл для o3 (гістограма)
+
+```{r}
+o3_plot <- ggplot(dt, aes(x = o3)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  labs(title = "Розподіл o3 (озон)", x = "о3", y = "Частота") +
+  theme_minimal()
+
+ggsave("../../plots/question2/o3_plot.png", o3_plot)
+```
+# за потреби можна додати інші забруднювачі
+
+```{r}
+so2_plot <- ggplot(dt, aes(x = so2)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  labs(title = "Розподіл SO2", x = "so2", y = "Частота") +
+  theme_minimal()
+
+ggsave("../../plots/question2/so2_plot.png", so2_plot)
+```
+
+# Діаграма розсіювання AQI ~ o3
+
+```{r}
+scatter_plot <- ggplot(dt, aes(x = o3, y = aqi)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_smooth(method = "lm", col = "red") +
+  theme_minimal() +
+  labs(title = "Залежність AQI від o3")
+
+ggsave("../../plots/question2/scatter_plot.png", scatter_plot)
+
+```
+
+# Взаємозв’язок AQI, o3, та інших забруднювачів
+
+```{r}
+seasonal_plot <- dt %>%
+  mutate(month = lubridate::month(date, label = TRUE)) %>%
+  ggplot(aes(x = month, y = o3, fill = month)) +
+  geom_boxplot() +
+  labs(title = "Розподіл AQI по місяцях", x = "Місяць", y = "AQI") +
+  theme_minimal()
+
+ggsave("../../plots/question2/seasonal_plot.png", seasonal_plot)
+```
+
+---
+додавати QQ-графіки в даному скрипті немає сенсу, аналіз розсіювання і викидів по цих параметрах, можна відстежити на загальних дослдженнях
+---
