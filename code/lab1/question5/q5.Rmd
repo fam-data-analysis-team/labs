@@ -1,0 +1,228 @@
+---
+Питання №5
+Як змiнився загальний рiвень забруднення по регiонам пiсля початку реформи?
+Для кращого розуміння і порівняння змін було досліджено дані за 2016 та 2024 роки
+---
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(naniar)
+library(GGally)
+library(corrplot)
+library(gridExtra)
+library(ggpubr)
+library(here)
+library(sf)
+library(viridis)
+library(RColorBrewer)
+library(ggrepel)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 18),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+  )
+)
+
+dir.create(here("plots", "question5"), recursive = TRUE, showWarnings = FALSE)
+```
+
+
+```{r}
+df <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
+#%>% slice_sample(n=100000)
+```
+
+
+```{r}
+dt <- df %>%
+  filter(
+    !is.na(windspeed),
+    !is.na(pm2.5),
+    !is.na(pm10),
+    is.finite(windspeed),
+    is.finite(pm2.5),
+    is.finite(pm10)
+  )
+```
+
+```{r}
+dt <- dt %>%
+  mutate(date = as.Date(as.character(date), format = "%Y"),
+         year = year(date))
+```
+
+```{r}
+# зчитування мапи
+taiwan <- st_read(here("data","tw.json"))
+
+unique(dt$county)
+unique(taiwan$name)
+
+```
+
+# з огляду на унікальні назви, маємо протиріччя в назвах регуонів. В початковому датасеті назви повні, у датасеті мапи - скорочені.
+
+
+```{r}
+
+# Словник відповідників
+name_map <- c(
+  "Kinmen" = "Kinmen County",
+  "Matsu Islands" = "Lienchiang County",
+  "Penghu" = "Penghu County",
+  "Taoyuan" = "Taoyuan City",
+  "Hsinchu" = "Hsinchu County",
+  "Hsinchu City" = "Hsinchu City",
+  "Miaoli" = "Miaoli County",
+  "Taichung City" = "Taichung City",
+  "Changhua" = "Changhua County",
+  "Yunlin" = "Yunlin County",
+  "Chiayi" = "Chiayi County",
+  "Chiayi City" = "Chiayi City",
+  "Tainan City" = "Tainan City",
+  "Kaohsiung City" = "Kaohsiung City",
+  "Pingtung" = "Pingtung County",
+  "Taitung" = "Taitung County",
+  "Hualien" = "Hualien County",
+  "Yilan" = "Yilan County",
+  "New Taipei City" = "New Taipei City",
+  "Keelung City" = "Keelung City",
+  "Nantou" = "Nantou County",
+  "Taipei City" = "Taipei City"
+)
+
+# Копія з оновленими назвами
+taiwan_updated <- taiwan %>%
+  mutate(region = recode(name, !!!name_map))  # створюємо нову колонку region
+
+# Запис у новий GeoJSON-файл
+st_write(taiwan_updated, here("data","tw_named.json"), driver = "GeoJSON", delete_dsn = TRUE)
+
+
+```
+
+# рішення переписати назви регіонів у датасеті мапи. Таким чином отримали новий датасет мапи, що відповідає даним з датасету про якість повітря. Тобто додали колонку "region" з відповідними назвами.
+
+
+```{r}
+# зчитування нової мапи
+taiwan <- st_read(here("data","tw_named.json"))
+
+unique(dt$county)
+unique(taiwan$region)
+
+```
+
+# агрегація AQI по регіонах і реформі
+
+```{r}
+region_avg_aqi_2016 <- dt %>%
+  filter(year == 2016, after_reform == FALSE) %>%
+  group_by(county) %>%
+  summarise(aqi = mean(aqi, na.rm = TRUE), .groups = "drop")
+
+print(region_avg_aqi_2016)
+
+# об'єднання з геоданими
+taiwan_map_with_data_2016 <- taiwan %>%
+  left_join(region_avg_aqi_2016, by = c("region" = "county"))
+```
+
+# агрегація AQI по регіонах і реформі
+```{r}
+
+region_avg_aqi_2024 <- dt %>%
+  filter(year == 2024, after_reform == TRUE) %>%
+  group_by(county) %>%
+  summarise(aqi = mean(aqi, na.rm = TRUE), .groups = "drop")
+
+print(region_avg_aqi_2024)
+
+# об'єднання з геоданими
+taiwan_map_with_data_2024 <- taiwan %>%
+  left_join(region_avg_aqi_2024, by = c("region" = "county"))
+```
+
+# Порахуємо центроїди регіонів для гарного виведення назв регіонів
+
+```{r}
+region_labels <- taiwan_map_with_data %>%
+  st_centroid() %>%
+  st_coordinates() %>%
+  as_tibble() %>%
+  bind_cols(taiwan_map_with_data %>% st_drop_geometry() %>% select(region, after_reform))
+```
+
+# мапа до реформи 2016
+
+```{r}
+map_before <- ggplot() +
+  geom_sf(data = taiwan_map_with_data_2016,
+          aes(fill = aqi), color = "black", size = 0.25) +
+  geom_text_repel(data = region_labels %>% filter(after_reform == FALSE),
+                  aes(x = X, y = Y, label = region), size = 3, max.overlaps = 30) +
+ scale_fill_viridis(option = "viridis", name = "AQI", direction = -1) +
+  labs(
+    title = "AQI по регіонах — ДО реформи",
+    subtitle = "До 21 листопада 2017"
+  ) +
+  theme_minimal()+
+  theme(
+    panel.grid.major = element_blank(),  # прибирає основну сітку
+    panel.grid.minor = element_blank()   # прибирає мінорну сітку
+  )
+
+
+ggsave(here("plots", "question5", "map_before_reform.png"), map_before)
+```
+
+# мапа після реформи 2024
+
+```{r}
+# Мапа після реформи
+map_after <- ggplot() +
+  geom_sf(data = taiwan_map_with_data_2024,
+          aes(fill = aqi), color = "black", size = 0.25) +
+  geom_text_repel(data = region_labels %>% filter(after_reform == TRUE),
+                  aes(x = X, y = Y, label = region), size = 3, max.overlaps = 30) +
+ scale_fill_viridis(option = "viridis", name = "AQI",direction = -1) +
+  labs(
+    title = "AQI по регіонах — ПІСЛЯ реформи",
+    subtitle = "за 2024 рік "
+  ) +
+  theme_minimal()+
+  theme(
+    panel.grid.major = element_blank(),  # прибирає основну сітку
+    panel.grid.minor = element_blank()   # прибирає мінорну сітку
+  )
+
+
+ggsave(here("plots", "question5", "map_after_reform.png"), map_after)
+```
+
+# порівняння середнього AQI до та після реформи
+
+```{r}
+region_comparison <- dt %>%
+  group_by(county, after_reform) %>%
+  summarise(aqi = mean(aqi, na.rm = TRUE), .groups = "drop") %>%
+  ggplot(aes(x = after_reform, y = aqi, fill = after_reform)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ county, scales = "free_y") +
+  labs(
+    title = "Порівняння рівня забруднення по регіонах до та після реформи",
+    x = "Період",
+    y = "Середній AQI"
+  ) +
+  scale_fill_manual(values = c("blue","yellow")) +
+  theme_minimal()
+
+ggsave(here("plots", "question5", "region_comparison_aqi.png"), region_comparison)
+
+```
