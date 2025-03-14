@@ -11,14 +11,16 @@ library(GGally)
 library(corrplot)
 library(gridExtra)
 library(ggpubr)
+library(here)
 
 theme_set(theme_minimal())
-dir.create("../../plots/question1/", recursive = TRUE, showWarnings = FALSE)
+dir.create(here("plots", "question1"), recursive = TRUE, showWarnings = FALSE)
 ```
 
 # Завантаженя датасету з файлу
 
 ```{r}
+set.seed(0)
 df <- readRDS("data/processed/air_quality_trimmed.rds") %>% slice_sample(n=100000)
 #df <- read_rds("data/processed/air_quality_tidy.RDS") %>% slice_sample(n=100000)
 ```
@@ -49,7 +51,7 @@ wind_speed_vs_pm <- ggplot(dt, aes(x = windspeed)) +
        color = "Тип частинок") +
   theme_minimal()
 
-ggsave("../../plots/question1/wind_speed_vs_pm.png", wind_speed_vs_pm)
+ggsave(here("plots", "question1", "wind_speed_vs_pm.png"), wind_speed_vs_pm)
 ```
 
 # розподіл для pm2.5 (гістограма)
@@ -60,15 +62,19 @@ pm2_5_gist <- ggplot(dt, aes(x = pm2.5)) +
     labs(title = "Розподіл PM2.5", x = "PM2.5", y = "Частота") +
     theme_minimal()
 
-ggsave("../../plots/question1/pm2_5_gist.png", pm2_5_gist)
+ggsave(here("plots", "question1", "pm2_5_gist.png"), pm2_5_gist)
 ```
 
 # Кореляційна матриця
+
 ```{r}
 corr_matrix <- cor(dt %>% select(where(is.numeric)), use = "complete.obs", method = "spearman")
-corr_matrix_plot <- corrplot(corr_matrix, method = "color", type = "upper", tl.cex = 0.7, addCoef.col = "black")
 
-ggsave("plots/question1/corr_matrix_plot.png", corr_matrix_plot)
+png(
+  here("plots", "question1", "corr_matrix_plot.png"), 
+  width = 720, height = 720)
+corrplot(corr_matrix, method = "color", type = "upper", tl.cex = 1, addCoef.col = "black")
+dev.off()
 ```
 
 # Діаграма розсіювання AQI ~ PM2.5
@@ -86,7 +92,7 @@ ggsave(filename = "aqi_pm2_5_diagram.png", plot = aqi_pm2_5_diagram, path = "plo
 # Взаємозв’язок AQI, PM2.5, та інших забруднювачів
 
 ```{r}
-aqi_pm_polutants <- ggplot(dt, aes(x = pm2.5, y = aqi, color = pollutant, size = co)) +
+aqi_pm_polutants <- ggplot(dt, aes(x = pm2.5, y = aqi, size = co)) +
     geom_point(alpha = 0.6) +
     theme_minimal() +
     labs(title = "Взаємозв’язок AQI, PM2.5, та інших забруднювачів")

@@ -13,14 +13,16 @@ library(GGally)
 library(corrplot)
 library(gridExtra)
 library(ggpubr)
+library(here)
 
 theme_set(theme_minimal())
-dir.create("../../plots/question2/", recursive = TRUE, showWarnings = FALSE)
+dir.create(here("plots", "question2"), recursive = TRUE, showWarnings = FALSE)
 ```
 
 
 ```{r}
-df <- readRDS("data/processed/air_quality_trimmed.rds") %>% slice_sample(n=100000)
+set.seed(0)
+df <- readRDS(here("data", "processed", "air_quality_trimmed.rds")) %>% slice_sample(n=100000)
 ```
 
 
@@ -45,9 +47,12 @@ air_corr <- dt %>%
   select(aqi, pm2.5, pm10, so2, nox, co, o3, windspeed) %>%
   cor(use = "complete.obs")
 
-air_corr_matrix <- corrplot(air_corr, method = "color", type = "upper", tl.cex = 0.8, addCoef.col = "black")
+png(
+  here("plots", "question2", "air_corr_matrix.png"), 
+  width = 720, height = 720)
 
-ggsave("../../plots/question2/air_corr_matrix.png", air_corr_matrix)
+air_corr_matrix <- corrplot(air_corr, method = "color", type = "upper", tl.cex = 0.8, addCoef.col = "black")
+dev.off()
 ```
 
 # Boxplot (аналіз викидів та розподілу всіх показників забруднення)
@@ -62,7 +67,7 @@ boxplot_pollutants <- dt %>%
   labs(title = "Розподіл забруднюючих речовин (Boxplot)", x = "Забруднювач", y = "Концентрація (log scale)") +
   theme_minimal()
 
-ggsave("../../plots/question2/boxplot_pollutants.png", boxplot_pollutants)
+ggsave(here("plots", "question2", "boxplot_pollutants.png"), boxplot_pollutants)
 ```
 
 # розподіл для o3 (гістограма)
@@ -73,7 +78,7 @@ o3_plot <- ggplot(dt, aes(x = o3)) +
   labs(title = "Розподіл o3 (озон)", x = "о3", y = "Частота") +
   theme_minimal()
 
-ggsave("../../plots/question2/o3_plot.png", o3_plot)
+ggsave(here("plots", "question2", "o3_plot.png"), o3_plot)
 ```
 # за потреби можна додати інші забруднювачі
 
@@ -83,7 +88,7 @@ so2_plot <- ggplot(dt, aes(x = so2)) +
   labs(title = "Розподіл SO2", x = "so2", y = "Частота") +
   theme_minimal()
 
-ggsave("../../plots/question2/so2_plot.png", so2_plot)
+ggsave(here("plots", "question2", "so2_plot.png"), so2_plot)
 ```
 
 # Діаграма розсіювання AQI ~ o3
@@ -95,7 +100,7 @@ scatter_plot <- ggplot(dt, aes(x = o3, y = aqi)) +
   theme_minimal() +
   labs(title = "Залежність AQI від o3")
 
-ggsave("../../plots/question2/scatter_plot.png", scatter_plot)
+ggsave(here("plots", "question2", "scatter_plot.png"), scatter_plot)
 
 ```
 
@@ -109,7 +114,7 @@ seasonal_plot <- dt %>%
   labs(title = "Розподіл AQI по місяцях", x = "Місяць", y = "AQI") +
   theme_minimal()
 
-ggsave("../../plots/question2/seasonal_plot.png", seasonal_plot)
+ggsave(here("plots", "question2", "seasonal_plot.png"), seasonal_plot)
 ```
 
 ---
