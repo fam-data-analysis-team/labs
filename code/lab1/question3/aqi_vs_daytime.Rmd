@@ -48,20 +48,21 @@ ggsave(here("plots", "question3", "box.png"), p, bg = "white", dpi = 200)
 Графіки для кожного county
 
 ```{r}
-for (i in unique(df_daytime$county)) {
-  p <- df_daytime %>%
-      filter(county == i) %>% 
-      ggplot(aes(x = daytime, y = log(aqi))) +
-        geom_boxplot(na.rm = TRUE) +
-        labs(
-          x = "Інтервал часу (год)",
-          title = sprintf("Зміна aqi впродовж доби (%s)", i)
-        )
-  
-  ggsave(
-    here("plots", "question3", "county-box",  paste(i, ".png", sep = "")), 
-    p, 
-    bg = "white", dpi = 200
-  )
-}
+p <- df_daytime %>%
+  ggplot(aes(x = daytime, y = log(aqi))) +
+  geom_boxplot(na.rm = TRUE) +
+  labs(
+    x = "Інтервал часу (год)",
+    title = "Зміна aqi впродовж доби (%s)"
+  ) +
+  facet_wrap(~county, scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.25))
+
+ggsave(
+  here("plots", "question3", "county-box.png"), 
+  p, 
+  width = 15,
+  height = 15,
+  bg = "white", dpi = 200
+)
 ```
