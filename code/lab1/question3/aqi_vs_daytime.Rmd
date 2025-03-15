@@ -53,15 +53,15 @@ p <- df_daytime %>%
   geom_boxplot(na.rm = TRUE) +
   labs(
     x = "Інтервал часу (год)",
-    title = "Зміна aqi впродовж доби (%s)"
+    title = "Зміна aqi впродовж доби"
   ) +
-  facet_wrap(~county, scales = "free") +
+  facet_wrap(~county, ncol = 4, scales = "free") +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.25))
 
 ggsave(
   here("plots", "question3", "county-box.png"), 
   p, 
-  width = 15,
+  width = 10,
   height = 15,
   bg = "white", dpi = 200
 )

@@ -21,5 +21,6 @@ data
 *.log
 *.out
 *.synctex.gz
+*.synctex(busy)
 *.pdf
 *.toc

@@ -108,7 +108,7 @@ ggsave(here("plots", "question1", "aqi_pm_polutants.png"), aqi_pm_polutants, dpi
 
 ```{r}
 qq_pm2_5 <- ggqqplot(dt$`pm2.5`, conf.int = TRUE) +
-    labs(title = "QQ-графік для PM2.5") +
+    labs(title = "QQ-графік для PM2.5")
 
 ggsave(here("plots", "question1", "qq_pm2_5.png"), qq_pm2_5, dpi = 200)
 ```
@@ -131,9 +131,10 @@ scatter_pm2_5_region <- ggplot(dt, aes(x = windspeed, y = pm2.5, color = winddir
   labs(title = "Вплив швидкості вітру на PM2.5 у різних регіонах",
        x = "Швидкість вітру (windspeed)",
        y = "PM2.5",
-       color = "Напрямок вітру")
+       color = "Напрямок вітру") +
+  theme(strip.text.x = element_text(size = 7.5, hjust = 0.5))
 
-ggsave(here("plots", "question1", "scatter_pm2_5_region.png"), scatter_pm2_5_region, dpi = 200)
+ggsave(here("plots", "question1", "scatter_pm2_5_region.png"), scatter_pm2_5_region, dpi = 200, bg = "white")
 ```
 
 ```{r}
@@ -143,7 +144,8 @@ scatter_pm10_region <- ggplot(dt, aes(x = windspeed, y = pm10, color = winddirec
   labs(title = "Вплив швидкості вітру на PM10 у різних регіонах",
        x = "Швидкість вітру (windspeed)",
        y = "PM10",
-       color = "Напрямок вітру")
+       color = "Напрямок вітру") +
+  theme(strip.text.x = element_text(size = 7.5, hjust = 0.5))
        
-ggsave(here("plots", "question1", "scatter_pm10_region.png"), scatter_pm10_region, dpi = 200)
+ggsave(here("plots", "question1", "scatter_pm10_region.png"), scatter_pm10_region, dpi = 200, bg = "white")
 ```

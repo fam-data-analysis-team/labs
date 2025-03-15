@@ -55,6 +55,7 @@ ggsave(
 
 ```{r}
 df_mads <- df %>%
+  select(!"winddirec" & !"windspeed") %>%
   group_by(date, county) %>%
   summarise(across(where(is.numeric), ~mad(.x, na.rm = TRUE)))
 ```
@@ -77,12 +78,12 @@ p <- df_mads_long %>%
   ggplot(aes(sample = value)) +
   labs(x = "Normal distribution quantiles", y = "MAD") +
   stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
-  facet_wrap(~key, scales = "free")
+  facet_wrap(~key, ncol = 3, scales = "free")
 
 ggsave(
   here("plots", "question7", "qq.png"),
   plot = p,
-  width = 15, height = 15,
+  width = 15, height = 20,
   bg = "white",
   dpi = 200)
 ```
@@ -94,12 +95,12 @@ p <- df_mads_long %>%
   ggplot(aes(x = value)) +
   labs(x = "MAD", y = "Density") +
   geom_density() +
-  facet_wrap(~key, scales = "free")
+  facet_wrap(~key, ncol = 3, scales = "free")
 
 ggsave(
   here("plots", "question7", "density.png"), 
   plot = p, 
-  width = 15, height = 15,
+  width = 15, height = 20,
   bg = "white",
   dpi = 200)
 ```
@@ -111,13 +112,13 @@ p <- df_mads_long %>%
   ggplot(aes(x = county, y = value)) +
   labs(x = "County", y = "Value") +
   geom_boxplot(outliers = FALSE) +
-  facet_wrap(~key, scales = "free") +
+  facet_wrap(~key, ncol = 3, scales = "free") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 ggsave(
   here("plots", "question7", "box-county.png"),
   plot = p,
-  width = 20, height = 15,
+  width = 15, height = 20,
   bg = "white",
   dpi = 200)
 ```

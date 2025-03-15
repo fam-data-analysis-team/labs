@@ -31,7 +31,7 @@ df_smooth <- df %>%
   summarise(across(where(is.numeric), ~ median(.x, na.rm = TRUE))) %>%
   pivot_longer(!"date", names_to = "key", values_to = "value") %>%
   group_by(key, ym = date %>% format("%Y-%m")) %>%
-  mutate(value_avg = mean(value)) %>%
+  mutate(value_avg = median(value)) %>%
   ungroup()
 ```
 
@@ -45,7 +45,8 @@ p <- df_smooth %>%
       y = value_avg, 
     ),
     color = "#f25309", 
-    lwd = 1.5) +
+    lwd = 1.5,
+    show.legend = TRUE) +
   labs(x = "Date", y = "Value") +
   facet_wrap(~key, scales = "free") +
   facetted_pos_scales(y = c(
