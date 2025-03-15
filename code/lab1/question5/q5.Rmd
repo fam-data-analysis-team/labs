@@ -70,7 +70,6 @@ unique(taiwan$name)
 
 
 ```{r}
-
 # Словник відповідників
 name_map <- c(
   "Kinmen" = "Kinmen County",
@@ -122,23 +121,25 @@ unique(taiwan$region)
 # агрегація AQI по регіонах і реформі
 
 ```{r}
-region_avg_aqi_2016 <- dt %>%
-  filter(year == 2016, after_reform == FALSE) %>%
+region_avg_aqi_period <- dt %>%
+  # переконайся, що date — це тип Date
+  mutate(date = as.Date(date)) %>%
+  filter(date >= as.Date("2016-11-25") & date <= as.Date("2017-05-25"), after_reform == FALSE) %>%
   group_by(county) %>%
   summarise(aqi = mean(aqi, na.rm = TRUE), .groups = "drop")
 
-print(region_avg_aqi_2016)
+print(region_avg_aqi_period)
 
 # об'єднання з геоданими
 taiwan_map_with_data_2016 <- taiwan %>%
-  left_join(region_avg_aqi_2016, by = c("region" = "county"))
+  left_join(region_avg_aqi_period, by = c("region" = "county"))
 ```
 
 # агрегація AQI по регіонах і реформі
 ```{r}
-
 region_avg_aqi_2024 <- dt %>%
-  filter(year == 2024, after_reform == TRUE) %>%
+ mutate(date = as.Date(date)) %>%
+ filter(date >= as.Date("2024-03-15") & date <= as.Date("2024-08-31"), after_reform == TRUE) %>%
   group_by(county) %>%
   summarise(aqi = mean(aqi, na.rm = TRUE), .groups = "drop")
 
@@ -152,11 +153,18 @@ taiwan_map_with_data_2024 <- taiwan %>%
 # Порахуємо центроїди регіонів для гарного виведення назв регіонів
 
 ```{r}
-region_labels <- taiwan_map_with_data %>%
+
+region_labels <- taiwan_map_with_data_2024 %>%
   st_centroid() %>%
   st_coordinates() %>%
   as_tibble() %>%
-  bind_cols(taiwan_map_with_data %>% st_drop_geometry() %>% select(region, after_reform))
+  bind_cols(taiwan_map_with_data_2024 %>% st_drop_geometry() %>% select(region))
+
+region_labels <- taiwan_map_with_data_2016 %>%
+  st_centroid() %>%
+  st_coordinates() %>%
+  as_tibble() %>%
+  bind_cols(taiwan_map_with_data_2016 %>% st_drop_geometry() %>% select(region))
 ```
 
 # мапа до реформи 2016
@@ -165,12 +173,12 @@ region_labels <- taiwan_map_with_data %>%
 map_before <- ggplot() +
   geom_sf(data = taiwan_map_with_data_2016,
           aes(fill = aqi), color = "black", size = 0.25) +
-  geom_text_repel(data = region_labels %>% filter(after_reform == FALSE),
+  geom_text_repel(data = region_labels ,
                   aes(x = X, y = Y, label = region), size = 3, max.overlaps = 30) +
  scale_fill_viridis(option = "viridis", name = "AQI", direction = -1) +
   labs(
     title = "AQI по регіонах — ДО реформи",
-    subtitle = "До 21 листопада 2017"
+    subtitle = "з 25 листопада 2016 До 25 травня 2017"
   ) +
   theme_minimal()+
   theme(
@@ -189,12 +197,12 @@ ggsave(here("plots", "question5", "map_before_reform.png"), map_before)
 map_after <- ggplot() +
   geom_sf(data = taiwan_map_with_data_2024,
           aes(fill = aqi), color = "black", size = 0.25) +
-  geom_text_repel(data = region_labels %>% filter(after_reform == TRUE),
+  geom_text_repel(data = region_labels,
                   aes(x = X, y = Y, label = region), size = 3, max.overlaps = 30) +
  scale_fill_viridis(option = "viridis", name = "AQI",direction = -1) +
   labs(
     title = "AQI по регіонах — ПІСЛЯ реформи",
-    subtitle = "за 2024 рік "
+    subtitle = "з 15 березня 2024 до 31 серпня 2024 року"
   ) +
   theme_minimal()+
   theme(
