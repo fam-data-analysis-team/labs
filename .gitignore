@@ -11,4 +11,5 @@
 .venv
 
 # data
-data/**
+data
+!data/tw.json
