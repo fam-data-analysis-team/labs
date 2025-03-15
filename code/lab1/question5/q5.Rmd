@@ -34,22 +34,10 @@ dir.create(here("plots", "question5"), recursive = TRUE, showWarnings = FALSE)
 
 
 ```{r}
-df <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
+dt <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
 #%>% slice_sample(n=100000)
 ```
 
-
-```{r}
-dt <- df %>%
-  filter(
-    !is.na(windspeed),
-    !is.na(pm2.5),
-    !is.na(pm10),
-    is.finite(windspeed),
-    is.finite(pm2.5),
-    is.finite(pm10)
-  )
-```
 
 ```{r}
 dt <- dt %>%
