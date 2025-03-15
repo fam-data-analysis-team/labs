@@ -15,12 +15,14 @@ data
 !data/tw.json
 
 # latex
-*.aux
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.synctex.gz
-*.synctex(busy)
-*.pdf
-*.toc
+notes/**/*.aux
+notes/**/*.fdb_latexmk
+notes/**/*.fls
+notes/**/*.log
+notes/**/*.out
+notes/**/*.synctex.gz
+notes/**/*.synctex(busy)
+notes/**/*.pdf
+notes/**/*.toc
+notes/**/*.snm
+notes/**/*.nav
