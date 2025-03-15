@@ -5,7 +5,7 @@ library(here)
 theme_set(
   theme_minimal() +
   theme(
-    text = element_text(size = 18),
+    text = element_text(size = 14),
     plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
     axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
     axis.title.y = element_text(margin = margin(0, 10, 0, 0))
@@ -83,7 +83,8 @@ ggsave(
   here("plots", "question7", "qq.png"),
   plot = p,
   width = 15, height = 15,
-  bg = "white")
+  bg = "white",
+  dpi = 200)
 ```
 
 Графіки щільності:
@@ -99,7 +100,8 @@ ggsave(
   here("plots", "question7", "density.png"), 
   plot = p, 
   width = 15, height = 15,
-  bg = "white")
+  bg = "white",
+  dpi = 200)
 ```
 
 Box plots (x - регіон):
@@ -116,7 +118,8 @@ ggsave(
   here("plots", "question7", "box-county.png"),
   plot = p,
   width = 20, height = 15,
-  bg = "white")
+  bg = "white",
+  dpi = 200)
 ```
 
 Найбільший MAD у `winddirec`. Це можна пояснити природною різницею напрямку вітру залежно від місця знахоження.

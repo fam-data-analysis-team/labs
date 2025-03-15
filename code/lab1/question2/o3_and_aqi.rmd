@@ -15,7 +15,16 @@ library(gridExtra)
 library(ggpubr)
 library(here)
 
-theme_set(theme_minimal())
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0))
+  )
+)
+
 dir.create(here("plots", "question2"), recursive = TRUE, showWarnings = FALSE)
 ```
 
@@ -64,10 +73,9 @@ boxplot_pollutants <- dt %>%
   ggplot(aes(x = pollutant, y = value, fill = pollutant)) +
   geom_boxplot() +
   scale_y_log10() +
-  labs(title = "Розподіл забруднюючих речовин (Boxplot)", x = "Забруднювач", y = "Концентрація (log scale)") +
-  theme_minimal()
+  labs(title = "Розподіл забруднюючих речовин (Boxplot)", x = "Забруднювач", y = "Концентрація (log scale)")
 
-ggsave(here("plots", "question2", "boxplot_pollutants.png"), boxplot_pollutants)
+ggsave(here("plots", "question2", "boxplot_pollutants.png"), boxplot_pollutants, dpi = 200)
 ```
 
 # розподіл для o3 (гістограма)
@@ -75,20 +83,18 @@ ggsave(here("plots", "question2", "boxplot_pollutants.png"), boxplot_pollutants)
 ```{r}
 o3_plot <- ggplot(dt, aes(x = o3)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black") +
-  labs(title = "Розподіл o3 (озон)", x = "о3", y = "Частота") +
-  theme_minimal()
+  labs(title = "Розподіл o3 (озон)", x = "о3", y = "Частота")
 
-ggsave(here("plots", "question2", "o3_plot.png"), o3_plot)
+ggsave(here("plots", "question2", "o3_plot.png"), o3_plot, dpi = 200)
 ```
 # за потреби можна додати інші забруднювачі
 
 ```{r}
 so2_plot <- ggplot(dt, aes(x = so2)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black") +
-  labs(title = "Розподіл SO2", x = "so2", y = "Частота") +
-  theme_minimal()
+  labs(title = "Розподіл SO2", x = "so2", y = "Частота")
 
-ggsave(here("plots", "question2", "so2_plot.png"), so2_plot)
+ggsave(here("plots", "question2", "so2_plot.png"), so2_plot, dpi = 200)
 ```
 
 # Діаграма розсіювання AQI ~ o3
@@ -97,10 +103,9 @@ ggsave(here("plots", "question2", "so2_plot.png"), so2_plot)
 scatter_plot <- ggplot(dt, aes(x = o3, y = aqi)) +
   geom_point(alpha = 0.5, color = "blue") +
   geom_smooth(method = "lm", col = "red") +
-  theme_minimal() +
   labs(title = "Залежність AQI від o3")
 
-ggsave(here("plots", "question2", "scatter_plot.png"), scatter_plot)
+ggsave(here("plots", "question2", "scatter_plot.png"), scatter_plot, dpi = 200)
 
 ```
 
@@ -111,10 +116,9 @@ seasonal_plot <- dt %>%
   mutate(month = lubridate::month(date, label = TRUE)) %>%
   ggplot(aes(x = month, y = o3, fill = month)) +
   geom_boxplot() +
-  labs(title = "Розподіл AQI по місяцях", x = "Місяць", y = "AQI") +
-  theme_minimal()
+  labs(title = "Розподіл AQI по місяцях", x = "Місяць", y = "AQI")
 
-ggsave(here("plots", "question2", "seasonal_plot.png"), seasonal_plot)
+ggsave(here("plots", "question2", "seasonal_plot.png"), seasonal_plot, dpi = 200)
 ```
 
 ---

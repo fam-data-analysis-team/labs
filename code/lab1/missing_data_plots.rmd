@@ -11,20 +11,31 @@ library(GGally)
 library(corrplot)
 library(gridExtra)
 library(ggpubr)
+library(here)
 
-theme_set(theme_minimal())
-dir.create("../../plots/", recursive = TRUE, showWarnings = FALSE)
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 18),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0))
+  )
+)
+
+dir.create(here("plots"), recursive = TRUE, showWarnings = FALSE)
 ```
 
 # Підраховуємо кількість пропущених значень для кожного стовпця
 
 ```{r}
+dt <- readRDS(here("data", "processed", "air_quality_tidy.RDS"))
 missing_data <- colSums(is.na(dt))
 ```
 
 # Перетворюємо на таблицю для зручності
 ```{r}
-mising_data <- data.frame(
+missing_data <- data.frame(
   Column = names(missing_data),
   Missing = missing_data
 )
@@ -33,13 +44,14 @@ mising_data <- data.frame(
 
 # Побудова діаграми
 ```{r}
- p <- ggplot(missing_data, aes(x = reorder(Column, Missing), y = Missing)) +
+p <- ggplot(missing_data, aes(x = reorder(Column, Missing), y = Missing)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   coord_flip() +  # Поворот осі X для кращого вигляду
-  labs(title = "Кількість пропущених значень для кожного стовпця",
+  labs(title = "Кількість пропущених значень\nдля кожного стовпця",
        x = "Стовпець",
        y = "Кількість пропущених значень") +
-  theme_minimal()
-ggsave("../../plots/missed_data.png", p)
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave(here("plots", "missed_data.png"), p)
 ```
 
