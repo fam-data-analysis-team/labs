@@ -1,0 +1,42 @@
+```{r setup}
+library(tidyverse)
+library(here)
+library(anytime)
+library(naniar)
+```
+
+Завантажимо датасет:
+
+```{r}
+df <- read_csv(
+  "data/raw/air_quality.csv",
+  na = c("", "-", "ND"),
+  col_types = c(date = "character")
+)
+
+df$date <- anytime(df$date)
+```
+
+Кількість стовбців:
+
+```{r}
+df %>% ncol()
+```
+
+Кількість рядків:
+
+```{r}
+df %>% nrow()
+```
+
+Числові:
+
+```{r}
+df %>% select(where(is.numeric)) %>% ncol()
+```
+
+Факторні:
+
+```{r}
+(df %>% select(where(is.character)) %>% ncol())
+```
