@@ -13,7 +13,6 @@ theme_set(
 )
 
 dir.create(here("plots", "question3"), recursive = TRUE, showWarnings = FALSE)
-dir.create(here("plots", "question3", "county-box"), recursive = TRUE, showWarnings = FALSE)
 ```
 
 # Завантаженя датасету з файлу
