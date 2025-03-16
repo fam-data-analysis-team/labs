@@ -11,8 +11,8 @@
 .venv
 
 # data
-data
-!data/tw.json
+data/raw/air_quality.csv
+data/processed/
 
 # latex
 notes/**/*.aux

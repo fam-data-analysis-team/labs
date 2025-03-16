@@ -48,7 +48,7 @@ p <- ggplot(county_avg_AQI, aes(x = reorder(county, -avg_AQI), y = avg_AQI)) +
        y = "Середній AQI") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave(here("plots", "question4", "avg_aqi_by_country.png"), p, bg = "white", dpi = 200)
+ggsave(here("plots", "question4", "avg_aqi_by_county.png"), p, bg = "white", dpi = 200)
 ```
 
 # Аналіз сезонних змін

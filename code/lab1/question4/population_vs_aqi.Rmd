@@ -1,0 +1,109 @@
+```{r setup, include = FALSE}
+library(tidyverse)
+library(skimr)
+library(naniar)
+library(corrplot)
+library(GGally)
+library(gridExtra)
+library(ggpubr)
+library(ggridges)
+library(viridis)
+library(here)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    axis.text.x = element_text(size = 7)
+  )
+)
+```
+
+```{r}
+df <- readRDS(here("data", "processed", "air_quality_trimmed.rds"))
+pop <- readRDS(here("data", "processed", "population.rds"))
+```
+
+# Аналіз середніх показників якості повітря по регіонам
+
+```{r}
+county_avg_AQI <- df %>%
+  group_by(county) %>%
+  summarise(avg_AQI = mean(aqi, na.rm = TRUE)) %>%
+  arrange(desc(avg_AQI))
+
+county_avg_AQI <- left_join(county_avg_AQI, pop)
+```
+
+```{r}
+p1 <- ggplot(county_avg_AQI, aes(x = reorder(county, -avg_AQI), y = avg_AQI)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = NULL, y = "Середній AQI") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p2 <- ggplot(county_avg_AQI, aes(x = reorder(county, -avg_AQI), y = pop_2020)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = NULL, y = "Населення") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+title_grob <- textGrob("Середній рівень AQI за регіонами", gp = gpar(fontsize = 14))
+x_grob <- textGrob("Регіон", gp = gpar(fontsize = 14))
+
+p <- grid.arrange(
+  grobs = list(p1, p2),
+  top = title_grob,
+  bottom = x_grob,
+  ncol = 2
+)
+
+ggsave(here("plots", "question4", "avg_aqi_by_county_w_pop.png"), p, bg = "white", dpi = 200)
+```
+
+```{r}
+p1 <- ggplot(county_avg_AQI, aes(x = reorder(county, -avg_AQI), y = avg_AQI)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = NULL, y = "Середній AQI") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+p2 <- ggplot(county_avg_AQI, aes(x = reorder(county, -avg_AQI), y = density)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = NULL, y = "Щільність населення (осіб/км2)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+title_grob <- textGrob("Середній рівень AQI за регіонами", gp = gpar(fontsize = 14))
+x_grob <- textGrob("Регіон", gp = gpar(fontsize = 14))
+
+p <- grid.arrange(
+  grobs = list(p1, p2),
+  top = title_grob,
+  bottom = x_grob,
+  ncol = 2
+)
+
+ggsave(here("plots", "question4", "avg_aqi_by_county_w_dens.png"), p, bg = "white", dpi = 200)
+```
+
+```{r}
+p <- ggplot(county_avg_AQI, aes(x = pop_2020, y = avg_AQI)) +
+    geom_point(alpha = 0.5, color = "blue") +
+    geom_smooth(method = "lm", col = "red") +
+    labs(
+      title = "Залежність AQI у регіонах від к-ті населення",
+      x = "Населення",
+      y = "Середнє AQI"
+    )
+
+ggsave(here("plots", "question4", "avg_aqi_county_diagram_w_pop.png"), p, bg = "white", dpi = 200)
+```
+
+Значної кореляції теж немає
+
+```{r}
+cor(county_avg_AQI$avg_AQI, county_avg_AQI$pop_2020, method = "spearman")
+cor(county_avg_AQI$avg_AQI, county_avg_AQI$pop_2020, method = "pearson")
+cor(county_avg_AQI$avg_AQI, county_avg_AQI$density, method = "spearman")
+cor(county_avg_AQI$avg_AQI, county_avg_AQI$density, method = "pearson")
+```
