@@ -1,4 +1,4 @@
-﻿---
+---
 Питання №2
 Як зміни в концентрації озону ($O_3$)  та $SO_2$ впливають на загальний рівень забруднення повітря (AQI)?
 Крім цього додано графіки інших забруднбвачів, для загального розуміння
@@ -13,6 +13,7 @@ library(GGally)
 library(corrplot)
 library(gridExtra)
 library(ggpubr)
+library(viridis)
 library(here)
 
 theme_set(
@@ -28,46 +29,15 @@ theme_set(
 dir.create(here("plots", "question2"), recursive = TRUE, showWarnings = FALSE)
 ```
 
-
 ```{r}
 set.seed(0)
 df <- readRDS(here("data", "processed", "air_quality_trimmed.rds")) %>% slice_sample(n=100000)
 ```
 
-
-```{r}
-dt <- df %>%
-  filter(
-    !is.na(windspeed),
-    !is.na(`pm2.5`),
-    !is.na(pm10),
-    is.finite(windspeed),
-    is.finite(`pm2.5`),
-    is.finite(pm10)
-  )
-```
-
-
-# Для початкуу дамо відповідь на питання:
-# Чи є зв’язок між концентраціями різних забруднювачів? (кореляційна матриця)
-
-```{r}
-air_corr <- dt %>%
-  select(aqi, pm2.5, pm10, so2, nox, co, o3, windspeed) %>%
-  cor(use = "complete.obs")
-
-png(
-  here("plots", "question2", "air_corr_matrix.png"), 
-  width = 720, height = 720)
-
-air_corr_matrix <- corrplot(air_corr, method = "color", type = "upper", tl.cex = 0.8, addCoef.col = "black")
-dev.off()
-```
-
 # Boxplot (аналіз викидів та розподілу всіх показників забруднення)
 
 ```{r}
-boxplot_pollutants <- dt %>%
+boxplot_pollutants <- df %>%
   select(so2, nox, co, o3, no2, no) %>%
   pivot_longer(cols = everything(), names_to = "pollutant", values_to = "value") %>%
   ggplot(aes(x = pollutant, y = value, fill = pollutant)) +
@@ -81,7 +51,7 @@ ggsave(here("plots", "question2", "boxplot_pollutants.png"), boxplot_pollutants,
 # розподіл для o3 (гістограма)
 
 ```{r}
-o3_plot <- ggplot(dt, aes(x = o3)) +
+o3_plot <- ggplot(df, aes(x = o3)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black") +
   labs(title = "Розподіл o3 (озон)", x = "о3", y = "Частота")
 
@@ -90,7 +60,7 @@ ggsave(here("plots", "question2", "o3_plot.png"), o3_plot, dpi = 200)
 # за потреби можна додати інші забруднювачі
 
 ```{r}
-so2_plot <- ggplot(dt, aes(x = so2)) +
+so2_plot <- ggplot(df, aes(x = so2)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black") +
   labs(title = "Розподіл SO2", x = "so2", y = "Частота")
 
@@ -100,7 +70,7 @@ ggsave(here("plots", "question2", "so2_plot.png"), so2_plot, dpi = 200)
 # Діаграма розсіювання AQI ~ o3
 
 ```{r}
-scatter_plot <- ggplot(dt, aes(x = o3, y = aqi)) +
+scatter_plot <- ggplot(df, aes(x = o3, y = aqi)) +
   geom_point(alpha = 0.5, color = "blue") +
   geom_smooth(method = "lm", col = "red") +
   labs(title = "Залежність AQI від o3")
@@ -109,16 +79,35 @@ ggsave(here("plots", "question2", "scatter_plot.png"), scatter_plot, dpi = 200)
 
 ```
 
-# Взаємозв’язок AQI, o3, та інших забруднювачів
+# Розподіли O3 і SO2 по місяцях
 
 ```{r}
-seasonal_plot <- dt %>%
-  mutate(month = lubridate::month(date, label = TRUE)) %>%
-  ggplot(aes(x = month, y = o3, fill = month)) +
-  geom_boxplot() +
-  labs(title = "Розподіл AQI по місяцях", x = "Місяць", y = "AQI")
+df_seasonal <- df %>%
+  mutate(month = lubridate::month(date, label = TRUE)) %>% 
+  mutate(o3_median = median(o3, na.rm = TRUE), .by = month)
 
-ggsave(here("plots", "question2", "seasonal_plot.png"), seasonal_plot, dpi = 200)
+seasonal_plot <- df_seasonal %>%
+  ggplot(aes(x = month, y = o3, fill = o3_median)) +
+  geom_boxplot() +
+  labs(title = "Кількість O3 по місяцях", x = "Місяць", y = "O3") + 
+  scale_fill_viridis(option = "viridis", name = "Медіана", direction = -1)
+
+ggsave(here("plots", "question2", "seasonal_o3.png"), seasonal_plot, bg = "white", dpi = 200)
+```
+
+```{r}
+df_seasonal <- df %>%
+  mutate(month = lubridate::month(date, label = TRUE)) %>% 
+  mutate(log_so2 = log(so2)) %>% 
+  mutate(log_so2_median = median(log_so2, na.rm = TRUE), .by = month)
+
+seasonal_plot <- df_seasonal %>%
+  ggplot(aes(x = month, y = log_so2, fill = log_so2_median)) +
+  geom_boxplot() +
+  labs(title = "Кількість SO2 по місяцях", x = "Місяць", y = "log(SO2)") + 
+  scale_fill_viridis(option = "viridis", name = "Медіана", direction = -1)
+
+ggsave(here("plots", "question2", "seasonal_so2.png"), seasonal_plot, bg = "white", dpi = 200)
 ```
 
 ---

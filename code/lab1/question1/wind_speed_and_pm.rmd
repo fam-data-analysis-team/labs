@@ -2,13 +2,16 @@
 Питання №1
 Чи впливає швидкість вітру (windspeed) на концентрацію частинок PM2.5 і PM10?
 ---
+
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(skimr)
-library(ggplot2)
+library(scales)
 library(naniar)
-library(GGally)
 library(corrplot)
+library(GGally)
+library(patchwork) 
+library(grid)
 library(gridExtra)
 library(ggpubr)
 library(here)
@@ -33,60 +36,46 @@ set.seed(0)
 df <- readRDS("data/processed/air_quality_trimmed.rds") %>% slice_sample(n=100000)
 ```
 
-
-
-```{r}
-dt <- df %>%
-  filter(
-    !is.na(windspeed),
-    !is.na(`pm2.5`),
-    !is.na(pm10),
-    is.finite(windspeed),
-    is.finite(`pm2.5`),
-    is.finite(pm10)
-  )
-```
-
 # Вплив швидкості вітру на концентрацію частинок PM2.5 і PM10
 
 ```{r}
-wind_speed_vs_pm <- ggplot(dt, aes(x = windspeed)) +
-  geom_point(aes(y = pm2.5, color = "PM2.5"), alpha = 0.5, na.rm = TRUE) +
-  geom_point(aes(y = pm10, color = "PM10"), alpha = 0.5, na.rm = TRUE) +
-  labs(title = "Вплив швидкості вітру\nна концентрацію частинок PM2.5 і PM10",
-       x = "Швидкість вітру (windspeed)",
-       y = "Концентрація частинок",
-       color = "Тип частинок")
+windspeed_vs_pm2.5 <- ggplot(df, aes(x = windspeed)) +
+  geom_point(aes(y = pm2.5), color = hue_pal()(2)[1], alpha = 0.1, na.rm = TRUE) +
+  labs(x=NULL, y=NULL)
 
-ggsave(here("plots", "question1", "wind_speed_vs_pm.png"), wind_speed_vs_pm, dpi = 200)
+windspeed_vs_pm10 <- ggplot(df, aes(x = windspeed)) +
+  geom_point(aes(y = pm10), color = hue_pal()(2)[2], alpha = 0.1, na.rm = TRUE) +
+  labs(x=NULL, y=NULL)
+
+title_grob <- textGrob("Вплив вітру на концентрацію частинок PM2.5 і PM10", gp = gpar(fontsize = 14))
+x_grob <- textGrob("Швидкість вітру (м/с)", gp = gpar(fontsize = 14))
+y_grob <- textGrob("Концентрація частинок", gp = gpar(fontsize = 14), rot=90)
+
+windspeed_vs_pm <- grid.arrange(
+  grobs = list(windspeed_vs_pm2.5, windspeed_vs_pm10),
+  top = title_grob,
+  bottom = x_grob,
+  left = y_grob,
+  ncol = 2
+)
+
+ggsave(here("plots", "question1", "wind_speed_vs_pm.png"), windspeed_vs_pm, dpi = 200)
 ```
 
 # розподіл для pm2.5 (гістограма)
 
 ```{r}
-pm2_5_gist <- ggplot(dt, aes(x = pm2.5)) +
+pm2_5_gist <- ggplot(df, aes(x = pm2.5)) +
     geom_histogram(binwidth = 5, fill = "blue", color = "black") +
     labs(title = "Розподіл PM2.5", x = "PM2.5", y = "Частота")
 
 ggsave(here("plots", "question1", "pm2_5_gist.png"), pm2_5_gist, dpi = 200)
 ```
 
-# Кореляційна матриця
-
-```{r}
-corr_matrix <- cor(dt %>% select(where(is.numeric)), use = "complete.obs", method = "spearman")
-
-png(
-  here("plots", "question1", "corr_matrix_plot.png"), 
-  width = 720, height = 720)
-corrplot(corr_matrix, method = "color", type = "upper", tl.cex = 1, addCoef.col = "black")
-dev.off()
-```
-
 # Діаграма розсіювання AQI ~ PM2.5
 
 ```{r}
-aqi_pm2_5_diagram <- ggplot(dt, aes(x = pm2.5, y = aqi)) +
+aqi_pm2_5_diagram <- ggplot(df, aes(x = pm2.5, y = aqi)) +
     geom_point(alpha = 0.5, color = "blue") +
     geom_smooth(method = "lm", col = "red") +
     labs(title = "Залежність AQI від PM2.5")
@@ -94,10 +83,21 @@ aqi_pm2_5_diagram <- ggplot(dt, aes(x = pm2.5, y = aqi)) +
 ggsave(here("plots", "question1", "aqi_pm2_5_diagram.png"), aqi_pm2_5_diagram, dpi = 200)
 ```
 
+# Діаграма розсіювання AQI ~ PM10
+
+```{r}
+aqi_pm10_diagram <- ggplot(df, aes(x = pm10, y = aqi)) +
+    geom_point(alpha = 0.5, color = "blue") +
+    geom_smooth(method = "lm", col = "red") +
+    labs(title = "Залежність AQI від PM10")
+
+ggsave(here("plots", "question1", "aqi_pm10_diagram.png"), aqi_pm10_diagram, dpi = 200)
+```
+
 # Взаємозв’язок AQI, PM2.5, та інших забруднювачів
 
 ```{r}
-aqi_pm_polutants <- ggplot(dt, aes(x = pm2.5, y = aqi, size = co)) +
+aqi_pm_polutants <- ggplot(df, aes(x = pm2.5, y = aqi, size = co)) +
     geom_point(alpha = 0.6) +
     labs(title = "Взаємозв’язок AQI, PM2.5, та інших забруднювачів")
 
@@ -107,7 +107,7 @@ ggsave(here("plots", "question1", "aqi_pm_polutants.png"), aqi_pm_polutants, dpi
 # QQ-графік для PM2.5
 
 ```{r}
-qq_pm2_5 <- ggqqplot(dt$`pm2.5`, conf.int = TRUE) +
+qq_pm2_5 <- ggqqplot(df$`pm2.5`, conf.int = TRUE) +
     labs(title = "QQ-графік для PM2.5")
 
 ggsave(here("plots", "question1", "qq_pm2_5.png"), qq_pm2_5, dpi = 200)
@@ -116,7 +116,7 @@ ggsave(here("plots", "question1", "qq_pm2_5.png"), qq_pm2_5, dpi = 200)
 # QQ-графік для PM10
 
 ```{r}
-qq_pm10 <- ggqqplot(dt$`pm10`, conf.int = TRUE) +
+qq_pm10 <- ggqqplot(df$`pm10`, conf.int = TRUE) +
     labs(title = "QQ-графік для PM10")
 
 ggsave(here("plots", "question1", "qq_pm10.png"), qq_pm10, dpi = 200)
@@ -125,7 +125,7 @@ ggsave(here("plots", "question1", "qq_pm10.png"), qq_pm10, dpi = 200)
 # Scatter plot (вплив швидкості і напрямку вітру на PM2.5 і PM10 по регіонах)
 
 ```{r}
-scatter_pm2_5_region <- ggplot(dt, aes(x = windspeed, y = pm2.5, color = winddirec)) +
+scatter_pm2_5_region <- ggplot(df, aes(x = windspeed, y = pm2.5, color = winddirec)) +
   geom_point(alpha = 0.5) +
   facet_wrap(~county) +
   labs(title = "Вплив швидкості вітру на PM2.5 у різних регіонах",
@@ -138,7 +138,7 @@ ggsave(here("plots", "question1", "scatter_pm2_5_region.png"), scatter_pm2_5_reg
 ```
 
 ```{r}
-scatter_pm10_region <- ggplot(dt, aes(x = windspeed, y = pm10, color = winddirec)) +
+scatter_pm10_region <- ggplot(df, aes(x = windspeed, y = pm10, color = winddirec)) +
   geom_point(alpha = 0.5) +
   facet_wrap(~county) +
   labs(title = "Вплив швидкості вітру на PM10 у різних регіонах",
