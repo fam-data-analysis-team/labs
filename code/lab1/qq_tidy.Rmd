@@ -2,6 +2,7 @@
 library(tidyverse)
 library(qqplotr)
 library(here)
+library(zeallot)
 
 theme_set(
   theme_minimal() +
@@ -14,6 +15,11 @@ theme_set(
 )
 
 dir.create(here("plots", "qq_tidy"), recursive = TRUE, showWarnings = FALSE)
+
+splitAt <- function(x, pos) {
+  split(x, cumsum(seq_along(x) %in% c(pos))) %>%
+  unname()
+}
 ```
 
 # Завантаженя датасету з файлу
@@ -30,12 +36,34 @@ df_gathered <- gather(df %>% select(where(is.numeric)))
 # QQ-графіки для нормального розподілу
 
 ```{r}
-p <- ggplot(df_gathered, aes(sample = value)) +
-  stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
-  facet_wrap(~key, scales = "free") +
-  labs(x = "Квантилі нормального розподілу", y = "Квантилі розподілу колонки")
+plot_qq <- function(input_df) {
+  input_df %>% ggplot(aes(sample = value)) +
+    stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
+    facet_wrap(~key, scales = "free") +
+    labs(x = "Квантилі нормального розподілу", y = "Квантилі розподілу колонки")
+}
 
+p <- plot_qq(df_gathered)
 ggsave(here("plots", "qq_tidy", "qq.png"), p, width = 12, height = 12, bg = "white")
+```
+
+Для презентації:
+
+```{r}
+names <- unique(df_gathered$key)
+c(names_1, names_2)  %<-% splitAt(names, ceiling(length(names) / 2))
+
+p1 <- plot_qq(df_gathered[df_gathered$key %in% names_1, ])
+p2 <- plot_qq(df_gathered[df_gathered$key %in% names_2, ])
+
+ggsave(
+  here("plots", "qq_tidy", "qq-p1.png"), 
+  p1, width = 14, height = 10, 
+  bg = "white")
+ggsave(
+  here("plots", "qq_tidy", "qq-p2.png"), 
+  p2, width = 14, height = 10, 
+  bg = "white")
 ```
 
 # QQ-графіки для логнормального розподілу
@@ -43,10 +71,35 @@ ggsave(here("plots", "qq_tidy", "qq.png"), p, width = 12, height = 12, bg = "whi
 Розподіл колонок (крім winddirect) ближче до логнормального, ніж нормального
 
 ```{r}
-p <- ggplot(df_gathered, aes(sample = log(value))) +
-  stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
-  facet_wrap(~key, scales = "free") +
-  labs(x = "Квантилі нормального розподілу", y = "ln(Квантилі розподілу колонки)")
+plot_qq_log <- function(input_df) {
+  ggplot(input_df, aes(sample = log(value))) +
+    stat_qq_point(size = 0.5) + stat_qq_line() + stat_qq_band() +
+    facet_wrap(~key, scales = "free") +
+    labs(
+      x = "Квантилі нормального розподілу",
+      y = "ln(Квантилі розподілу колонки)"
+    )
+} 
 
+p <- plot_qq_log(df_gathered)
 ggsave(here("plots", "qq_tidy", "qq-log.png"), p, bg = "white")
+```
+
+Для презентації:
+
+```{r}
+names <- unique(df_gathered$key)
+c(names_1, names_2)  %<-% splitAt(names, ceiling(length(names) / 2))
+
+p1 <- plot_qq_log(df_gathered[df_gathered$key %in% names_1, ])
+p2 <- plot_qq_log(df_gathered[df_gathered$key %in% names_2, ])
+
+ggsave(
+  here("plots", "qq_tidy", "qq-log-p1.png"), 
+  p1, width = 14, height = 10, 
+  bg = "white")
+ggsave(
+  here("plots", "qq_tidy", "qq-log-p2.png"), 
+  p2, width = 14, height = 10, 
+  bg = "white")
 ```

@@ -170,13 +170,17 @@
 \begin{frame}
   \frametitle{Пропущені дані}
 
+  Був використаний \textit{tidy} набір даних.
+
   \begin{center}
-    \includegraphics[height=3in]{plots/missed_data.png}
+    \includegraphics[height=2.8in]{plots/missed_data.png}
   \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Викиди}
+
+  Був використаний \textit{trimmed} набір даних.
 
   Для пошуку викидів використаємо \textit{фільтр Гампеля}:
 
@@ -187,7 +191,7 @@
   \frametitle{Викиди}
 
   \begin{center}
-    \includegraphics[height=3in]{plots/outliers/count-bar-county.png}
+    \includegraphics[height=3in]{plots/outliers/count-bar-county-p1.png}
   \end{center}
 \end{frame}
 
@@ -195,7 +199,23 @@
   \frametitle{Викиди}
 
   \begin{center}
-    \includegraphics[height=3in]{plots/outliers/scatter.png}
+    \includegraphics[height=3in]{plots/outliers/count-bar-county-p2.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Викиди}
+
+  \begin{center}
+    \includegraphics[height=3in]{plots/outliers/scatter-p1.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Викиди}
+
+  \begin{center}
+    \includegraphics[height=3in]{plots/outliers/scatter-p2.png}
   \end{center}
 \end{frame}
 
@@ -217,19 +237,36 @@
   Для побудови QQ-графіків, випадковим чином виберемо з датасету 10\,000 рядків.
 
   \begin{center}
-    \includegraphics[height=2.5in]{plots/qq_tidy/qq.png}
+    \includegraphics[height=2.5in]{plots/qq_tidy/qq-p1.png}
   \end{center}
 \end{frame}
 
 \begin{frame}
   \frametitle{Розподіли змінних}
 
-  Розподіл змінних (крім winddirect) ближче до логнормального, ніж нормального:
-
   \begin{center}
-    \includegraphics[height=2.5in]{plots/qq_tidy/qq-log.png}
+    \includegraphics[height=3in]{plots/qq_tidy/qq-p2.png}
   \end{center}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Розподіли змінних}
+
+  Розподіл змінних (крім \textit{winddirect}) ближче до логнормального, ніж нормального:
+
+  \begin{center}
+    \includegraphics[height=2.5in]{plots/qq_tidy/qq-log-p1.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Розподіли змінних}
+
+  \begin{center}
+    \includegraphics[height=3in]{plots/qq_tidy/qq-log-p2.png}
+  \end{center}
+\end{frame}
+
 
 \begin{frame}
   \section{Питання EDA}

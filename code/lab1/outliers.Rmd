@@ -16,6 +16,11 @@ theme_set(
 )
 
 dir.create(here("plots", "outliers"), recursive = TRUE, showWarnings = FALSE)
+
+splitAt <- function(x, pos) {
+  split(x, cumsum(seq_along(x) %in% c(pos))) %>%
+  unname()
+}
 ```
 
 Завантажимо датасет:
@@ -76,7 +81,10 @@ ggsave(here("plots", "outliers", "count-bar.png"), p, width = 15)
 Для кожної числової змінної побудуємо scatter plot, де X - дата, Y - значення змінної:
 
 ```{r}
-p <- df %>%
+outlier_name <- "Відсічення викидів"
+
+plot_scatter <- function (input_df) {
+input_df %>%
   select(where(is.numeric) | "date") %>%
   pivot_longer(!date, names_to = "key", values_to = "value") %>%
   group_by(key) %>%
@@ -89,17 +97,52 @@ p <- df %>%
   ggplot(aes(x = date, y = value, group = 1)) +
   facet_wrap(~key, scales = "free") +
   geom_point() +
-  geom_hline(aes(yintercept = to), colour = "red", lwd = 1.5) + # Позначимо лінії відсічення
-  geom_hline(aes(yintercept = bo), colour = "red", lwd = 1.5) +
-  labs(x = "Дата", y = "Значення")
+  geom_hline(
+    aes(yintercept = bo, linetype = outlier_name), 
+    color = "red", 
+    lwd = 1.5
+  ) +
+  geom_hline(
+    aes(yintercept = to, linetype = outlier_name), 
+    color = "red", 
+    lwd = 1.5
+  ) +
+  scale_linetype_manual(values = 2) +
+  labs(x = "Дата", y = "Значення", linetype = NULL)
+}
 
-ggsave(here("plots", "outliers", "scatter.png"), p, width = 15, height = 15)
+p <- plot_scatter(df)
+ggsave(
+  here("plots", "outliers", "scatter.png"),
+  p,
+  width = 17, height = 15,
+  bg = "white")
+```
+
+Для презентації:
+
+```{r}
+names <- unique(df_gathered$key)
+c(names_1, names_2)  %<-% splitAt(names, ceiling(length(names) / 2))
+
+p1 <- plot_scatter(df[c("date", names_1)])
+p2 <- plot_scatter(df[c("date", names_2)])
+
+ggsave(
+  here("plots", "outliers", "scatter-p1.png"),
+  p1, width = 15, height = 10,
+  bg = "white")
+ggsave(
+  here("plots", "outliers", "scatter-p2.png"),
+  p2, width = 15, height = 10,
+  bg = "white")
 ```
 
 Кількість викидів залежно від регіону:
 
 ```{r}
-p <- df %>%
+plot_bar_county <- function (input_df) {
+input_df %>%
   group_by(county) %>%
   summarise(across(
     where(is.numeric),
@@ -115,8 +158,29 @@ p <- df %>%
   facet_wrap(~key, scales = "free") +
   labs(x = "Регіон", y = "Кількість викидів") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+}
+
+p <- plot_bar_county(df)
+ggsave(
+  here("plots", "outliers", "count-bar-county.png"),
+  p, width = 22, height = 15)
+```
+
+Для презентації:
+
+```{r}
+names <- unique(df_gathered$key)
+c(names_1, names_2)  %<-% splitAt(names, ceiling(length(names) / 2))
+
+p1 <- plot_bar_county(df[c("county", names_1)])
+p2 <- plot_bar_county(df[c("county", names_2)])
 
 ggsave(
-  here("plots", "outliers", "count-bar-county.png"), 
-  width = 22, height = 15)
+  here("plots", "outliers", "count-bar-county-p1.png"),
+  p1, width = 14, height = 10,
+  bg = "white")
+ggsave(
+  here("plots", "outliers", "count-bar-county-p2.png"),
+  p2, width = 14, height = 10,
+  bg = "white")
 ```

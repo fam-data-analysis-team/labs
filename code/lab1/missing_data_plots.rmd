@@ -11,6 +11,7 @@ library(GGally)
 library(corrplot)
 library(gridExtra)
 library(ggpubr)
+library(scales)
 library(here)
 
 theme_set(
@@ -41,17 +42,18 @@ missing_data <- data.frame(
 )
 ```
 
-
 # Побудова діаграми
+
 ```{r}
 p <- ggplot(missing_data, aes(x = reorder(Column, Missing), y = Missing)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_bar(stat = "identity") +
   coord_flip() +  # Поворот осі X для кращого вигляду
   labs(title = "Кількість пропущених значень\nдля кожного стовпця",
        x = "Стовпець",
        y = "Кількість пропущених значень") +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = function(x) 
+    sprintf("%0.f\n(%0.f%%)", x, (x / nrow(dt)) * 100))
 
-ggsave(here("plots", "missed_data.png"), p)
+ggsave(here("plots", "missed_data.png"), p, bg = "white")
 ```
-

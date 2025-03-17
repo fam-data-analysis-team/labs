@@ -13,6 +13,7 @@
 # data
 data/raw/air_quality.csv
 data/processed/
+data/tw_named.json
 
 # latex
 notes/**/*.aux
