@@ -10,7 +10,7 @@ library(scales)
 library(naniar)
 library(corrplot)
 library(GGally)
-library(patchwork) 
+library(patchwork)
 library(grid)
 library(gridExtra)
 library(ggpubr)
@@ -134,7 +134,14 @@ scatter_pm2_5_region <- ggplot(df, aes(x = windspeed, y = pm2.5, color = winddir
        color = "Напрямок вітру") +
   theme(strip.text.x = element_text(size = 7.5, hjust = 0.5))
 
-ggsave(here("plots", "question1", "scatter_pm2_5_region.png"), scatter_pm2_5_region, dpi = 200, bg = "white")
+ggsave(
+  here("plots", "question1", "scatter_pm2_5_region.png"),
+  scatter_pm2_5_region,
+  dpi = 200,
+  width = 16,
+  height = 10,
+  bg = "white"
+)
 ```
 
 ```{r}
@@ -146,6 +153,13 @@ scatter_pm10_region <- ggplot(df, aes(x = windspeed, y = pm10, color = winddirec
        y = "PM10",
        color = "Напрямок вітру") +
   theme(strip.text.x = element_text(size = 7.5, hjust = 0.5))
-       
-ggsave(here("plots", "question1", "scatter_pm10_region.png"), scatter_pm10_region, dpi = 200, bg = "white")
+
+ggsave(
+  here("plots", "question1", "scatter_pm10_region.png"),
+  scatter_pm10_region,
+  width = 16,
+  height = 10,
+  dpi = 200,
+  bg = "white"
+)
 ```
