@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc} % Підтримка UTF-8
 \usepackage[ukrainian]{babel} % Підтримка української мови
-\usepackage[ukrainian=nohyphenation]{hyphsubst} 
+\usepackage[ukrainian=nohyphenation]{hyphsubst} % Без переносу слів в українській
 \setlength{\emergencystretch}{3cm}
 \usepackage{booktabs}
 \usepackage[T2A]{fontenc} % Кодова таблиця для кирилиці
@@ -16,6 +16,7 @@
 \usepackage{csquotes}
 \usepackage{pgfplotstable}
 \usepackage{xcolor}      % For custom colors
+\usepackage{colortbl}
 
 \pagestyle{fancy}            % Встановлюємо fancy стиль для колонтитулів
 \fancyhf{}                   % Очищуємо всі колонтитули
@@ -39,6 +40,7 @@
 }
 
 \graphicspath{{../../plots/}}
+
 
 \newcommand\warningsign{⚠}
 
@@ -547,28 +549,42 @@ after\_reform     &  654783       &  5227425       \\
     \quad \textit{Був використаний trimmed набір даних}
 
     \includegraphics[width=6in]{question2/o3_plot.png}
+    
     Гістограма показує, що більшість значень $O_3$ знаходяться в межах 0-50 одиниць, а більш високі концентрації трапляються рідко.
     Це підтверджує, що озон зазвичай має помірний рівень, але все ж може впливати на AQI, особливо за високих значень.
+    
     \includegraphics[width=6in]{question2/so2_plot.png}
+    
     Гістограма показує, що більшість значень $SO_2$ дуже малі (близькі до нуля).
     Це може свідчити про незначний внесок $SO_2$ у загальний рівень забруднення AQI у вибраних даних.   
+    
     \includegraphics[width=6in]{question2/scatter_plot.png}
+    
     Спостерігається позитивна залежність між концентрацією $O_3$ та AQI: зростання озону супроводжується збільшенням індексу забруднення.
     Проте розсіювання значень значне, що може вказувати на вплив інших чинників.
+    
+    \begin{center}
     \includegraphics[width=6in]{question2/boxplot_pollutants.png}
+    \end{center}
+
     Спостерігається підвищена концентрація $O_3$ та відповідно відносно не значна $SO_2$.
     
     \item Як змінюється якість повітря (status) протягом доби в різних районах?
     
     \quad \textit{Був використаний tidy набір даних}
 
+    \begin{center}
     \includegraphics[width=6in]{question3/box.png}
+    \end{center}
     Аналізуючи даний графік, можна стверджувтаи,що якість повітря трохи покращується у другій половині дня.
+    Також можемо розглянути детальніше регіони та зміни якости повітря. 
     
-    Також можемо розглянути детальніше декілкьа регіонів та зміни якости повітря. 
-    \includegraphics[width=6in]{question3/county-box/Changhua County.png}
-    \includegraphics[width=6in]{question3/county-box/Tainan City.png}
-    Бачимо, що 
+    \begin{center}
+    \includegraphics[width=6in]{question3/county-box-p1.png}
+    \includegraphics[width=6in]{question3/county-box-p2.png}
+    \end{center}
+
+    Бачимо, що проятгом доби по регіонам теж відбуваються незначні зміни  
 
     \item Які регіони (county) мають найвищий середній рівень забруднення повітря (AQI) протягом року?
     
@@ -577,92 +593,274 @@ after\_reform     &  654783       &  5227425       \\
     Всі наступні графіки, будуть будуватися на основі даних за 2016, 2017, 2023 та 2024 роки.
     Для розуміння числових даних, розглянемо 10 регіонів з найвищим рівнем AQI за відповідні роки.
  
-    \begin{tabular}{ccc}
-        \textbf{Year} & \textbf{Сounty} & \textbf{avg\_AQI} \\
-        2016 &       Chiayi City &   120.31 \\
-        2016 &   Kaohsiung City &   112.10 \\
-        2016 &       Tainan City &    99.60 \\
-        2016 &   Pingtung County &    97.15 \\
-        2016 &    Yunlin County &    91.23 \\
-        2016 &    Chiayi County &    88.83 \\
-        2016 &    Nantou County &    83.34 \\
-        2016 &  Changhua County &    81.68 \\
-        2016 &    Kinmen County &    81.60 \\
-        2016 &   Taichung City &    77.96 \\
-    \end{tabular}
-
-
-
-    Візуалізуючи отримуємо наступне:
-    \includegraphics[width=6in]{question4/avg_aqi_by_country.png}
-
-    Якщо розглядати рівень якости повітря по сезонно, то можна відмітити, що влітку показники 
-    \includegraphics[width=6in]{question4/seasonal_change.png}
+    \begin{table}
+        \centering
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \begin{tabular}{ccc}
+                \textbf{Year} & \textbf{County} & \textbf{avg\_AQI} \\
+                \toprule
+                2016 & Chiayi City & 120.31 \\
+                2016 & Kaohsiung City & 112.10 \\
+                2016 & Tainan City & 99.60 \\
+                2016 & Pingtung County & 97.15 \\
+                2016 & Yunlin County & 91.23 \\
+                2016 & Chiayi County & 88.83 \\
+                2016 & Nantou County & 83.34 \\
+                2016 & Changhua County & 81.68 \\
+                2016 & Kinmen County & 81.60 \\
+                2016 & Taichung City & 77.96 \\
+                \midrule
+            \end{tabular}
+            \caption{Середнє AQI за 2016}
+        \end{minipage}
+        \hspace{0.05\textwidth} % Додає відстань між таблицями
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \begin{tabular}{ccc}
+                \textbf{Year} & \textbf{County} & \textbf{avg\_AQI} \\
+                \toprule
+                2017 & Kinmen County & 79.77 \\
+                2017 & Kaohsiung City & 79.31 \\
+                2017 & Yunlin County & 77.24 \\
+                2017 & Nantou County & 76.42 \\
+                2017 & Tainan City & 74.00 \\
+                2017 & Chiayi County & 73.40 \\
+                2017 & Changhua County & 72.39 \\
+                2017 & Chiayi City & 71.89 \\
+                2017 & Pingtung County & 70.10 \\
+                2017 & Lienchiang County & 66.44 \\
+                \midrule
+            \end{tabular}
+            \caption{Середнє AQI за 2017}
+        \end{minipage}
+    \end{table}
     
+    \begin{table}
+        \centering
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \begin{tabular}{ccc}
+                \textbf{Year} & \textbf{County} & \textbf{avg\_AQI} \\
+                \toprule
+                2023&	Kinmen County	   &64.90551\\	
+                2023&	Lienchiang County  &61.09091\\	
+                2023&	Chiayi City	       &60.36290\\	
+                2023&	Chiayi County	   &59.45318\\	
+                2023&	Kaohsiung City	   &59.29308\\	
+                2023&	Tainan City	       &56.54597\\	
+                2023&	Yunlin County	   &54.93570\\	
+                2023&	Changhua County	   &54.02576\\	
+                2023&	Nantou County	   &52.30822\\	
+                2023&	Pingtung County	   &50.73770\\
+                \midrule
+            \end{tabular}
+            \caption{Середнє AQI за 2016}
+        \end{minipage}
+        \hspace{0.05\textwidth} % Додає відстань між таблицями
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \begin{tabular}{ccc}
+                \textbf{Year} & \textbf{County} & \textbf{avg\_AQI} \\
+                \toprule
+                2024&	Kinmen County	   &66.82609	\\	
+                2024&	Lienchiang County  &58.25882	\\	
+                2024&	Chiayi County	   &55.87912	\\	
+                2024&	Chiayi City	       &55.83784	\\	
+                2024&	Yunlin County	   &54.74169	\\	
+                2024&	Kaohsiung City	   &54.05860	\\	
+                2024&	Tainan City	       &53.17339	\\	
+                2024&	Nantou County	   &51.36140	\\	
+                2024&	Changhua County	   &51.12869	\\	
+                2024&	Taichung City	   &49.87937	\\
+                \midrule
+            \end{tabular}
+            \caption{Середнє AQI за 2017}
+        \end{minipage}
+    \end{table}
+    
+    Візуалізуючи чітко можна відмітити найбільш забруднені регіони.
+    \begin{center}
+    \includegraphics[width=6in]{question4/avg_aqi_by_county.png}
+    \end{center}
+
+    Також можемо порівняти якість повітря в залежності від щільності населення. Проте це не дає однознанчої відповіді чи повязані ці значення між собою.
+    \begin{center}
+    \includegraphics[width=6in]{question4/avg_aqi_by_county_w_dens.png}
+    \includegraphics[width=6in]{question4/avg_aqi_by_county_w_pop.png}
+    \end{center}
+
+    Якщо розглядати рівень якости повітря по сезонно, то можна відмітити, що влітку показники явно кращі, ніж в холодні пори року. Це може бути спричинено погодиними умовами, такі як сезони дощі, часті пориви вітру та інше.
+    
+    \begin{center}
+    \includegraphics[width=6in]{question4/seasonal_change_ridgeline.png}
+    \includegraphics[width=6in]{question4/seasonal_change.png}
+    \end{center} 
+
     \item Як змінився загальний рівень забруднення по регіонам після початку реформи?
     
     \quad \textit{Був використаний tidy набір даних}
 
+    Для загального кількісного розуміння можна переглянути таблиці з результатми середнього значення в попередньому питанні. 
+    Далі візуалізуємо середнє значення якости повітря за 5 місяців від початку вимірювання показників і до початку реформи. Відповідно так само візуалізуємо за останні 5 місців вже під час реформи. 
+    Задля розуміння рівня по всій країні, обрано графік map. 
+    
+    \begin{center}
     \includegraphics[width=6in]{question5/map_after_reform.png}
     \includegraphics[width=6in]{question5/map_before_reform.png}
     \includegraphics[width=6in]{question5/region_comparison_aqi.png}
+    \end{center}
+
+    Отже, можна однозначно сказати, що загальний рівень якости повітря по регіонам покращується після реформи, це можна відмітити по насиченості забарвлення регіонів. 
+    Також варто відмітити не рівномірний розподіл (зафарбовування). Провівши дослідження по таким питаняням як кількість населення та промислові регіони, було виявлено наступне: 
+    \begin{figure}
+        \centering
+        \includegraphics[width=6in]{../../notes/media/Study-area-of-Taiwan-representative-rivers-population-density-and-industrial-area-map.png}
+        \caption{Мапа розміщення промислових зон та кількості населення по регіонам}
+        \label{fig:map_after_reform}
+    \end{figure}
+    \footnote{\href{https://www.researchgate.net/figure/Study-area-of-Taiwan-representative-rivers-population-density-and-industrial-area-map_fig1_327245998}{Покликання на ресурс з мапою та дослідженням}}
     
+
+    \begin{itemize}
+        \item На мапі, що ми отримали, темними кольорами зафарбовані промислові та густо населені регіони. 
+        Отже це може бути одним з факторів погіршення якости повітря загалом у республіці.
+        \item
+            \begin{quote}
+            До найбільш серйозних екологічних проблем відносяться забруднення повітря, забруднення води промисловими водами та каналізацією, 
+            зараження джерел питної води, незаконне вивезення тварин, занесених до Червоної книги, а також
+            забруднення радіоактивними відходами. Загрозу здоров'ю населення і місцевих лісах становлять кислотні дощі. 
+            На думку місцевих вчених, понад половина кислотних опадів потрапляє на острів з материкової частини Китаю під час періоду мусонів.
+            \end{quote}
+            \href{https://uk.wikipedia.org/wiki/%D0%A2%D0%B0%D0%B9%D0%B2%D0%B0%D0%BD%D1%8C_(%D0%BE%D1%81%D1%82%D1%80%D1%96%D0%B2)}{Покликання на статтю у Вікіпедії}
+            
+            Тобто саме з південних регіони найближче до материкової частини Китаю, тому "страждають" від природних катаклізмів.
+        
+    \end{itemize} 
+
     \item Чи існує залежність між початком реформ та показниками забруднення?
     
     \quad \textit{Був використаний tidy набір даних}
 
-    \includegraphics[width=6in]{question6/line.png}
+    \begin{center}
+    \includegraphics[width=6in]{question6/line-p1.png}
+    \includegraphics[width=6in]{question6/line-p2.png}
+    \end{center}
 
-
+    Аналізуючи діаграму розсіювання для кожного типу забруднювача можна сказати, що помітні зміни і залежність від реформи зявилась лише у $SO_2$. Також не значне покращення є у $NO$.
+    Всі інші показники відносно без змін. Чим це може бути обгрунтовано? Можливо зменшили викиди певні промислові регіони.
     
     \item Як змінюється якість повітря залежно від станції виміру у містах?
     
     \quad \textit{Був використаний trimmed набір даних}
 
+    \begin{center}
     \includegraphics[width=6in]{question7/bar-count.png}
-    \includegraphics[width=6in]{question7/box-county.png}
+    \includegraphics[width=6in]{question7/box-county-p1.png}
+    \includegraphics[width=6in]{question7/box-county-p2.png}
     \includegraphics[width=6in]{question7/density.png}
     \includegraphics[width=6in]{question7/qq.png}
+    \end{center}
+    Найбільший MAD у `winddirec`. Це можна пояснити природною різницею напрямку вітру залежно від місця знахоження.
+
+    На графіку видно, що зміна показників не є рівномірно розподілена по регіонам. В загальному можна зробити висновок, що для більшості 
+показників зміна значення залежно від станції вимірювання не є суттєвою.
 \end{enumerate}
 
 \pagebreak
 
 \newpage
 \section{ВИСНОВОК}
-В результаті виконання лабораторної роботи було проведено розвідковий аналіз результатів виміру якості повітрю регіонів Тайваню з 2016 року по 2024. 
+Питання якости повітря в світі зараз досить акутальне, тому було стандартизовано деякі показники, які дозволяють розуміти стан повітря.
+Нижче наведена загальна таблиця, яка показує шкалу та рекомендації по AQI.
+\begin{table}
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \setlength{\arrayrulewidth}{1pt}
+    \begin{tabular}{|c|c|p{8cm}|}
+        \hline
+        \rowcolor{gray!20} \textbf{AQI} & \textbf{Рівень якості повітря} & \textbf{Рекомендації} \\
+        \hline
+        \rowcolor{green!40} 0-50 & Добрий & Якість повітря відмінна. Можна безпечно перебувати на вулиці. Ідеально для занять спортом. \\
+        \hline
+        \rowcolor{yellow!40} 51-100 & Помірний & Прийнятна якість повітря. Чутливим групам слід обмежити тривалі прогулянки. Можливі незначні проблеми для алергіків. \\
+        \hline
+        \rowcolor{orange!60} 101-150 & Шкідливий для чутливих груп & Люди з респіраторними захворюваннями повинні обмежити перебування надворі. Дітям та літнім людям рекомендується залишатися вдома. Уникати активного спорту на відкритому повітрі. \\
+        \hline
+        \rowcolor{red!60} 151-200 & Шкідливий & Всім рекомендується обмежити перебування надворі. Використовувати захисні маски при виході. Зачиняти вікна в приміщеннях. \\
+        \hline
+        \rowcolor{purple!50} 201-300 & Дуже шкідливий & Серйозна загроза для здоров’я. Максимально обмежити вихід на вулицю. Використовувати очищувачі повітря в приміщеннях. \\
+        \hline
+        \rowcolor{black!40} 301+ & Небезпечний & Надзвичайна ситуація. Виходити тільки в разі крайньої необхідності. Обов’язкове використання респіраторів. \\
+        \hline
+    \end{tabular}
+    \caption{Шкала оцінювання AQI та рекомендації}
+    \label{tab:AQI_scale}
+\end{table}
+Тобто розуміючи загальні характеристики та стандарти, ми можемо зробити висновок по Тайваню.\footnote{\href{https://center-ltd.com.ua/novyny/normy-indeksu-yakosti-povitrya-yak-rozumity-pokaznyky-ta-zahystyty-svoye-zdorov-ya/}{Покликання на статтю про характеристику AQI}}
 
-На жаль не вдалось відповісти на деякі поставлені питання, через значну кількість відсутніх даних у стовпці $'pollutant'$, а саме не дали відповідь на: 
+В результаті виконання лабораторної роботи було проведено розвідковий
+аналіз результатів виміру якости повітря у регіонах Тайваню з 2016 року по 2024. 
+
+На жаль не вдалось відповісти на деякі поставлені питання, 
+через значну кількість відсутніх даних у стовпці $'pollutant'$, а саме не дали відповідь на: 
 \begin{enumerate}
     
     \item  Чи існує кореляція між рівнем забруднення повітря (AQI) і типом головного забруднювача (pollutant) в різних районах?
     
 \end{enumerate}
-Відповіді на ці питання сподіваємось уряд Тайваню, зможе в скорому часі оприлюднити.
+Відповіді на ці питання сподіваємось уряд Тайваню, зможе в скорому часі оприлюднити, 
+тому що зараз можна лише припускати, що саме впливає на такий рівень забруднення.
 
-
-%На основі аналізу залежності викидів та регіонів, можна зробити наступні висновки: 
-
-
-Гістограми, побудовані на основі видобутих даних, повинні демонструвати характерну залежність тих чи інших речовин у повітрі відповідно до регіону, часу доби та швидкості вітру.
+Гістограми, побудовані на основі видобутих даних, демонструють характерну залежність тих чи інших речовин 
+у повітрі відповідно до регіону, часу доби, швидкості вітру та іншого.
 
 Отже, після розвідкового аналізу та побудови графіків, можна дати відповіді на наступні питання:
 \begin{enumerate}
     \item Чи впливає швидкість вітру (windspeed) на концентрацію частинок PM2.5 і PM10?
     
-    \item Як зміни в концентрації  ($O_3$)  та $SO_2$ впливають на загальний рівень забруднення повітря (AQI)?
+    Ні, на жаль, швидкість вітру має не значний вплив на концентрацію цих частинок, так як це тверді речовини. 
     
+    \item Як зміни в концентрації  $O_3$  та $SO_2$ впливають на загальний рівень забруднення повітря (AQI)?
+    
+    Концентрація $O_3$ має більший вплив на загальний рівень AQI ніж $SO_2$.
+
     \item Як змінюється якість повітря (status) протягом доби в різних районах?
     
+    Протягом доби якість повітря не зазнає значних змін. В загальному є незначне покращення пообіді. 
+
     \item Які регіони (county) мають найвищий середній рівень забруднення повітря (AQI) протягом року?
      
+    Найвищий середній рівень забруднення повітря (AQI) протягом року мають такі регіони: 
+    \begin{itemize}
+        \item Kinmen County	 
+        \item Lienchiang County
+        \item Chiayi County	 
+        \item Chiayi City	     
+        \item Yunlin County	 
+        \item Kaohsiung City	 
+        \item Tainan City	     
+        \item Nantou County	 
+        \item Changhua County	 
+        \item Taichung City	 
+    \end{itemize} 
+
     \item Як змінився загальний рівень забруднення по регіонам після початку реформи?
     
+    Загальний рівень AQI по регіонам зменшується, тобто показники покращуються після початку реформи.
+    Більш явні зміни помітні через декілька років, після початку, що є цілком логічним. 
+    Якщо уряд продовжить вводити обмеження та покращувати систему реформ, то показники в усій республіці нормалізуються. 
+
     \item Чи існує залежність між початком реформ та показниками забруднення?
     
-    Після побудови низки гарфіків, було відмічено, що після реформи суттєво змінився лише показник концентрації $S0_2$. Всі ініші показники, не зазнали суттєвих змін.
+    Після побудови низки гарфіків, було відмічено, що після реформи суттєво змінився 
+    лише показник концентрації $S0_2$ та незначні зміними $NO$. Всі ініші показники, не зазнали суттєвих змін.
     
     \item Як змінюється якість повітря залежно від станції виміру у містах?
     
+    Якість повітря змінюється нерівномірно у містах. Тобто саме від станції виміру не залежить, 
+    на це впливають інші фактори, які зазначені вище.
+
 \end{enumerate}
 
 
@@ -679,6 +877,19 @@ after\_reform     &  654783       &  5227425       \\
     \item The R Graph Gallery – Help and inspiration for R charts. The R Graph Gallery. 
     
     URL: \href{ https://r-graph-gallery.com/}{ https://r-graph-gallery.com/ }
+
+    \item Учасники проектів Вікімедіа. Тайвань (острів) – Вікіпедія. Вікіпедія.
+     
+    URL: \href{https://uk.wikipedia.org/wiki/Тайвань\_(острів)}{\url{https://uk.wikipedia.org/wiki/Тайвань_(острів)}} 
+
+    \item Air quality index (AQI)(historical data) 
+    
+    URL: \href{https://data.moenv.gov.tw/en/dataset/detail/aqx\_p\_488}{\url{https://data.moenv.gov.tw/en/dataset/detail/aqx_p_488}}
+
+    \item Стаття: "План дій виконавчого врядуваня щодо контролю над забрудненням повітря. Центр екологічної інформації."
+    
+    URL:\href{https://e-info.org.tw/node/209138}{https://e-info.org.tw/node/209138} 
+
 \end{enumerate}
 
 \end{document}
