@@ -42,7 +42,7 @@ p <- df_group_len %>%
   ungroup() %>%
   ggplot(aes(x = county, y = mean)) +
   geom_bar(stat = "identity") +
-  labs(x = "County", y = "Count") +
+  labs(x = "County", y = "Count", title = "Середня величина групи в кожному регіоні") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 ggsave(

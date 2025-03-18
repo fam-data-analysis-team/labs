@@ -13,6 +13,11 @@ theme_set(
 )
 
 dir.create(here("plots", "question3"), recursive = TRUE, showWarnings = FALSE)
+
+splitAt <- function(x, pos) {
+  split(x, cumsum(seq_along(x) %in% c(pos))) %>%
+  unname()
+}
 ```
 
 # Завантаженя датасету з файлу
@@ -47,8 +52,8 @@ ggsave(here("plots", "question3", "box.png"), p, bg = "white", dpi = 200)
 Графіки для кожного county
 
 ```{r}
-p <- df_daytime %>%
-  ggplot(aes(x = daytime, y = log(aqi))) +
+plot_box_county <- function(input_df) {
+  ggplot(input_df, aes(x = daytime, y = log(aqi))) +
   geom_boxplot(na.rm = TRUE) +
   labs(
     x = "Інтервал часу (год)",
@@ -56,6 +61,9 @@ p <- df_daytime %>%
   ) +
   facet_wrap(~county, ncol = 4, scales = "free") +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.25))
+}
+
+p <- plot_box_county(df_daytime)
 
 ggsave(
   here("plots", "question3", "county-box.png"), 
@@ -64,4 +72,28 @@ ggsave(
   height = 15,
   bg = "white", dpi = 200
 )
+```
+
+Для презентації:
+
+```{r}
+counties <- unique(df_daytime$county)
+c(counties_1, counties_2)  %<-% splitAt(counties, ceiling(length(counties) / 2))
+
+p1 <- plot_box_county(df_daytime[df_daytime$county %in% counties_1, ])
+p2 <- plot_box_county(df_daytime[df_daytime$county %in% counties_2, ])
+
+ggsave(
+  here("plots", "question3", "county-box-p1.png"), 
+  plot = p1, 
+  width = 16, height = 10,
+  bg = "white",
+  dpi = 200)
+
+ggsave(
+  here("plots", "question3", "county-box-p2.png"), 
+  plot = p2, 
+  width = 16, height = 10,
+  bg = "white",
+  dpi = 200)
 ```

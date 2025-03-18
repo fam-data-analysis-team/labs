@@ -2,6 +2,7 @@
 library(tidyverse)
 library(here)
 library(ggh4x)
+library(zeallot)
 
 theme_set(
   theme_minimal() +
@@ -14,6 +15,11 @@ theme_set(
 )
 
 dir.create(here("plots", "question6"), recursive = TRUE, showWarnings = FALSE)
+
+splitAt <- function(x, pos) {
+  split(x, cumsum(seq_along(x) %in% c(pos))) %>%
+  unname()
+}
 ```
 
 Завантажимо датасет:
@@ -36,7 +42,8 @@ df_smooth <- df %>%
 ```
 
 ```{r}
-p <- df_smooth %>%
+plot_line <- function(input_df) {
+  input_df %>%
   ggplot() +
   geom_line(aes(x = date, y = value), color = "black") +
   geom_line(
@@ -54,11 +61,38 @@ p <- df_smooth %>%
     key == "so2" ~ scale_y_continuous(limits = c(0, 4))
   )) +
   theme(legend.position = "none")
+}
+
+p <- plot_line(df_smooth)
 
 ggsave(
   here("plots", "question6", "line.png"), 
   plot = p, 
   width = 15, height = 15,
+  bg = "white",
+  dpi = 200)
+```
+
+Для презентації:
+
+```{r}
+names <- unique(df_smooth$key)
+c(names_1, names_2)  %<-% splitAt(names, ceiling(length(names) / 2))
+
+p1 <- plot_line(df_smooth[df_smooth$key %in% names_1, ])
+p2 <- plot_line(df_smooth[df_smooth$key %in% names_2, ])
+
+ggsave(
+  here("plots", "question6", "line-p1.png"), 
+  plot = p1, 
+  width = 16, height = 10,
+  bg = "white",
+  dpi = 200)
+
+ggsave(
+  here("plots", "question6", "line-p2.png"), 
+  plot = p2, 
+  width = 16, height = 10,
   bg = "white",
   dpi = 200)
 ```

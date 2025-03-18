@@ -319,7 +319,7 @@
   \end{tabular}
 
   \begin{center}
-    
+
   \end{center}
 \end{frame}
 
@@ -348,7 +348,7 @@
   \textit{Був використаний trimmed набір даних}
 
   Аналіз викидів та розподілу всіх показників забруднення:
-  
+
   \begin{center}
     \includegraphics[height=2.6in]{plots/question2/boxplot_pollutants.png}
   \end{center}
@@ -410,7 +410,7 @@
   \begin{enumerate}
     \item Аналізуючи даний графік, можна стведжувати, що якість повітря трохи
     покращується у другій половині дня.
-    \item  Також можемо розглянути детальніше регіони та зміни якости повітря.
+    \item Також можемо розглянути детальніше регіони та зміни якости повітря.
   \end{enumerate}
 \end{frame}
 
@@ -418,7 +418,15 @@
   \frametitle{Як змінюється якість повітря протягом доби в різних районах?}
 
   \begin{center}
-    \includegraphics[height=2.8in]{plots/question3/county-box.png}
+    \includegraphics[height=2.8in]{plots/question3/county-box-p1.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінюється якість повітря протягом доби в різних районах?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question3/county-box-p2.png}
   \end{center}
 \end{frame}
 
@@ -435,6 +443,82 @@
 \begin{frame}
   \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
 
+  \textit{Був використаний trimmed набір даних}
+
+  \begin{enumerate}
+    \item Всі наступні графіки, будуть будуватися на основі даних за
+    2016, 2017, 2023 та 2024 роки.
+    \item  Для розуміння числових даних, розглянемо 10 регіонів з
+    найвищим рівнем AQI за відповідні роки.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  \begin{center}
+    \begin{tabular}{clc}
+      \textbf{Year} & \textbf{Сounty} & \textbf{Average AQI} \\
+      2016 & Chiayi City     & 120.31 \\
+      2016 & Kaohsiung City  & 112.10 \\
+      2016 & Tainan City     & 99.60  \\
+      2016 & Pingtung County & 97.15  \\
+      2016 & Yunlin County   & 91.23  \\
+      2016 & Chiayi County   & 88.83  \\
+      2016 & Nantou County   & 83.34  \\
+      2016 & Changhua County & 81.68  \\
+      2016 & Kinmen County   & 81.60  \\
+      2016 & Taichung City   & 77.96  \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question4/avg_aqi_by_county_w_dens.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question4/avg_aqi_by_county_w_pop.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question4/avg_aqi_by_county.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question4/avg_aqi_by_county_w_dens.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question4/seasonal_change.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question4/seasonal_change_ridgeline.png}
+  \end{center}
 \end{frame}
 
 %% Question 5
@@ -444,10 +528,12 @@
 
   \textit{Був використаний tidy набір даних}
 
-  \begin{tabular}{cc}
-    \includegraphics[height=2.6in]{plots/question5/map_before_reform.png} &
-    \includegraphics[height=2.6in]{plots/question5/map_after_reform.png}
-  \end{tabular}
+  \begin{center}
+    \begin{tabular}{cc}
+      \includegraphics[height=2in]{plots/question5/map_before_reform.png} &
+      \includegraphics[height=2in]{plots/question5/map_after_reform.png}
+    \end{tabular}
+  \end{center}
 \end{frame}
 
 \begin{frame}
@@ -463,6 +549,19 @@
 \begin{frame}
   \frametitle{Чи існує залежність між початком реформ та показниками забруднення?}
 
+  \textit{Був використаний tidy набір даних}
+
+  \begin{center}
+    \includegraphics[height=2.5in]{plots/question6/line-p1.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Чи існує залежність між початком реформ та показниками забруднення?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question6/line-p2.png}
+  \end{center}
 \end{frame}
 
 %% Question 7
@@ -470,7 +569,78 @@
 \begin{frame}
   \frametitle{Як змінюється якість повітря залежно від станції виміру у містах?}
 
+  \textit{Був використаний trimmed набір даних}
+
+  \begin{enumerate}
+    \item Будемо розглядати зміни в показниках якості повітря в певній точці в часі (наприклад, 2023-06-28 11:00:00) в
+    конкретному регіоні (наприклад, Tainan).
+    \item Таким чином, будемо розглядати датасетзгрупований за парою \textit{(date; county)}, так як тільки $sitename$ різний в групі.
+  \end{enumerate}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Як змінюється якість повітря залежно від станції виміру у містах?}
+
+  Порахуємо узагальнену статистику по кількості рядків в кожній групі:
+
+  \begin{center}
+    \begin{tabular}{lc}
+      \textbf{Min.}    & 1     \\
+      \textbf{1st Qu.} & 1     \\
+      \textbf{Median}  & 3     \\
+      \textbf{Mean}    & 3.864 \\
+      \textbf{3rd Qu.} & 5     \\
+      \textbf{Max.}    & 26    \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінюється якість повітря залежно від станції виміру у містах?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question7/bar-count.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінюється якість повітря залежно від станції виміру у містах?}
+
+  Для аналізу змін в групі, будемо використовувати \textit{Median absolute difference}.
+
+  \begin{center}
+    \begin{tabular}{lcccccc}
+      \hline
+      \textbf{Variable} & \textbf{Min.} & \textbf{1st Qu.}  & \textbf{Median} & \textbf{Mean} & \textbf{3rd Qu.} & \textbf{Max.} \\
+      \hline
+      \textbf{aqi}      & 0             & 0                 & 2.965           & 4.597         & 6.672            & 109.712       \\
+      \textbf{so2}      & 0             & 0                 & 0.2224          & 0.2989        & 0.4448           & 58.8592       \\
+      \textbf{co}       & 0             & 0                 & 0.0222          & 0.0405        & 0.0593           & 4.0846        \\
+      \textbf{o3}       & 0             & 0                 & 2.076           & 3.268         & 5.041            & 56.191        \\
+      \textbf{pm10}     & 0             & 0                 & 2.965           & 4.265         & 5.930            & 254.266       \\
+      \textbf{pm2.5}    & 0             & 0                 & 1.483           & 2.424         & 3.707            & 137.141       \\
+      \textbf{no2}      & 0             & 0                 & 1.038           & 2.026         & 2.965            & 36.472        \\
+      \textbf{nox}      & 0             & 0                 & 1.26            & 2.57          & 3.558            & 71.61         \\
+      \textbf{no}       & 0             & 0                 & 0.2965          & 0.6151        & 0.593            & 62.2692       \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінюється якість повітря залежно від станції виміру у містах?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question7/density.png}
+  \end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінюється якість повітря залежно від станції виміру у містах?}
+
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/question7/box-county.png}
+  \end{center}
+\end{frame}
 
 \end{document}
