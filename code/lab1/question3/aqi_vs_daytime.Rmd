@@ -77,8 +77,8 @@ ggsave(
 Для презентації:
 
 ```{r}
-counties <- unique(df_daytime$county)
-c(counties_1, counties_2)  %<-% splitAt(counties, ceiling(length(counties) / 2))
+names <- unique(df_daytime$county)
+c(counties_1, counties_2)  %<-% splitAt(names, ceiling(length(names) / 2))
 
 p1 <- plot_box_county(df_daytime[df_daytime$county %in% counties_1, ])
 p2 <- plot_box_county(df_daytime[df_daytime$county %in% counties_2, ])
