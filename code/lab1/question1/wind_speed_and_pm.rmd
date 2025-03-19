@@ -41,10 +41,12 @@ df <- readRDS("data/processed/air_quality_trimmed.rds") %>% slice_sample(n=10000
 ```{r}
 windspeed_vs_pm2.5 <- ggplot(df, aes(x = windspeed)) +
   geom_point(aes(y = pm2.5), color = hue_pal()(2)[1], alpha = 0.1, na.rm = TRUE) +
+  ylim(0, 400) +
   labs(x=NULL, y=NULL)
 
 windspeed_vs_pm10 <- ggplot(df, aes(x = windspeed)) +
   geom_point(aes(y = pm10), color = hue_pal()(2)[2], alpha = 0.1, na.rm = TRUE) +
+  ylim(0, 400) +
   labs(x=NULL, y=NULL)
 
 title_grob <- textGrob("Вплив вітру на концентрацію частинок PM2.5 і PM10", gp = gpar(fontsize = 14))
@@ -70,6 +72,18 @@ pm2_5_gist <- ggplot(df, aes(x = pm2.5)) +
     labs(title = "Розподіл PM2.5", x = "PM2.5", y = "Частота")
 
 ggsave(here("plots", "question1", "pm2_5_gist.png"), pm2_5_gist, dpi = 200)
+```
+
+# Кореляційна матриця
+
+```{r}
+corr_matrix <- cor(df %>% select(where(is.numeric)), use = "complete.obs", method = "spearman")
+
+png(
+  here("plots", "question1", "corr_matrix_plot.png"), 
+  width = 720, height = 720)
+corrplot(corr_matrix, method = "color", type = "upper", tl.cex = 1, addCoef.col = "black")
+dev.off()
 ```
 
 # Діаграма розсіювання AQI ~ PM2.5
