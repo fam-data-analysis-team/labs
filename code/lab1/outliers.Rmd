@@ -3,12 +3,13 @@ library(tidyverse)
 library(ggplot2)
 library(data.table)
 library(glue)
+library(zeallot)
 library(here)
 
 theme_set(
   theme_minimal() +
   theme(
-    text = element_text(size = 18),
+    text = element_text(size = 22),
     plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
     axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
     axis.title.y = element_text(margin = margin(0, 10, 0, 0))
@@ -75,7 +76,12 @@ p <- df_ocount %>%
   geom_bar(stat = "identity") +
   labs(x = "Змінна", y = "Кількість викидів")
 
-ggsave(here("plots", "outliers", "count-bar.png"), p, width = 15)
+ggsave(
+  here("plots", "outliers", "count-bar.png"), 
+  p, 
+  width = 15,
+  height = 10,
+  bg = "white")
 ```
 
 Для кожної числової змінної побудуємо scatter plot, де X - дата, Y - значення змінної:
@@ -122,19 +128,19 @@ ggsave(
 Для презентації:
 
 ```{r}
-names <- unique(df_gathered$key)
-c(names_1, names_2)  %<-% splitAt(names, ceiling(length(names) / 2))
+df_names <- df %>% select(where(is.numeric)) %>% names()
+c(names_1, names_2)  %<-% splitAt(df_names, ceiling(length(df_names) / 2))
 
 p1 <- plot_scatter(df[c("date", names_1)])
 p2 <- plot_scatter(df[c("date", names_2)])
 
 ggsave(
   here("plots", "outliers", "scatter-p1.png"),
-  p1, width = 15, height = 10,
+  p1, width = 16, height = 10,
   bg = "white")
 ggsave(
   here("plots", "outliers", "scatter-p2.png"),
-  p2, width = 15, height = 10,
+  p2, width = 16, height = 10,
   bg = "white")
 ```
 
@@ -163,24 +169,25 @@ input_df %>%
 p <- plot_bar_county(df)
 ggsave(
   here("plots", "outliers", "count-bar-county.png"),
-  p, width = 22, height = 15)
+  p, width = 22, height = 15,
+  bg = "white")
 ```
 
 Для презентації:
 
 ```{r}
-names <- unique(df_gathered$key)
-c(names_1, names_2)  %<-% splitAt(names, ceiling(length(names) / 2))
+df_names <- df %>% select(where(is.numeric)) %>% names()
+c(names_1, names_2)  %<-% splitAt(df_names, ceiling(length(df_names) / 2))
 
 p1 <- plot_bar_county(df[c("county", names_1)])
 p2 <- plot_bar_county(df[c("county", names_2)])
 
 ggsave(
   here("plots", "outliers", "count-bar-county-p1.png"),
-  p1, width = 14, height = 10,
+  p1, width = 20, height = 12,
   bg = "white")
 ggsave(
   here("plots", "outliers", "count-bar-county-p2.png"),
-  p2, width = 14, height = 10,
+  p2, width = 20, height = 12,
   bg = "white")
 ```

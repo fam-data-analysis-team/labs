@@ -19,7 +19,7 @@ library(here)
 theme_set(
   theme_minimal() +
   theme(
-    text = element_text(size = 14),
+    text = element_text(size = 20),
     plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
     axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
     axis.title.y = element_text(margin = margin(0, 10, 0, 0))
@@ -41,17 +41,17 @@ df <- readRDS("data/processed/air_quality_trimmed.rds") %>% slice_sample(n=10000
 ```{r}
 windspeed_vs_pm2.5 <- ggplot(df, aes(x = windspeed)) +
   geom_point(aes(y = pm2.5), color = hue_pal()(2)[1], alpha = 0.1, na.rm = TRUE) +
-  ylim(0, 400) +
+  # ylim(0, 400) +
   labs(x=NULL, y=NULL)
 
 windspeed_vs_pm10 <- ggplot(df, aes(x = windspeed)) +
   geom_point(aes(y = pm10), color = hue_pal()(2)[2], alpha = 0.1, na.rm = TRUE) +
-  ylim(0, 400) +
+  # ylim(0, 400) +
   labs(x=NULL, y=NULL)
 
 title_grob <- textGrob("Вплив вітру на концентрацію частинок PM2.5 і PM10", gp = gpar(fontsize = 14))
-x_grob <- textGrob("Швидкість вітру (м/с)", gp = gpar(fontsize = 14))
-y_grob <- textGrob("Концентрація частинок", gp = gpar(fontsize = 14), rot=90)
+x_grob <- textGrob("Швидкість вітру (м/с)", gp = gpar(fontsize = 20))
+y_grob <- textGrob("Концентрація частинок", gp = gpar(fontsize = 20), rot=90)
 
 windspeed_vs_pm <- grid.arrange(
   grobs = list(windspeed_vs_pm2.5, windspeed_vs_pm10),
@@ -61,7 +61,11 @@ windspeed_vs_pm <- grid.arrange(
   ncol = 2
 )
 
-ggsave(here("plots", "question1", "wind_speed_vs_pm.png"), windspeed_vs_pm, dpi = 200)
+ggsave(
+  here("plots", "question1", "wind_speed_vs_pm.png"), 
+  windspeed_vs_pm, 
+  bg = "white",
+  dpi = 200)
 ```
 
 # розподіл для pm2.5 (гістограма)
@@ -122,7 +126,10 @@ ggsave(here("plots", "question1", "aqi_pm_polutants.png"), aqi_pm_polutants, dpi
 
 ```{r}
 qq_pm2_5 <- ggqqplot(df$`pm2.5`, conf.int = TRUE) +
-    labs(title = "QQ-графік для PM2.5")
+    labs(title = "QQ-графік для PM2.5") +
+    theme(
+      text = element_text(size = 20)
+    )
 
 ggsave(here("plots", "question1", "qq_pm2_5.png"), qq_pm2_5, dpi = 200)
 ```
@@ -131,7 +138,10 @@ ggsave(here("plots", "question1", "qq_pm2_5.png"), qq_pm2_5, dpi = 200)
 
 ```{r}
 qq_pm10 <- ggqqplot(df$`pm10`, conf.int = TRUE) +
-    labs(title = "QQ-графік для PM10")
+    labs(title = "QQ-графік для PM10") +
+    theme(
+      text = element_text(size = 20)
+    )
 
 ggsave(here("plots", "question1", "qq_pm10.png"), qq_pm10, dpi = 200)
 ```

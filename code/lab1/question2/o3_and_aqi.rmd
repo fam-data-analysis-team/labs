@@ -19,7 +19,7 @@ library(here)
 theme_set(
   theme_minimal() +
   theme(
-    text = element_text(size = 14),
+    text = element_text(size = 20),
     plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
     axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
     axis.title.y = element_text(margin = margin(0, 10, 0, 0))
@@ -43,9 +43,18 @@ boxplot_pollutants <- df %>%
   ggplot(aes(x = pollutant, y = value, fill = pollutant)) +
   geom_boxplot() +
   scale_y_log10() +
-  labs(title = "Розподіл забруднюючих речовин (Boxplot)", x = "Забруднювач", y = "Концентрація (log scale)")
+  labs(title = "Розподіл забруднюючих речовин (Boxplot)", x = "Забруднювач", y = "Концентрація (log scale)") +
+  theme(
+    text = element_text(size = 22)
+  )
 
-ggsave(here("plots", "question2", "boxplot_pollutants.png"), boxplot_pollutants, dpi = 200)
+ggsave(
+  here("plots", "question2", "boxplot_pollutants.png"), 
+  boxplot_pollutants, 
+  dpi = 200,
+  bg = "white",
+  width = 10, height = 10
+)
 ```
 
 # розподіл для o3 (гістограма)
@@ -55,7 +64,13 @@ o3_plot <- ggplot(df, aes(x = o3)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black") +
   labs(title = "Розподіл o3 (озон)", x = "о3", y = "Частота")
 
-ggsave(here("plots", "question2", "o3_plot.png"), o3_plot, dpi = 200)
+ggsave(
+  here("plots", "question2", "o3_plot.png"),
+  o3_plot,
+  dpi = 200,
+  bg = "white",
+  width = 10, height = 10
+)
 ```
 # за потреби можна додати інші забруднювачі
 
@@ -64,7 +79,13 @@ so2_plot <- ggplot(df, aes(x = so2)) +
   geom_histogram(binwidth = 5, fill = "blue", color = "black") +
   labs(title = "Розподіл SO2", x = "so2", y = "Частота")
 
-ggsave(here("plots", "question2", "so2_plot.png"), so2_plot, dpi = 200)
+ggsave(
+  here("plots", "question2", "so2_plot.png"),
+  so2_plot,
+  dpi = 200,
+  bg = "white",
+  width = 10, height = 10
+)
 ```
 
 # Діаграма розсіювання AQI ~ o3
@@ -75,8 +96,13 @@ scatter_plot <- ggplot(df, aes(x = o3, y = aqi)) +
   geom_smooth(method = "lm", col = "red") +
   labs(title = "Залежність AQI від o3")
 
-ggsave(here("plots", "question2", "scatter_plot.png"), scatter_plot, dpi = 200)
-
+ggsave(
+  here("plots", "question2", "scatter_plot.png"),
+  scatter_plot,
+  dpi = 200,
+  bg = "white",
+  width = 10, height = 10
+)
 ```
 
 # Розподіли O3 і SO2 по місяцях
@@ -92,7 +118,13 @@ seasonal_plot <- df_seasonal %>%
   labs(title = "Кількість O3 по місяцях", x = "Місяць", y = "O3") + 
   scale_fill_viridis(option = "viridis", name = "Медіана", direction = -1)
 
-ggsave(here("plots", "question2", "seasonal_o3.png"), seasonal_plot, bg = "white", dpi = 200)
+ggsave(
+  here("plots", "question2", "seasonal_o3.png"),
+  seasonal_plot,
+  bg = "white",
+  dpi = 200,
+  width = 10, height = 10
+)
 ```
 
 ```{r}
@@ -107,7 +139,13 @@ seasonal_plot <- df_seasonal %>%
   labs(title = "Кількість SO2 по місяцях", x = "Місяць", y = "log(SO2)") + 
   scale_fill_viridis(option = "viridis", name = "Медіана", direction = -1)
 
-ggsave(here("plots", "question2", "seasonal_so2.png"), seasonal_plot, bg = "white", dpi = 200)
+ggsave(
+  here("plots", "question2", "seasonal_so2.png"),
+  seasonal_plot,
+  bg = "white",
+  dpi = 200,
+  width = 10, height = 10
+)
 ```
 
 ---

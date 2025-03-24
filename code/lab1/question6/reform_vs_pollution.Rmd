@@ -7,7 +7,7 @@ library(zeallot)
 theme_set(
   theme_minimal() +
   theme(
-    text = element_text(size = 14),
+    text = element_text(size = 24),
     plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
     axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
     axis.title.y = element_text(margin = margin(0, 10, 0, 0))
@@ -54,7 +54,7 @@ plot_line <- function(input_df) {
     color = "#f25309", 
     lwd = 1.5,
     show.legend = TRUE) +
-  labs(x = "Date", y = "Value") +
+  labs(x = "Дата", y = "Значення") +
   facet_wrap(~key, scales = "free") +
   facetted_pos_scales(y = c(
     key == "aqi" ~ scale_y_continuous(limits = c(0, 120)),

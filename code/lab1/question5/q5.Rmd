@@ -22,7 +22,7 @@ library(ggrepel)
 theme_set(
   theme_minimal() +
   theme(
-    text = element_text(size = 18),
+    text = element_text(size = 22),
     plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
     axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
     axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
@@ -219,6 +219,10 @@ region_comparison <- dt %>%
   scale_fill_manual(values = c("blue","yellow")) +
   theme_minimal()
 
-ggsave(here("plots", "question5", "region_comparison_aqi.png"), region_comparison)
+ggsave(
+  here("plots", "question5", "region_comparison_aqi.png"),
+  region_comparison,
+  bg = "white"
+)
 
 ```
