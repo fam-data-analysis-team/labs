@@ -97,13 +97,30 @@ scatter_plot <- ggplot(df, aes(x = o3, y = aqi)) +
   labs(title = "Залежність AQI від o3")
 
 ggsave(
-  here("plots", "question2", "scatter_plot.png"),
+  here("plots", "question2", "scatter_plot_o3.png"),
   scatter_plot,
   dpi = 200,
   bg = "white",
   width = 10, height = 10
 )
 ```
+
+
+```{r}
+scatter_plot <- ggplot(df, aes(x = so2, y = aqi)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Залежність AQI від S02")
+
+ggsave(
+  here("plots", "question2", "scatter_plot_so2.png"),
+  scatter_plot,
+  dpi = 200,
+  bg = "white",
+  width = 10, height = 10
+)
+```
+
 
 # Розподіли O3 і SO2 по місяцях
 
