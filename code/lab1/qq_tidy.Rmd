@@ -82,7 +82,7 @@ plot_qq_log <- function(input_df) {
 } 
 
 p <- plot_qq_log(df_gathered)
-ggsave(here("plots", "qq_tidy", "qq-log.png"), p, bg = "white")
+ggsave(here("plots", "qq_tidy", "qq-log.png"), p, width = 12, height = 12, bg = "white")
 ```
 
 Для презентації:

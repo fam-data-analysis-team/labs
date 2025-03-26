@@ -123,27 +123,29 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{"Очищення" даних}
+  \frametitle{``Очищення'' даних}
 
   \begin{enumerate}
-    \item Перетворили кодові значення на NA.
+    \item Звели дати до одного формату.
+    \item Замінили кодові значення (``$ \ $'', ``$-$'', ``ND'', -1, -999, 990) на NA.
+    \item Перетворили текстові колонки на категорійні.
     \item Видалили стовпці, які не знадобляться для аналізу.
-    \item Видалили стовпці, в яких більше $50\%$ пропущених даних.
+    \item Видалили стовпці, у яких більше $50\%$ пропущених даних.
     \item Додали стовпець \textit{after\_reform}, що визначає, чи вимір
     якості повітря був здійснений після реформи (\textit{17 грудня 2017 року})
   \end{enumerate}
 \end{frame}
 
 \begin{frame}
-  \frametitle{"Очищення" даних}
+  \frametitle{``Очищення'' даних}
 
   Був отриманий набір даних, що складається з таких змінних:
 
   \begin{itemize}
-    \item Факторні - 3
-    \item Логічні - 1
     \item Числові - 11
+    \item Факторні - 3
     \item Дата - 1
+    \item Логічні - 1
   \end{itemize}
 \end{frame}
 
@@ -155,7 +157,7 @@
     окремий набір даних, в якому виміри починаються з 2023 року.
     \item Таким чином цей набір даних має 1\,232\,994 рядків.
     \item Надалі будемо зазначати на якому наборі даних був виконаний аналіз. Зменшений
-    датасет назвемо \textit{trimmed}, весь очищений набір даних -- \textit{tidy}.
+    датасет назвемо \textit{trimmed}, а весь очищений набір даних -- \textit{tidy}.
   \end{enumerate}
 
 \end{frame}
@@ -254,7 +256,7 @@
 \begin{frame}
   \frametitle{Розподіли змінних}
 
-  Розподіл змінних (крім \textit{winddirect}) ближче до логнормального, ніж нормального:
+  Розподіл змінних (крім \textit{winddirect} і \textit{o3}) ближче до логнормального, ніж нормального:
 
   \begin{center}
     \includegraphics[height=2.5in]{plots/qq_tidy/qq-log-p1.png}
@@ -283,41 +285,27 @@
 
   \quad \textit{Був використаний trimmed набір даних}
 
-  \begin{center}
-    \includegraphics[height=2.5in]{plots/question1/pm2_5_gist.png}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Чи впливає швидкість вітру на концентрацію частинок PM2.5 і PM10}
-
-  \begin{center}
-    \includegraphics[height=2.8in]{plots/question1/wind_speed_vs_pm.png}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Чи впливає швидкість вітру на концентрацію частинок PM2.5 і PM10}
-
-  \begin{center}
-    \includegraphics[height=2.8in]{plots/question1/aqi_pm2_5_diagram.png}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Чи впливає швидкість вітру на концентрацію частинок PM2.5 і PM10}
-
-  \begin{center}
-    \includegraphics[height=2.8in]{plots/question1/aqi_pm_polutants.png}
-  \end{center}
+  \begin{tabular}{cc}
+    \includegraphics[height=2.2in]{plots/question1/pm2_5_gist.png} &
+    \includegraphics[height=2.2in]{plots/question1/pm10_gist.png}
+  \end{tabular}
 \end{frame}
 
 \begin{frame}
   \frametitle{Чи впливає швидкість вітру на концентрацію частинок PM2.5 і PM10}
 
   \begin{tabular}{cc}
-    \includegraphics[height=2.2in]{plots/question1/qq_pm2_5.png} &
-    \includegraphics[height=2.2in]{plots/question1/qq_pm10.png}
+    \includegraphics[height=2.2in]{plots/question1/wind_speed_vs_pm2_5.png} &
+    \includegraphics[height=2.2in]{plots/question1/wind_speed_vs_pm10.png}
+  \end{tabular}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Чи впливає швидкість вітру на концентрацію частинок PM2.5 і PM10}
+
+  \begin{tabular}{cc}
+    \includegraphics[height=2.2in]{plots/question1/aqi_pm2_5_diagram.png} &
+    \includegraphics[height=2.2in]{plots/question1/aqi_pm10_diagram.png}
   \end{tabular}
 \end{frame}
 
@@ -372,7 +360,7 @@
 
 \begin{frame}
   \frametitle{Як зміни в концентрації $O_3$ та $SO_2$ впливають на загальний рівень забруднення повітря (AQI)?}
-
+  
   \begin{center}
     \includegraphics[height=2.8in]{plots/question2/o3_plot.png}
   \end{center}
@@ -519,14 +507,6 @@
 
   \begin{center}
     \includegraphics[height=2.8in]{plots/question4/avg_aqi_by_county.png}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Які регіони мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
-
-  \begin{center}
-    \includegraphics[height=2.8in]{plots/question4/avg_aqi_by_county_w_dens.png}
   \end{center}
 \end{frame}
 

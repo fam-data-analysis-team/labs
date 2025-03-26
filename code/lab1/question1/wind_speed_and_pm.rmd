@@ -41,41 +41,48 @@ df <- readRDS("data/processed/air_quality_trimmed.rds") %>% slice_sample(n=10000
 ```{r}
 windspeed_vs_pm2.5 <- ggplot(df, aes(x = windspeed)) +
   geom_point(aes(y = pm2.5), color = hue_pal()(2)[1], alpha = 0.1, na.rm = TRUE) +
-  # ylim(0, 400) +
-  labs(x=NULL, y=NULL)
-
-windspeed_vs_pm10 <- ggplot(df, aes(x = windspeed)) +
-  geom_point(aes(y = pm10), color = hue_pal()(2)[2], alpha = 0.1, na.rm = TRUE) +
-  # ylim(0, 400) +
-  labs(x=NULL, y=NULL)
-
-title_grob <- textGrob("Вплив вітру на концентрацію частинок PM2.5 і PM10", gp = gpar(fontsize = 14))
-x_grob <- textGrob("Швидкість вітру (м/с)", gp = gpar(fontsize = 20))
-y_grob <- textGrob("Концентрація частинок", gp = gpar(fontsize = 20), rot=90)
-
-windspeed_vs_pm <- grid.arrange(
-  grobs = list(windspeed_vs_pm2.5, windspeed_vs_pm10),
-  top = title_grob,
-  bottom = x_grob,
-  left = y_grob,
-  ncol = 2
-)
+  ylim(0, 400) +
+  labs(title = "Вплив вітру на PM2.5", x = "Швидкість вітру (м/с)", y = "Концентрація")
 
 ggsave(
-  here("plots", "question1", "wind_speed_vs_pm.png"), 
-  windspeed_vs_pm, 
+  here("plots", "question1", "wind_speed_vs_pm2_5.png"), 
+  windspeed_vs_pm2.5, 
   bg = "white",
-  dpi = 200)
+  dpi = 200
+)
 ```
 
-# розподіл для pm2.5 (гістограма)
+
+```{r}
+windspeed_vs_pm10 <- ggplot(df, aes(x = windspeed)) +
+  geom_point(aes(y = pm10), color = hue_pal()(2)[2], alpha = 0.1, na.rm = TRUE) +
+  ylim(0, 400) +
+  labs(title = "Вплив вітру на PM10", x = "Швидкість вітру (м/с)", y = "Концентрація")
+
+ggsave(
+  here("plots", "question1", "wind_speed_vs_pm10.png"), 
+  windspeed_vs_pm10, 
+  bg = "white",
+  dpi = 200
+)
+```
+
+# Розподіли для pm2.5 і pm10 (гістограма)
 
 ```{r}
 pm2_5_gist <- ggplot(df, aes(x = pm2.5)) +
     geom_histogram(binwidth = 5, fill = "blue", color = "black") +
-    labs(title = "Розподіл PM2.5", x = "PM2.5", y = "Частота")
+    labs(title = "Розподіл PM2.5", x = "Концентрація", y = "Частота")
 
 ggsave(here("plots", "question1", "pm2_5_gist.png"), pm2_5_gist, dpi = 200)
+```
+
+```{r}
+pm10_gist <- ggplot(df, aes(x = pm10)) +
+    geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+    labs(title = "Розподіл PM10", x = "Концентрація", y = "Частота")
+
+ggsave(here("plots", "question1", "pm10_gist.png"), pm10_gist, dpi = 200)
 ```
 
 # Кореляційна матриця
@@ -96,7 +103,7 @@ dev.off()
 aqi_pm2_5_diagram <- ggplot(df, aes(x = pm2.5, y = aqi)) +
     geom_point(alpha = 0.5, color = "blue") +
     geom_smooth(method = "lm", col = "red") +
-    labs(title = "Залежність AQI від PM2.5")
+    labs(title = "Залежність AQI від PM2.5", x = "Концентрація PM2.5", y = "AQI")
 
 ggsave(here("plots", "question1", "aqi_pm2_5_diagram.png"), aqi_pm2_5_diagram, dpi = 200)
 ```
@@ -107,7 +114,7 @@ ggsave(here("plots", "question1", "aqi_pm2_5_diagram.png"), aqi_pm2_5_diagram, d
 aqi_pm10_diagram <- ggplot(df, aes(x = pm10, y = aqi)) +
     geom_point(alpha = 0.5, color = "blue") +
     geom_smooth(method = "lm", col = "red") +
-    labs(title = "Залежність AQI від PM10")
+    labs(title = "Залежність AQI від PM10", x = "Концентрація PM10", y = "AQI")
 
 ggsave(here("plots", "question1", "aqi_pm10_diagram.png"), aqi_pm10_diagram, dpi = 200)
 ```
