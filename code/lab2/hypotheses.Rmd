@@ -24,7 +24,7 @@ dir.create(here("plots", "lab2", "hypotheses"), recursive = TRUE, showWarnings =
 
 Для тестування гіпотез використовується тест Волда:
 
-```{r define}
+```{r define_wald}
 wald <- function(theta_hat, theta_0, se_theta_hat, alternative, a) {
   difference = theta_hat - theta_0
   T_stat <- difference / se_theta_hat
@@ -60,6 +60,7 @@ df <- df %>% select(date, aqi, after_reform) %>% filter(!is.na(aqi))
 
 df <- df %>%
   mutate(
+    date_wo_time = as.Date(date),
     interval_3hr = factor(
       lubridate::hour(date) %/% 3,
       labels = c("00-03", "03-06", "06-09", "09-12", "12-15", "15-18", "18-21", "21-24")
@@ -103,88 +104,55 @@ ggsave(
 
 Розглянемо дві популяції:
 
-* X - aqi в I половині доби
-* Y - aqi в II половині доби
+* X - середнє aqi за I половину доби
+* Y - середнє aqi за II половину доби
 
-Припустимо, що X і Y незалежні.  
+Вважати, що X і Y є незалежними було б некоректно. Якість повітря в I половині доби явно має впливати на якість повітря в II половині доби.
 
-Нас цікавить різниця медіан $\theta = Me_X - Me_Y$. Їхніми оцінками $\hat{Me}_X$ і $\hat{Me}_Y$ будуть вибіркові медіани.    
-
-Обидві оцінки асимпотчно мають нормальний розподіл:
-
-$$\hat{Me}_i \overset{a}{\sim} N(\mu_i, \frac{1}{4nf(m)^2});i = X, Y$$
-
-де $n$ -- розмір вибірки, $f(x)$ -- щільність розподілу популяції, $m$ -- медіана $f(x)$.  
-
-Оцінка різниці медіан $\hat{\theta} = \hat{Me}_X - \hat{Me}_Y$, теж асимптотично матиме нормальний розподіл, тому для тестування гіпотез можна використати тест Волда.  
-
-Проте, не знаючи $f(x)$, ми не зможемо порахувати дисперсію вибіркової медіани за наведеною формулою. Замість неї застосуємо бутстреп. Бутстреп-вибірки X* і Y* будуть генеруватися незалежно одна від одної, оскільки раніше ми припустили, що вони незалежні.  
-
-```{r boot_define}
-median_diff <- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
-  medians <- data[indices,] %>% group_by_at(gp_col) %>% summarize(med = median(aqi))
-  
-  med_x <- medians %>% filter_at(gp_col, any_vars(. == x_gp_lab)) %>% pull(med)
-  med_y <- medians %>% filter_at(gp_col, any_vars(. == y_gp_lab)) %>% pull(med)
-  
-  return(med_x - med_y)
-}
-
-var_median_diff <- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
-  d <- data[indices,]
-  
-  boot_out <- boot(  # generate an array of median diffs
-    d, statistic = median_diff, R = 100, strata = d[[gp_col]],
-    gp_col = gp_col, x_gp_lab = x_gp_lab, y_gp_lab = y_gp_lab
-  )
-  
-  return(var(boot_out$t[,1]))  # return the median diff variance
-}
-
-boot_var_median_diff <- function(data, grouping_col, x_group_label, y_group_label) {
-  boot_out <- boot(  # generate an array of median diff variances
-    data, statistic = var_median_diff, R = 100, strata = data[[grouping_col]],
-    gp_col = grouping_col, x_gp_lab = x_group_label, y_gp_lab = y_group_label
-  )
-  
-  return(boot_out$t0)  # return the observed value of median diff variance
-}
+```{r group_by_day, include = FALSE}
+df_by_day <- df %>%
+  group_by(date_wo_time, interval_12hr) %>%
+  summarize(avg = mean(aqi)) %>% 
+  spread(key = interval_12hr, value = avg) %>% 
+  filter(!is.na(`00-12`) & !is.na(`12-24`))
 ```
 
-Розмір вибірки було зменшено до 10000 рядків у цілях економії часу на обчислення.
+```{r plot_00_12_vs_12_24, include = FALSE}
+p <- df_by_day %>%
+  ggplot(aes(x = `00-12`, y = `12-24`)) +
+  geom_point() +
+  labs(x = "Середнє AQI до 12:00", y = "Середнє AQI після 12:00")
 
-```{r sample_daytime}
-set.seed(0)
-df_sampled <- df %>% sample_n(10000)
-```
-
-```{r boot_daytime}
-var_theta_hat <- boot_var_median_diff(
-  data = df_sampled,
-  grouping_col = "interval_12hr",
-  x_group_label = "00-12",
-  y_group_label = "12-24"
+ggsave(
+  here("plots", "lab2", "hypotheses", "aqi_00_12_vs_12_24.png"), p,
+  bg = "white", dpi = 200, width = 10, height = 8
 )
-
-var_theta_hat
 ```
 
-Маючи оцінку $\mathrm Var(\hat{\theta})$, перейдемо до тестування.
+![](../../plots/lab2/hypotheses/aqi_00_12_vs_12_24.png){width=49%}
 
-$H_0: \theta ≥ 0$ vs. $H_1: \theta < 0$
+Тому працюватимемо з відповідними вибірками, як з парованими. Для кожного i-го спостереження порахуємо різницю:
+
+$$D_i = X_i - Y_i$$
+
+```{r paired}
+df_by_day <- df_by_day %>% mutate(di = `00-12` - `12-24`)
+```
+
+Нас цікавить статистика $\theta = \mu_D$. Її оцінкою є вибіркове середнє $\hat{\theta} = \bar{D}$. Відомо, що вибіркове середнє асимптотично має нормальний розподіл:
+
+$$\bar{D} \overset{a}{\sim} N(\mu_D, \frac{{\mathrm Var}(\bar{D})}{n})$$
+
+Отже, для тестування гіпотез щодо $\theta$ можна використати тест Волда.
+
+$H_0: \theta ≥ 0$ vs. $H_1: \theta < 0$  
+$H_0: \mu_{X_i - Y_i} ≥ 0$ vs. $H_1: \mu_{X_i - Y_i} < 0$
 
 ```{r wald_daytime}
-estimates <- df_sampled %>% filter(!is.na(aqi)) %>% group_by(interval_12hr) %>%
-  summarize(med_hat = median(aqi))
+theta_hat = mean(df_by_day$di)
+se_theta_hat <- sqrt(var(df_by_day$di) / nrow(df_by_day))
 
-med_hat_fst <- estimates %>% filter(interval_12hr == "00-12") %>% pull(med_hat)
-med_hat_snd <- estimates %>% filter(interval_12hr == "12-24") %>% pull(med_hat)
-
-theta_hat = med_hat_fst - med_hat_snd
-se_theta_hat <- sqrt(var_theta_hat)
-
-med_hat_fst
-med_hat_snd
+theta_hat
 wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)
 ```
 
@@ -230,9 +198,51 @@ ggsave(
 * X - aqi від червня до вересня
 * Y - aqi в інший час
 
-Аналогічно попередньому прикладу будемо досліджувати різницю медіан $\theta = Me_X - Me_Y$.  
+Припустимо, що X і Y незалежні.  
 
-Спочатку знайдемо $\mathrm Var(\hat{\theta})$ за допомогою бутстреп.
+Нас цікавить різниця медіан $\theta = Me_X - Me_Y$. Їхніми оцінками $\hat{Me}_X$ і $\hat{Me}_Y$ будуть вибіркові медіани.  
+
+Обидві оцінки асимптотчно мають нормальний розподіл:
+
+$$\hat{Me}_i \overset{a}{\sim} N(\mu_i, \frac{1}{4nf(m)^2});i = X, Y$$
+де $n$ -- розмір вибірки, $f(x)$ -- щільність розподілу популяції, $m$ -- медіана $f(x)$.  
+
+Оцінка різниці медіан $\hat{\theta} = \hat{Me}_X - \hat{Me}_Y$, теж асимптотично матиме нормальний розподіл, тому для тестування гіпотез можна використати тест Волда.  
+
+Проте, не знаючи $f(x)$, ми не зможемо порахувати дисперсію вибіркової медіани за наведеною формулою. Замість неї застосуємо бутстреп. Бутстреп-вибірки X* і Y* будуть генеруватися незалежно одна від одної, оскільки раніше ми припустили, що вони незалежні.  
+
+```{r boot_define}
+median_diff <- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
+  medians <- data[indices,] %>% group_by_at(gp_col) %>% summarize(med = median(aqi))
+  
+  med_x <- medians %>% filter_at(gp_col, any_vars(. == x_gp_lab)) %>% pull(med)
+  med_y <- medians %>% filter_at(gp_col, any_vars(. == y_gp_lab)) %>% pull(med)
+  
+  return(med_x - med_y)
+}
+
+var_median_diff <- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
+  d <- data[indices,]
+  
+  boot_out <- boot(  # generate an array of median diffs
+    d, statistic = median_diff, R = 100, strata = d[[gp_col]],
+    gp_col = gp_col, x_gp_lab = x_gp_lab, y_gp_lab = y_gp_lab
+  )
+  
+  return(var(boot_out$t[,1]))  # return the median diff variance
+}
+
+boot_var_median_diff <- function(data, grouping_col, x_group_label, y_group_label) {
+  boot_out <- boot(  # generate an array of median diff variances
+    data, statistic = var_median_diff, R = 100, strata = data[[grouping_col]],
+    gp_col = grouping_col, x_gp_lab = x_group_label, y_gp_lab = y_group_label
+  )
+  
+  return(boot_out$t0)  # return the observed value of median diff variance
+}
+```
+
+Розмір вибірки було зменшено до 10000 рядків у цілях економії часу на обчислення.
 
 ```{r sample_season}
 set.seed(0)
@@ -250,9 +260,10 @@ var_theta_hat <- boot_var_median_diff(
 var_theta_hat
 ```
 
-Протестуємо гіпотезу.  
+Маючи оцінку $\mathrm Var(\hat{\theta})$, перейдемо до тестування.  
 
-$H_0: \theta ≥ 0$ vs. $H_1: \theta < 0$
+$H_0: \theta ≥ 0$ vs. $H_1: \theta < 0$  
+$H_0: Me_X - Me_Y ≥ 0$ vs. $H_1: Me_X - Me_Y < 0$
 
 ```{r wald_season}
 estimates <- df_sampled %>% group_by(season) %>% summarize(med_hat = median(aqi))
@@ -272,7 +283,7 @@ wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)
 
 ## Гіпотеза 3 -- Вплив реформи на aqi
 
-Одним з головних питань EDA було, чи вплинула реформа на якість повітря. Візуалізація розподілів aqi за періоди часу до 2017-05-25 (до введення реформи) і після 2024-03-15 (найновіші дані) створює підстави для оптимізму.
+Одним із головних питань EDA було, чи вплинула реформа на якість повітря. Візуалізація розподілів aqi за періоди часу до 2017-05-25 (до введення реформи) і після 2024-03-15 (найновіші дані) створює підстави для оптимізму.
 
 ```{r load_reform, include = FALSE}
 df <- df %>% filter(!(as.Date("2017-05-25") < date & date < as.Date("2024-03-15")))
@@ -300,11 +311,13 @@ ggsave(
 * X - aqi до 2017-05-25
 * Y - aqi після 2024-03-15
 
-Знайдемо $\mathrm Var(\hat{\theta})$ за допомогою бутстреп.
+Аналогічно попередньому прикладу припустимо, що вони незалежні, і будемо досліджувати різницю медіан $\theta = Me_X - Me_Y$.  
+
+Спочатку знайдемо $\mathrm Var(\hat{\theta})$ за допомогою бутстреп.
 
 ```{r sample_reform}
 set.seed(0)
-df_sampled <- df %>% filter(!is.na(aqi)) %>% sample_n(10000)
+df_sampled <- df %>% sample_n(10000)
 table(df_sampled$after_reform)
 ```
 
@@ -321,7 +334,8 @@ var_theta_hat
 
 Протестуємо гіпотезу.  
 
-$H_0: \theta ≤ 0$ vs. $H_1: \theta > 0$
+$H_0: \theta ≤ 0$ vs. $H_1: \theta > 0$  
+$H_0: Me_X - Me_Y ≤ 0$ vs. $H_1: Me_X - Me_Y > 0$
 
 ```{r wald_reform}
 estimates <- df_sampled %>% group_by(after_reform) %>% summarize(med_hat = median(aqi))
