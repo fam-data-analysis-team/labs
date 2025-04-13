@@ -1,0 +1,158 @@
+---
+title: "Лаб2 - Множинне тестування"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(here)
+```
+
+Для тестування гіпотез використовується тест Волда:
+
+```{r define_wald}
+wald <- function(theta_hat, theta_0, se_theta_hat, alternative, a) {
+  difference = theta_hat - theta_0
+  T_stat <- difference / se_theta_hat
+  
+  if (alternative == "two.sided") {
+    p_value <- 2 * pnorm(T_stat)
+    conf_int <- c(
+      difference - qnorm(1 - a / 2) * se_theta_hat,
+      difference + qnorm(1 - a / 2) * se_theta_hat
+    )
+  } else if  (alternative == "greater") {
+    p_value <- pnorm(T_stat, lower.tail = FALSE)
+    conf_int <- c(difference - qnorm(1 - a) * se_theta_hat, Inf)
+  } else if  (alternative == "less") {
+    p_value <- pnorm(T_stat)
+    conf_int <- c(-Inf, difference + qnorm(1 - a) * se_theta_hat)
+  } else {
+    stop(paste("Unknown alternative hypothesis:", alternative, sep=" "))
+  }
+  
+  c(t = T_stat,  p_value = p_value, conf_int = conf_int)
+}
+```
+
+## Гіпотеза 1 -- Вплив на забруднювачі
+
+Перевіримо гіпотезу, що введення реформи позитивно вплинуло на всі види забруднювачів.
+
+```{r load_daytime, include = FALSE}
+df <- readRDS(here("data", "processed", "air_quality_tidy.RDS"))
+
+df <- df %>% filter(!(as.Date("2017-05-25") < date & date < as.Date("2024-03-15")))
+
+df <- df %>% filter(!is.na(aqi))
+
+# df <- df %>% sample_n(100)
+```
+
+```{r}
+tests <- data.frame(
+  pollutant = character(),
+  mean_before = double(),
+  mean_after = double(),
+  # var_mean_before = double(),
+  # var_mean_after = double(),
+  delta = double(),
+  p_value = double(),
+  p_value_BH = double(),
+  reject_BH = logical()
+)
+
+for (col in c("so2", "co", "o3", "pm10", "pm2.5", "no2", "nox", "no")) {
+  estimates <- df %>%
+    filter_at(col, all_vars(!is.na(.))) %>% 
+    group_by(after_reform) %>%
+    summarize(
+      mean_hat = mean(get(col)),
+      var_mean_hat = var(get(col)) / n(),
+    )
+
+  mean_hat_before <- estimates %>% filter(after_reform == FALSE) %>% pull(mean_hat)
+  mean_hat_after <- estimates %>% filter(after_reform == TRUE) %>% pull(mean_hat)
+  
+  var_mean_hat_before <- estimates %>% filter(after_reform == FALSE) %>% pull(var_mean_hat)
+  var_mean_hat_after <- estimates %>% filter(after_reform == TRUE) %>% pull(var_mean_hat)
+  
+  theta_hat <- mean_hat_after - mean_hat_before
+  se_theta_hat <- sqrt(var_mean_hat_before + var_mean_hat_after)
+  
+  p_value <- wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)["p_value"]
+  p_value_BH <- p.adjust(p_value, method = "BH")
+  
+  tests <- tests %>% add_row(
+    pollutant = col,
+    mean_before = mean_hat_before,
+    mean_after = mean_hat_after,
+    # var_mean_before = var_mean_hat_before,
+    # var_mean_after = var_mean_hat_after,
+    delta = theta_hat,
+    p_value = p_value,
+    p_value_BH = p_value_BH,
+    reject_BH = p_value_BH < 0.05
+  )
+}
+
+tests
+```
+
+Для всіх забруднювачів $p-value$ близьке до нуля, тому можна з впевненістю сказати, що всі концентрації зменшились після реформи.
+
+## Гіпотеза 2 -- Ефективність у різних регіонах
+
+Перевіримо гіпотезу, що введення реформи знизило aqi для всіх регіонів Тайваню.
+
+```{r, tidy=FALSE}
+tests <- data.frame(
+  county = character(),
+  mean_before = double(),
+  mean_after = double(),
+  # var_mean_before = double(),
+  # var_mean_after = double(),
+  delta = double(),
+  # p_value = double(),
+  p_value_BH = double(),
+  reject_BH = logical()
+)
+
+for (county_name in unique(df$county)) {
+  estimates <- df %>%
+    filter(county == county_name) %>% 
+    group_by(after_reform) %>%
+    summarize(
+      mean_hat = mean(aqi),
+      var_mean_hat = var(aqi) / n(),
+    )
+
+  mean_hat_before <- estimates %>% filter(after_reform == FALSE) %>% pull(mean_hat)
+  mean_hat_after <- estimates %>% filter(after_reform == TRUE) %>% pull(mean_hat)
+  
+  var_mean_hat_before <- estimates %>% filter(after_reform == FALSE) %>% pull(var_mean_hat)
+  var_mean_hat_after <- estimates %>% filter(after_reform == TRUE) %>% pull(var_mean_hat)
+  
+  theta_hat <- mean_hat_after - mean_hat_before
+  se_theta_hat <- sqrt(var_mean_hat_before + var_mean_hat_after)
+  
+  p_value <- wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)["p_value"]
+  p_value_BH <- p.adjust(p_value, method = "BH")
+  
+  tests <- tests %>% add_row(
+    county = county_name,
+    mean_before = mean_hat_before,
+    mean_after = mean_hat_after,
+    # var_mean_before = var_mean_hat_before,
+    # var_mean_after = var_mean_hat_after,
+    delta = theta_hat,
+    # p_value = p_value,
+    p_value_BH = p_value_BH,
+    reject_BH = p_value_BH < 0.05
+  )
+}
+
+tests
+```
+
+Для всіх регіонів $p-value$ близьке до нуля, тому можна з впевненістю сказати, що реформа спрацювала по всьому Тайваню.
