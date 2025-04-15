@@ -1,0 +1,1095 @@
+"date","sitename","county","aqi","status","so2","co","o3","pm10","pm2.5","no2","nox","no","windspeed","winddirec","after_reform"
+2017-04-15,"Zhongli","Taoyuan City",31,"Good",2.5,0.78,20,40,8,23,44,21,1.9,308,FALSE
+2017-04-15,"Hualien","Hualien County",42,"Good",1.1,0.19,10,36,16,7.9,10,2.4,2.1,235,FALSE
+2017-04-15,"Douliu","Yunlin County",159,NA,2.2,0.36,32,98,62,8.3,9.3,1.1,0.9,20,FALSE
+2017-04-15,"Pingtung","Pingtung County",72,"Moderate",2.4,0.6,16,64,39,12,14,1.9,2.1,348,FALSE
+2017-04-15,"Meinong","Kaohsiung City",110,"Unhealthy for Sensitive Groups",0.9,0.33,9.6,74,37,6.9,7.3,0.4,0.8,96,TRUE
+2017-04-15,"Fengyuan","Taichung City",117,NA,2.6,0.33,42,62,46,15,14,-0.2,0.8,129,FALSE
+2017-04-15,"Renwu","Kaohsiung City",54,"Moderate",4.5,0.34,10,54,9,20,24,3.9,0.6,149,FALSE
+2017-04-15,"Tamsui","New Taipei City",68,"Moderate",2,0.73,12,45,21,26,28,1.5,NA,NA,FALSE
+2017-04-15,"Fengyuan","Taichung City",100,"Moderate",2.7,0.34,58,75,33,17,18,1.7,2.1,313,TRUE
+2017-04-15,"Shilin","Taipei City",81,"Moderate",2,0.37,52,71,33,8.6,10,1.6,3,117,FALSE
+2017-04-15,"Erlin","Changhua County",92,"Moderate",1.5,0.19,57,92,24,3.5,4.1,0.6,3.5,253,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",54,"Moderate",4.1,0.24,28,87,14,18,22,4,2.4,201,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",157,NA,3,0.59,22,113,59,17,23,5.5,1.6,326,FALSE
+2017-04-15,"Zhongli","Taoyuan City",49,"Good",3.1,0.74,28,46,15,35,49,14,1.7,103,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",152,NA,3.8,0.45,25,136,62,17,18,1.1,1.3,51,FALSE
+2017-04-15,"Fengshan","Kaohsiung City",119,NA,6.2,0.57,8.7,92,42,26,28,1.8,1.5,257,FALSE
+2017-04-15,"Puzi","Chiayi County",64,"Moderate",3.5,0.25,52,53,24,3.5,4.3,0.8,2.9,313,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",98,"Moderate",NA,NA,58,161,41,NA,NA,NA,2.1,17,FALSE
+2017-04-15,"Lunbei","Yunlin County",105,NA,4.6,0.53,38,78,41,18,19,0.7,5.3,85,FALSE
+2017-04-15,"Taitung","Taitung County",24,"Good",1.3,0.28,26,9,3,5.9,7.4,1.5,2.1,269,FALSE
+2017-04-15,"Shanhua","Tainan City",68,"Moderate",4.3,0.22,72,46,24,6.4,7.4,1,2.7,350,FALSE
+2017-04-15,"Xindian","New Taipei City",19,"Good",1.4,0.08,24,10,5,2.3,3.3,1,1.1,79,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",34,"Good",2.1,0.18,42,63,6,8.6,10,1.8,2.6,273,FALSE
+2017-04-15,"Dayuan","Taoyuan City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Guting","Taipei City",72,"Moderate",1.7,1.42,3.1,34,20,44,59,15,1.4,190,FALSE
+2017-04-15,"Mailiao","Yunlin County",87,"Moderate",2.5,0.11,30,36,17,5.1,6.8,1.7,3.1,353,FALSE
+2017-04-15,"Erlin","Changhua County",40,"Good",2.9,0.19,29,45,16,6.2,7.1,0.9,3.6,54,FALSE
+2017-04-15,"Sanchong","New Taipei City",64,"Moderate",6.6,1.89,NA,58,22,54,136,83,NA,NA,FALSE
+2017-04-15,"Xizhi","New Taipei City",99,"Moderate",2.9,0.48,48,76,35,12,13,1,2.9,47,FALSE
+2017-04-15,"Puli","Nantou County",98,"Moderate",2.2,0.42,27,49,31,17,18,0.7,0.9,271,FALSE
+2017-04-15,"Daliao","Kaohsiung City",32,"Good",1.4,0.04,17,36,NA,2.2,4.7,2.6,3.3,168,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",97,"Moderate",4.3,0.32,64,39,39,5,5.2,0.3,2,255,FALSE
+2017-04-15,"Puzi","Chiayi County",88,"Moderate",4.1,0.39,36,67,31,8.6,9.2,0.6,2.5,80,FALSE
+2017-04-15,"Lunbei","Yunlin County",111,NA,2.3,0.39,6.4,101,31,13,15,1.6,0.5,60,FALSE
+2017-04-15,"Changhua","Changhua County",45,"Good",1.8,0.22,52,34,16,3.2,3.8,0.6,8.1,11,FALSE
+2017-04-15,"Shilin","Taipei City",34,"Good",1.1,0.16,42,31,NA,4.5,5,0.5,1.5,177,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",29,"Good",1.9,0.18,9.5,12,3,7.7,9.2,1.5,6.5,61,FALSE
+2017-04-15,"Shilin","Taipei City",31,"Good",4.5,0.51,7.5,19,6,25,38,13,0.8,172,FALSE
+2017-04-15,"Cailiao","New Taipei City",57,"Moderate",4.1,0.49,6.6,37,29,24,27,2.4,1.1,207,FALSE
+2017-04-15,"Xindian","New Taipei City",49,"Good",1.3,0.4,30,23,11,16,19,3.2,2,99,FALSE
+2017-04-15,"Daliao","Kaohsiung City",57,"Moderate",1.8,0.16,36,44,7,4.8,6.8,2,1.4,174,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",58,"Moderate",4.4,0.13,37,29,17,7.6,10,2.7,3.8,243,FALSE
+2017-04-15,"Chaozhou","Pingtung County",44,"Good",3.4,0.2,38,36,13,7.5,7.9,0.5,3.4,249,FALSE
+2017-04-15,"Lunbei","Yunlin County",18,"Good",1.3,0.12,15,19,4,2.9,4.3,1.4,4,190,FALSE
+2017-04-15,"Matsu","Lienchiang County",25,"Good",2.9,0.36,23,19,8,5,6.8,1.7,3.7,30,FALSE
+2017-04-15,"Fengshan","Kaohsiung City",89,"Moderate",3.4,0.53,20,89,18,19,27,7.9,1.7,5.5,TRUE
+2017-04-15,"Kinmen","Kinmen County",157,NA,5.4,0.39,48,110,54,13,15,2.3,1.3,172,FALSE
+2017-04-15,"Hengchun","Pingtung County",30,"Good",2.1,0.08,28,26,10,1.2,1.9,0.8,5.7,276,FALSE
+2017-04-15,"Meinong","Kaohsiung City",91,"Moderate",2.3,0.39,17,74,38,10,15,4.8,1.2,137,FALSE
+2017-04-15,"Puli","Nantou County",97,"Moderate",1.8,0.54,17,52,35,16,19,3.6,1.6,304,FALSE
+2017-04-15,"Mailiao","Yunlin County",73,"Moderate",2.5,0.2,34,69,20,5.4,6.3,0.8,1.8,45,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",22,"Good",1.3,0.42,12,18,8,23,25,1.9,0.9,50,FALSE
+2017-04-15,"Tainan","Tainan City",80,"Moderate",3.8,0.32,63,61,35,7.8,9.1,1.3,2.7,218,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",129,NA,2.8,0.48,77,48,21,10,12,1.4,1.4,241,FALSE
+2017-04-15,"Taixi","Yunlin County",55,"Moderate",2.8,0.09,19,25,10,3.7,6.3,2.6,2.2,308,FALSE
+2017-04-15,"Cailiao","New Taipei City",30,"Good",2.8,0.3,32,34,5,16,20,3.2,3.2,82,FALSE
+2017-04-15,"Mailiao","Yunlin County",60,"Moderate",3,0.29,24,58,23,9.7,13,3.3,3.7,4.9,FALSE
+2017-04-15,"Sanyi","Miaoli County",80,"Moderate",1.4,0.24,58,46,29,8.2,9,0.8,2.7,37,FALSE
+2017-04-15,"Pingtung","Pingtung County",112,NA,2.8,0.29,36,64,34,6.8,9.3,2.6,2.1,289,FALSE
+2017-04-15,"Matsu","Lienchiang County",100,"Moderate",5.9,0.43,45,67,37,NA,NA,NA,2.9,166,FALSE
+2017-04-15,"Cailiao","New Taipei City",26,"Good",1.9,0.48,23,23,5,19,22,2.8,4.1,107,TRUE
+2017-04-15,"Xizhi","New Taipei City",122,NA,5,0.34,43,48,26,17,19,1.5,1.5,41,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",36,"Good",9.7,0.59,12,36,19,20,29,8.9,1.1,255,FALSE
+2017-04-15,"Xianxi","Changhua County",55,"Moderate",NA,NA,NA,53,17,28,36,8.3,0.9,98,TRUE
+2017-04-15,"Taitung","Taitung County",13,"Good",1.5,0.14,18,4,4,2.3,5.6,3.2,2.2,69,FALSE
+2017-04-15,"Toufen","Miaoli County",68,"Moderate",0.9,0.25,24,32,19,4.9,6.9,2,1.8,332,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",82,"Moderate",7.5,0.87,7.9,107,34,36,40,4.2,0.7,142,FALSE
+2017-04-15,"Chiayi","Chiayi City",24,"Good",1.6,0.22,13,12,7,9,11,1.7,2.1,100,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",56,"Moderate",7.1,0.39,26,34,16,14,17,2.5,1.5,70,TRUE
+2017-04-15,"Zhushan","Nantou County",65,"Moderate",1.3,0.3,9,50,21,10,11,0.8,2.7,155,FALSE
+2017-04-15,"Xingang","Chiayi County",107,NA,4.2,0.29,94,71,38,7.2,8.4,1.3,2.5,298,FALSE
+2017-04-15,"Mailiao","Yunlin County",67,"Moderate",4.9,0.56,3.8,60,26,25,27,1.5,1.5,86,FALSE
+2017-04-15,"Wanli","New Taipei City",77,"Moderate",2.6,0.37,45,74,34,2.7,3.6,1,0.5,22,TRUE
+2017-04-15,"Pingtung","Pingtung County",124,NA,1.4,0.47,31,59,41,12,16,3.3,2.9,33,FALSE
+2017-04-15,"Guanshan","Taitung County",61,"Moderate",1,NA,33,159,5,2.7,2.7,0,3.6,19,TRUE
+2017-04-15,"Qianzhen","Kaohsiung City",48,"Good",15,0.32,6,47,14,22,42,20,1.6,158,FALSE
+2017-04-15,"Sanyi","Miaoli County",71,"Moderate",1.4,0.4,41,24,17,9.1,9.7,0.6,4.9,42,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",85,"Moderate",3.7,0.49,22,62,29,22,27,4.9,1,313,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",169,"Unhealthy",5.4,1.47,10,150,89,36,49,12,0.8,217,TRUE
+2017-04-15,"Puzi","Chiayi County",72,"Moderate",3,0.2,45,67,20,5.1,7.1,2,2.7,281,FALSE
+2017-04-15,"Daliao","Kaohsiung City",41,"Good",1.4,0.05,NA,NA,NA,3.6,5.2,1.6,3.2,200,FALSE
+2017-04-15,"Puzi","Chiayi County",41,"Good",2.1,0.22,5.8,37,12,11,12,1.4,0.9,152,FALSE
+2017-04-15,"Yangming","Taipei City",36,"Good",1.7,0.13,39,4,NA,0.8,1.3,0.6,NA,NA,FALSE
+2017-04-15,"Erlin","Changhua County",72,"Moderate",5,0.42,29,36,12,11,12,0.9,3.5,81,FALSE
+2017-04-15,"Douliu","Yunlin County",152,NA,2.9,0.4,53,95,57,15,16,1.4,1.6,25,FALSE
+2017-04-15,"Dayuan","Taoyuan City",113,NA,4.8,0.57,21,76,34,26,32,6.4,1,24,FALSE
+2017-04-15,"Miaoli","Miaoli County",73,"Moderate",4.3,0.45,81,70,35,11,12,1.6,2.6,263,FALSE
+2017-04-15,"Douliu","Yunlin County",83,"Moderate",1.3,0.22,35,24,20,6.3,6.8,0.5,1.1,68,FALSE
+2017-04-15,"Annan","Tainan City",56,"Moderate",2.5,0.23,71,53,26,6.6,8.1,1.4,4.8,260,FALSE
+2017-04-15,"Matsu","Lienchiang County",106,NA,3.8,0.3,22,88,45,10,10,0.3,0.7,147,FALSE
+2017-04-15,"Nantou","Nantou County",152,NA,1.5,0.36,25,91,58,15,15,0.7,2.7,168,FALSE
+2017-04-15,"Guanyin","Taoyuan City",43,"Good",3.4,0.15,26,48,NA,9.5,13,3.6,2.3,303,FALSE
+2017-04-15,"Erlin","Changhua County",43,"Good",0.4,0.12,34,25,11,2,2.6,0.7,1.7,315,FALSE
+2017-04-15,"Yonghe","New Taipei City",82,"Moderate",3.6,1.64,15,51,28,44,77,34,1.3,31,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",90,"Moderate",3.5,0.5,6.5,58,47,25,27,1.7,2,2.9,TRUE
+2017-04-15,"Zhongming","Taichung City",91,"Moderate",3,0.55,24,65,39,24,26,2.6,1.3,62,FALSE
+2017-04-15,"Zhongming","Taichung City",NA,NA,1.6,0.23,32,33,19,11,15,3.7,3.1,12,TRUE
+2017-04-15,"Puzi","Chiayi County",81,"Moderate",2.6,0.27,49,158,24,4.6,6.5,1.8,4.4,346,TRUE
+2017-04-15,"Magong","Penghu County",63,"Moderate",1.7,0.18,52,44,19,1.1,2.4,1.3,6.4,24,FALSE
+2017-04-15,"Shanhua","Tainan City",115,NA,1.2,0.33,61,117,32,10,11,0.7,3.4,325,FALSE
+2017-04-15,"Guting","Taipei City",27,"Good",1.3,0.24,10,40,4,5.8,7.9,2,1.2,191,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",60,"Moderate",5.6,0.41,9.8,43,13,19,26,6.9,2.3,34,FALSE
+2017-04-15,"Meinong","Kaohsiung City",109,NA,2.2,0.53,17,64,42,13,17,4.9,1.2,156,FALSE
+2017-04-15,"Xinying","Tainan City",112,NA,2.1,0.35,53,51,7,13,15,1.3,2.4,325,FALSE
+2017-04-15,"Zhongli","Taoyuan City",99,"Moderate",9.1,1.59,1.9,63,39,39,67,27,0.6,270,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",124,"Unhealthy for Sensitive Groups",1.7,0.6,29,84,50,28,30,1.7,1.2,354,TRUE
+2017-04-15,"Xitun","Taichung City",29,"Good",1.3,0.33,4.2,25,8,15,23,8.6,1.2,199,FALSE
+2017-04-15,"Songshan","Taipei City",23,"Good",3.5,0.33,6,10,6,24,30,6.1,1.5,61,FALSE
+2017-04-15,"Mailiao","Yunlin County",44,"Good",4.2,0.23,31,27,7,13,16,3,5.6,51,FALSE
+2017-04-15,"Toufen","Miaoli County",38,"Good",NA,NA,41,15,12,NA,NA,NA,3,63,TRUE
+2017-04-15,"Matsu","Lienchiang County",41,"Good",3.3,0.1,21,41,16,3.6,5.8,2.2,4.7,114,FALSE
+2017-04-15,"Lunbei","Yunlin County",56,"Moderate",1.5,0.25,53,33,19,8.2,8.7,0.6,5,71,FALSE
+2017-04-15,"Hukou","Hsinchu County",39,"Good",2.2,0.22,40,19,3,4.5,5.2,0.7,6.2,43,TRUE
+2017-04-15,"Taixi","Yunlin County",1,"Good",NA,NA,1.2,NA,NA,NA,NA,NA,2.1,134,FALSE
+2017-04-15,"Linkou","New Taipei City",57,"Moderate",1.4,0.33,39,30,19,15,17,1.8,1.5,119,TRUE
+2017-04-15,"Kinmen","Kinmen County",93,"Moderate",3.9,0.37,58,94,35,11,13,1.6,4.1,61,TRUE
+2017-04-15,"Changhua","Changhua County",41,"Good",0.2,0.27,20,25,3,7.5,7.8,0.3,3.1,124,FALSE
+2017-04-15,"Chiayi","Chiayi City",87,"Moderate",3,0.36,47,57,30,14,17,3,3.1,27,FALSE
+2017-04-15,"Matsu","Lienchiang County",87,"Moderate",1.7,0.24,67,43,24,4.5,5,0.5,5.7,38,FALSE
+2017-04-15,"Renwu","Kaohsiung City",41,"Good",7.7,0.36,87,47,14,15,16,1.4,1.4,300,FALSE
+2017-04-15,"Xingang","Chiayi County",93,"Moderate",5.2,0.32,75,91,32,10,12,1.6,4.8,348,FALSE
+2017-04-15,"Erlin","Changhua County",117,NA,6.7,0.41,12,87,45,22,23,0.8,2.2,13,FALSE
+2017-04-15,"Keelung","Keelung City",44,"Good",0.8,0.16,44,30,15,1.7,3,1.3,1.7,75,FALSE
+2017-04-15,"Dali","Taichung City",55,"Moderate",2.8,0.38,14,41,8,17,21,3.9,1.9,276,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",73,"Moderate",11,0.51,6.1,52,18,26,38,12,0.8,96,FALSE
+2017-04-15,"Daliao","Kaohsiung City",101,NA,3.6,0.53,52,80,42,22,23,1.7,2.3,5.7,FALSE
+2017-04-15,"Tamsui","New Taipei City",27,"Good",1.8,0.73,4,27,9,27,37,11,NA,NA,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",24,"Good",7.3,0.32,23,11,9,13,14,0.9,0.5,40,FALSE
+2017-04-15,"Erlin","Changhua County",65,"Moderate",3.7,0.18,36,91,20,15,16,1.2,3.7,56,FALSE
+2017-04-15,"Datong","Taipei City",69,"Moderate",5,1.87,NA,63,25,39,62,24,NA,NA,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",113,NA,4.1,0.58,24,93,47,19,20,1.1,1.7,46,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",72,"Moderate",6,0.36,1.4,71,23,22,28,5.8,2.6,28,TRUE
+2017-04-15,"Linkou","New Taipei City",150,NA,1.1,0.31,66,93,41,7.2,8.7,1.5,3.1,320,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",63,"Moderate",2.5,0.49,26,33,21,19,20,0.7,1,15,FALSE
+2017-04-15,"Xinying","Tainan City",58,"Moderate",1.7,0.19,24,35,7,8.7,8.9,0.2,2.6,351,FALSE
+2017-04-15,"Zhudong","Hsinchu County",89,"Moderate",1.9,0.44,12,71,29,15,16,1.5,1.1,131,FALSE
+2017-04-15,"Hualien","Hualien County",39,"Good",1.7,0.26,40,13,12,3.4,3.9,0.5,4.9,59,TRUE
+2017-04-15,"Sanchong","New Taipei City",40,"Good",2.8,1.37,NA,22,5,42,108,66,NA,NA,FALSE
+2017-04-15,"Renwu","Kaohsiung City",129,"Unhealthy for Sensitive Groups",2.1,0.77,10,100,56,30,33,2.2,1.9,334,TRUE
+2017-04-15,"Chiayi","Chiayi City",68,"Moderate",3.3,0.38,51,57,22,17,19,2,3.3,297,FALSE
+2017-04-15,"Puzi","Chiayi County",80,"Moderate",5.8,0.4,42,81,31,12,16,4.2,2.2,89,FALSE
+2017-04-15,"Zhushan","Nantou County",109,NA,2.1,0.47,12,49,39,16,19,2.8,1.3,44,FALSE
+2017-04-15,"Xinying","Tainan City",56,"Moderate",4.1,0.28,55,56,29,11,12,1.4,2,327,FALSE
+2017-04-15,"Dayuan","Taoyuan City",185,NA,4.6,0.51,79,76,36,19,19,0.2,0.6,161,FALSE
+2017-04-15,"Xianxi","Changhua County",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,TRUE
+2017-04-15,"Dali","Taichung City",44,"Good",2.8,0.25,58,46,26,9.9,13,2.8,3,267,FALSE
+2017-04-15,"Dali","Taichung City",61,"Moderate",2.7,0.32,15,49,16,NA,NA,NA,1.3,91,FALSE
+2017-04-15,"Renwu","Kaohsiung City",116,"Unhealthy for Sensitive Groups",4,0.64,8.8,85,45,22,38,16,1.1,333,FALSE
+2017-04-15,"Matsu","Lienchiang County",57,"Moderate",1.8,0.5,29,44,27,6,7.6,1.6,6.8,14,FALSE
+2017-04-15,"Xingang","Chiayi County",98,"Moderate",2.5,0.42,13,66,40,11,15,4,2.4,45,FALSE
+2017-04-15,"Daliao","Kaohsiung City",79,"Moderate",5.2,0.37,6.6,87,24,22,23,1.4,1.1,328,FALSE
+2017-04-15,"Chiayi","Chiayi City",56,"Moderate",5.8,0.21,22,40,23,15,20,5.3,1.6,283,FALSE
+2017-04-15,"Lunbei","Yunlin County",84,"Moderate",3.4,0.39,18,57,36,15,19,4.2,3.5,0.2,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",21,"Good",1.4,0.55,26,22,8,18,21,3.5,3,63,FALSE
+2017-04-15,"Puzi","Chiayi County",127,NA,4.5,0.27,48,161,21,13,13,0.8,3.6,9.4,FALSE
+2017-04-15,"Renwu","Kaohsiung City",96,"Moderate",4,0.36,70,85,33,8.7,10,1.5,1.5,133,FALSE
+2017-04-15,"Wanhua","Taipei City",28,"Good",1.4,0.34,31,33,2,11,14,3.3,1,87,FALSE
+2017-04-15,"Magong","Penghu County",35,"Good",1.3,0.28,39,22,12,2.6,4.1,1.5,7.4,15,TRUE
+2017-04-15,"Qianzhen","Kaohsiung City",26,"Good",1.4,0.17,26,16,7,6.6,7.2,0.6,0.6,127,FALSE
+2017-04-15,"Meinong","Kaohsiung City",63,"Moderate",2.2,0.28,18,67,19,8.5,9.4,0.9,0.6,276,FALSE
+2017-04-15,"Zhushan","Nantou County",151,"Unhealthy",4.9,0.42,69,113,64,17,18,0.9,1.8,300,TRUE
+2017-04-15,"Fengyuan","Taichung City",44,"Good",1.8,0.24,34,22,19,9,11,1.6,2.1,60,FALSE
+2017-04-15,"Yilan","Yilan County",32,"Good",2.3,0.17,12,42,10,8.5,9,0.5,1.4,37,FALSE
+2017-04-15,"Banqiao","New Taipei City",32,"Good",1.1,0.28,39,26,6,10,12,1.6,3.7,58,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",43,"Good",2,0.2,8.1,32,8,13,13,0.7,1.1,48,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",91,"Moderate",2,0.39,16,44,17,17,19,1.8,1.7,139,FALSE
+2017-04-15,"Shalu","Taichung City",34,"Good",1.9,0.17,37,17,3,6.3,6.5,0.2,6,7.3,TRUE
+2017-04-15,"Dongshan","Yilan County",38,"Good",1.6,0.23,39,16,6,12,13,1.2,1.6,278,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",71,"Moderate",1.8,0.31,22,36,16,14,19,5.2,3.6,311,FALSE
+2017-04-15,"Xizhi","New Taipei City",61,"Moderate",0.2,0.36,44,29,24,4.4,5.6,1.2,4.3,48,FALSE
+2017-04-15,"Hengchun","Pingtung County",43,"Good",1.7,0.17,38,28,16,2.1,2.3,0.2,3.9,12,TRUE
+2017-04-15,"Nantou","Nantou County",74,"Moderate",3.1,0.37,26,44,17,15,15,0.5,1.2,330,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",58,"Moderate",2.8,0.26,42,51,21,13,14,0.8,1.7,294,FALSE
+2017-04-15,"Zhongshan","Taipei City",57,"Moderate",0.9,0.58,2.5,30,16,16,23,6.8,1.3,258,FALSE
+2017-04-15,"Taitung","Taitung County",31,"Good",1.3,0.27,30,11,7,2.2,4,1.9,1.9,337,FALSE
+2017-04-15,"Mailiao","Yunlin County",111,NA,2.2,0.33,46,81,49,12,12,0.2,0.9,140,FALSE
+2017-04-15,"Hengchun","Pingtung County",41,"Good",0.6,0.38,41,14,2,1.9,4,2,9.9,34,FALSE
+2017-04-15,"Chaozhou","Pingtung County",36,"Good",1.1,0.11,6,29,18,3.1,2.9,-0.2,0.9,5.7,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",84,"Moderate",1.7,0.43,24,57,27,14,15,0.6,2,32,FALSE
+2017-04-15,"Tainan","Tainan City",95,"Moderate",3.3,0.38,67,104,38,8.9,11,2.1,2.8,355,FALSE
+2017-04-15,"Hukou","Hsinchu County",44,"Good",2.1,0.34,34,34,20,15,15,0.9,4.3,58,FALSE
+2017-04-15,"Annan","Tainan City",68,"Moderate",2.6,0.37,32,42,15,16,17,1.3,2.3,310,FALSE
+2017-04-15,"Taixi","Yunlin County",45,"Good",1.7,0.09,38,30,14,6.6,7.1,0.5,6.6,15,FALSE
+2017-04-15,"Sanchong","New Taipei City",40,"Good",2.2,0.48,NA,35,9,17,26,9.4,NA,NA,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",45,"Good",1.9,0.2,35,34,15,8,11,3.3,4.1,247,FALSE
+2017-04-15,"Fengyuan","Taichung City",26,"Good",1.7,0.14,22,12,8,4.7,6.8,2.2,4.3,188,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",18,"Good",1.2,0.64,11,8,4,19,27,7.8,1.3,190,FALSE
+2017-04-15,"Longtan","Taoyuan City",99,"Moderate",1.7,0.41,59,60,34,10,11,0.8,2.7,62,FALSE
+2017-04-15,"Magong","Penghu County",54,"Moderate",1.7,0.27,34,51,17,6.7,8.7,2,5.2,7.1,TRUE
+2017-04-15,"Xinzhuang","New Taipei City",50,"Good",3.3,0.73,27,35,22,34,36,2.4,1,174,FALSE
+2017-04-15,"Xinying","Tainan City",74,"Moderate",3.5,0.25,48,49,29,7.6,9,1.4,3,233,FALSE
+2017-04-15,"Douliu","Yunlin County",37,"Good",2.9,0.13,8.6,36,6,4.5,5.2,0.7,0.8,113,FALSE
+2017-04-15,"Guanyin","Taoyuan City",39,"Good",2.1,0.14,37,31,8,5.7,7,1.3,3.7,41,TRUE
+2017-04-15,"Toufen","Miaoli County",69,"Moderate",0.4,0.43,19,45,22,18,23,5.4,1,117,FALSE
+2017-04-15,"Zhongshan","Taipei City",61,"Moderate",3.6,0.91,16,31,18,23,43,20,0.8,57,FALSE
+2017-04-15,"Wanhua","Taipei City",54,"Moderate",1.8,0.54,39,45,14,19,27,8.3,2.7,200,FALSE
+2017-04-15,"Xinying","Tainan City",63,"Moderate",2.3,0.15,49,49,19,5.5,6.7,1.2,4.6,101,FALSE
+2017-04-15,"Magong","Penghu County",25,"Good",2,0.24,26,15,6,5.9,7.9,2,2.5,148,FALSE
+2017-04-15,"Renwu","Kaohsiung City",70,"Moderate",3.7,0.31,68,56,24,10,12,1.3,2.5,290,FALSE
+2017-04-15,"Linkou","New Taipei City",55,"Moderate",1.5,0.31,39,37,13,17,23,5.9,2.5,114,FALSE
+2017-04-15,"Tamsui","New Taipei City",39,"Good",1.7,0.35,28,28,17,7.5,9.5,2,NA,NA,TRUE
+2017-04-15,"Zhushan","Nantou County",95,"Moderate",2.6,0.39,5.5,80,30,15,18,3.5,1,105,FALSE
+2017-04-15,"Longtan","Taoyuan City",68,"Moderate",3.3,0.2,57,44,28,4.3,5.7,1.3,4,282,FALSE
+2017-04-15,"Dali","Taichung City",89,"Moderate",NA,0.7,17,96,41,16,20,4.3,0.9,262,FALSE
+2017-04-15,"Linkou","New Taipei City",26,"Good",7.2,0.48,2,24,12,24,31,7.2,1.9,125,FALSE
+2017-04-15,"Taixi","Yunlin County",65,"Moderate",1.6,0.13,5.3,32,24,8.1,10,2.3,1.1,129,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",42,"Good",3,0.26,34,43,12,9.1,11,2.4,2.5,49,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",105,"Unhealthy for Sensitive Groups",3.4,0.51,26,155,45,18,19,0.8,1.7,36,FALSE
+2017-04-15,"Erlin","Changhua County",26,"Good",2.6,0.17,12,17,6,5.7,6.8,1.1,3.5,217,FALSE
+2017-04-15,"Fengyuan","Taichung City",56,"Moderate",1,0.35,12,35,21,8.7,10,1.4,0.9,119,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",23,"Good",1.6,0.12,23,31,NA,NA,NA,NA,4.6,187,FALSE
+2017-04-15,"Mailiao","Yunlin County",95,"Moderate",3.1,0.41,20,86,38,16,19,2.3,1.2,124,FALSE
+2017-04-15,"Douliu","Yunlin County",35,"Good",3,0.18,15,29,14,4.9,5.6,0.6,0.9,124,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",58,"Moderate",2.9,0.34,36,34,16,16,20,4.3,4.2,8.1,TRUE
+2017-04-15,"Fuxing","Kaohsiung City",133,"Unhealthy for Sensitive Groups",4.9,0.39,61,149,49,17,19,2.8,1.2,212,TRUE
+2017-04-15,"Douliu","Yunlin County",108,NA,5.3,0.43,21,76,34,16,22,5.8,0.8,69,FALSE
+2017-04-15,"Renwu","Kaohsiung City",44,"Good",2.5,0.17,17,9,12,7.3,9.8,2.4,3,243,FALSE
+2017-04-15,"Songshan","Taipei City",13,"Good",2.1,0.39,2.1,9,5,13,28,15,1.1,72,FALSE
+2017-04-15,"Douliu","Yunlin County",23,"Good",2.3,0.17,27,17,7,5.5,6.5,1,3.1,288,FALSE
+2017-04-15,"Magong","Penghu County",71,"Moderate",1.9,0.2,37,42,20,4.1,4.6,0.5,3.2,5.9,FALSE
+2017-04-15,"Hengchun","Pingtung County",25,"Good",1.1,0.03,18,10,10,0.9,2.1,1.3,5.6,63,FALSE
+2017-04-15,"Wanhua","Taipei City",68,"Moderate",NA,0.62,19,23,12,22,30,8,3,88,FALSE
+2017-04-15,"Taixi","Yunlin County",53,"Moderate",3.1,0.11,22,29,19,5,6.5,1.5,5.4,251,FALSE
+2017-04-15,"Datong","Taipei City",101,NA,3.1,1.51,NA,83,34,42,74,33,NA,NA,FALSE
+2017-04-15,"Xingang","Chiayi County",20,"Good",1,0.19,11,NA,4,11,15,4.3,1.6,104,FALSE
+2017-04-15,"Dongshan","Yilan County",57,"Moderate",1.6,0.24,17,39,18,9.5,13,3.7,1.3,235,FALSE
+2017-04-15,"Zhongli","Taoyuan City",68,"Moderate",4.1,0.85,17,77,25,40,59,20,1.1,18,TRUE
+2017-04-15,"Dali","Taichung City",48,"Good",5.2,0.64,108,50,15,20,22,2,2.4,236,FALSE
+2017-04-15,"Zhongli","Taoyuan City",59,"Moderate",1.2,0.52,19,40,10,21,31,9.8,1.3,172,FALSE
+2017-04-15,"Yilan","Yilan County",34,"Good",1.2,0.2,35,19,5,3.8,4.1,0.3,1,218,FALSE
+2017-04-15,"Wanli","New Taipei City",132,NA,2.3,0.27,70,113,33,3.3,4.5,1.2,9.8,22,FALSE
+2017-04-15,"Mailiao","Yunlin County",69,"Moderate",0.8,0.21,43,77,17,5.7,7.3,1.6,3.7,109,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",123,"Unhealthy for Sensitive Groups",3.3,0.45,31,98,50,20,23,3,1.4,51,TRUE
+2017-04-15,"Dayuan","Taoyuan City",40,"Good",1.9,0.1,31,27,14,3.9,5,1.1,4.4,256,FALSE
+2017-04-15,"Miaoli","Miaoli County",95,"Moderate",3.4,0.35,55,70,37,16,20,3.6,2.4,326,FALSE
+2017-04-15,"Toufen","Miaoli County",55,"Moderate",1.3,0.29,29,32,16,8.6,8.4,-0.2,1.6,194,FALSE
+2017-04-15,"Xitun","Taichung City",72,"Moderate",3.4,0.32,42,99,30,19,25,6.2,3.2,299,FALSE
+2017-04-15,"Mailiao","Yunlin County",36,"Good",2,0.14,18,29,12,5.9,7.4,1.6,2,233,FALSE
+2017-04-15,"Miaoli","Miaoli County",41,"Good",1.6,0.38,20,24,10,9.6,12,1.9,2.4,213,FALSE
+2017-04-15,"Sanchong","New Taipei City",50,"Good",3.1,1.47,NA,54,15,51,122,71,NA,NA,FALSE
+2017-04-15,"Nantou","Nantou County",95,"Moderate",0.8,0.39,31,47,36,9.5,11,1.2,2,33,FALSE
+2017-04-15,"Renwu","Kaohsiung City",49,"Good",2.4,0.18,16,37,13,7.4,7.7,0.3,0.9,162,FALSE
+2017-04-15,"Dali","Taichung City",33,"Good",2.2,0.46,35,4,11,17,18,1.3,2.4,35,FALSE
+2017-04-15,"Toufen","Miaoli County",36,"Good",8.7,0.37,1.8,31,14,22,35,13,1.7,223,FALSE
+2017-04-15,"Shilin","Taipei City",21,"Good",1.9,0.1,19,19,6,2.1,3.1,1,3.4,82,FALSE
+2017-04-15,"Shilin","Taipei City",38,"Good",0.6,0.25,38,13,2,6.8,7.6,0.8,2.2,115,TRUE
+2017-04-15,"Guanyin","Taoyuan City",47,"Good",3.9,0.26,51,42,17,15,16,1.8,6,82,FALSE
+2017-04-15,"Shilin","Taipei City",25,"Good",3.9,0.3,14,33,14,13,22,9.2,1.2,298,FALSE
+2017-04-15,"Zhongshan","Taipei City",42,"Good",1.4,0.25,31,19,10,8.3,9.6,1.3,1.4,136,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",34,"Good",2.3,0.61,3.1,15,12,24,36,13,0.8,67,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",115,"Unhealthy for Sensitive Groups",2,0.45,23,80,43,15,15,0.3,2.4,0.9,TRUE
+2017-04-15,"Puli","Nantou County",54,"Moderate",2.6,0.32,13,34,13,14,15,0.8,1.2,313,TRUE
+2017-04-15,"Meinong","Kaohsiung City",44,"Good",2,0.13,40,67,15,2.5,4.6,2.1,2.6,89,FALSE
+2017-04-15,"Zhushan","Nantou County",67,"Moderate",1.6,0.37,29,27,22,13,14,1.1,2,307,FALSE
+2017-04-15,"Hualien","Hualien County",38,"Good",1,0.24,36,21,11,2.5,3.1,0.5,2,249,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",117,"Unhealthy for Sensitive Groups",3.7,0.69,33,112,69,28,30,1.8,5,3.6,TRUE
+2017-04-15,"Taitung","Taitung County",30,"Good",0.7,0.28,27,23,8,4.3,6.6,2.4,1.9,326,TRUE
+2017-04-15,"Guanyin","Taoyuan City",146,NA,6.7,0.42,45,85,54,19,20,0.7,6.9,83,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",43,"Good",2.1,0.36,11,39,21,10,14,3.4,2.5,253,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",159,"Unhealthy",3.3,0.71,5.2,120,84,28,30,2.2,1.2,1.3,TRUE
+2017-04-15,"Fengshan","Kaohsiung City",61,"Moderate",2.7,0.23,43,52,14,6.4,7,0.6,1.5,301,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",93,"Moderate",2.7,0.2,32,46,20,9.2,12,2.8,1.6,241,FALSE
+2017-04-15,"Tamsui","New Taipei City",54,"Moderate",1.2,0.34,13,32,14,13,15,1.8,NA,NA,FALSE
+2017-04-15,"Pingtung","Pingtung County",23,"Good",1.5,0.25,8.1,26,8,5.4,8.2,2.8,1.2,53,FALSE
+2017-04-15,"Tainan","Tainan City",73,"Moderate",1.6,0.79,44,48,23,20,22,1.7,1,146,FALSE
+2017-04-15,"Zhudong","Hsinchu County",61,"Moderate",2,0.13,34,29,19,7.3,8.5,1.2,1.3,83,FALSE
+2017-04-15,"Shanhua","Tainan City",31,"Good",3.2,0.21,12,27,12,6.6,9.1,2.6,3.6,145,FALSE
+2017-04-15,"Toufen","Miaoli County",87,"Moderate",1.2,0.36,16,44,27,12,13,1.2,0.9,93,FALSE
+2017-04-15,"Xianxi","Changhua County",86,"Moderate",2.1,0.5,29,48,32,14,18,4.1,1.6,131,FALSE
+2017-04-15,"Xianxi","Changhua County",53,"Moderate",8.4,0.34,5.3,34,21,25,27,1.9,1.3,40,FALSE
+2017-04-15,"Toufen","Miaoli County",76,"Moderate",2.4,0.32,41,58,27,10,12,2.1,2.2,296,FALSE
+2017-04-15,"Hualien","Hualien County",32,"Good",1.4,0.27,16,30,13,7.4,7.4,0,2.8,236,FALSE
+2017-04-15,"Douliu","Yunlin County",115,NA,2.5,0.29,58,86,27,14,15,0.8,3.6,354,FALSE
+2017-04-15,"Tucheng","New Taipei City",35,"Good",1.7,0.31,19,28,9,9.1,16,6.5,2.6,212,FALSE
+2017-04-15,"Cailiao","New Taipei City",60,"Moderate",6.8,1.17,1.2,39,24,36,57,21,1.5,122,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",153,NA,3.1,0.7,14,84,55,27,30,2.5,2.4,42,FALSE
+2017-04-15,"Songshan","Taipei City",54,"Moderate",1.7,0.33,17,21,7,16,18,1.9,1.4,67,FALSE
+2017-04-15,"Puzi","Chiayi County",37,"Good",1.9,0.12,14,31,13,NA,NA,NA,1.7,11,FALSE
+2017-04-15,"Magong","Penghu County",48,"Good",2.8,0.19,39,19,19,4,5.1,1.1,1.9,0,FALSE
+2017-04-15,"Tainan","Tainan City",39,"Good",2.6,0.56,9.1,34,13,26,35,9.5,1.6,31,TRUE
+2017-04-15,"Mailiao","Yunlin County",158,NA,3.2,0.5,32,189,49,14,17,2.7,7.6,65,FALSE
+2017-04-15,"Zhudong","Hsinchu County",37,"Good",0.8,0.17,6.7,21,13,7.7,9.9,2.2,1.2,39,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",77,"Moderate",2.9,0.24,46,70,33,9.3,11,1.5,2.8,259,FALSE
+2017-04-15,"Tucheng","New Taipei City",48,"Good",3,0.25,8.5,30,16,12,13,1.8,1.9,219,FALSE
+2017-04-15,"Puzi","Chiayi County",60,"Moderate",3,0.32,21,29,19,13,14,1,1.6,7.9,TRUE
+2017-04-15,"Tamsui","New Taipei City",47,"Good",1.4,0.19,45,32,14,1.2,2.5,1.3,NA,NA,FALSE
+2017-04-15,"Shanhua","Tainan City",121,"Unhealthy for Sensitive Groups",3.4,0.49,18,82,54,19,20,0.8,2.4,349,TRUE
+2017-04-15,"Puzi","Chiayi County",101,NA,3.2,0.51,7.4,86,37,18,20,2,1.4,356,FALSE
+2017-04-15,"Sanyi","Miaoli County",94,"Moderate",2.4,0.58,22,61,40,14,18,4.2,2.2,318,FALSE
+2017-04-15,"Annan","Tainan City",58,"Moderate",3.5,0.71,10,44,19,20,29,8.6,2.2,242,FALSE
+2017-04-15,"Longtan","Taoyuan City",84,"Moderate",2,0.28,60,59,17,9,10,1,5.3,60,FALSE
+2017-04-15,"Lunbei","Yunlin County",82,"Moderate",4.4,0.53,52,94,38,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Zhongli","Taoyuan City",31,"Good",3.4,0.51,15,31,NA,31,55,24,1.2,21,TRUE
+2017-04-15,"Taixi","Yunlin County",111,NA,3.8,0.22,37,48,35,7,8.5,1.5,3,48,FALSE
+2017-04-15,"Dayuan","Taoyuan City",27,"Good",2.1,0.33,20,28,4,17,21,4.7,4,43,TRUE
+2017-04-15,"Zhongshan","Taipei City",61,"Moderate",1.7,0.48,35,43,22,7.6,7.6,0,2.9,118,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",140,"Unhealthy for Sensitive Groups",6.5,0.56,53,86,64,21,25,3.6,1.8,314,FALSE
+2017-04-15,"Zhushan","Nantou County",42,"Good",3.2,0.18,56,27,16,4.7,5,0.2,2,284,FALSE
+2017-04-15,"Linkou","New Taipei City",27,"Good",1.3,0.17,16,16,9,13,21,7.9,5.5,255,FALSE
+2017-04-15,"Taixi","Yunlin County",55,"Moderate",1.7,0.27,13,31,23,9,12,2.6,2,110,FALSE
+2017-04-15,"Magong","Penghu County",75,"Moderate",1.7,0.47,33,115,44,3.4,4.9,1.5,8.5,92,FALSE
+2017-04-15,"Zhongshan","Taipei City",20,"Good",0.9,0.5,12,15,NA,18,24,5.9,1.7,150,FALSE
+2017-04-15,"Renwu","Kaohsiung City",113,NA,8.2,0.48,12,80,48,21,23,2,0.4,16,FALSE
+2017-04-15,"Zhushan","Nantou County",101,NA,2.7,0.41,17,44,36,15,16,0.9,0.7,160,FALSE
+2017-04-15,"Yonghe","New Taipei City",52,"Moderate",1.9,0.31,49,36,10,8.7,10,1.4,3,98,FALSE
+2017-04-15,"Banqiao","New Taipei City",25,"Good",1.8,0.4,23,12,8,15,19,4.3,3.6,337,TRUE
+2017-04-15,"Cailiao","New Taipei City",60,"Moderate",3.1,0.38,15,43,21,11,17,5.5,1.7,240,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",133,NA,4.4,0.57,24,130,45,27,28,1,2.7,338,FALSE
+2017-04-15,"Zhongli","Taoyuan City",61,"Moderate",3.2,0.77,24,42,6,27,46,19,2,356,FALSE
+2017-04-15,"Erlin","Changhua County",54,"Moderate",2.7,0.38,31,67,21,12,12,0.7,3.2,18,FALSE
+2017-04-15,"Yangming","Taipei City",21,"Good",1.4,0.08,21,3,NA,0.7,1.6,0.9,NA,NA,FALSE
+2017-04-15,"Hualien","Hualien County",11,"Good",1.1,0.08,12,4,NA,1.1,2.3,1.2,3.2,227,FALSE
+2017-04-15,"Changhua","Changhua County",90,"Moderate",11,0.47,56,72,29,17,20,2.9,3.2,312,FALSE
+2017-04-15,"Wanli","New Taipei City",102,NA,2.8,0.25,68,133,26,4,5.6,1.5,7.2,25,FALSE
+2017-04-15,"Fengyuan","Taichung City",58,"Moderate",1.1,0.19,60,28,22,6.4,7.4,1,3.6,29,FALSE
+2017-04-15,"Keelung","Keelung City",38,"Good",1.3,0.17,42,19,8,2.3,2.4,0.1,2.5,79,TRUE
+2017-04-15,"Fengyuan","Taichung City",76,"Moderate",0.9,0.26,47,34,18,3.9,4.8,0.9,1.3,46,FALSE
+2017-04-15,"Kinmen","Kinmen County",88,"Moderate",2.2,0.36,66,47,31,8,8.8,0.7,3,102,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",102,NA,4.4,0.83,25,62,31,24,30,5.8,1.3,243,FALSE
+2017-04-15,"Zhushan","Nantou County",68,"Moderate",2.2,0.21,33,20,10,7.9,10,2.4,1,200,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",38,"Good",4.3,0.41,65,49,16,17,20,2.8,2.7,311,FALSE
+2017-04-15,"Songshan","Taipei City",25,"Good",0.8,0.29,27,15,7,14,20,6,2,63,FALSE
+2017-04-15,"Xindian","New Taipei City",71,"Moderate",4.6,0.84,38,52,32,24,29,5.3,0.8,124,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",95,"Moderate",3.1,2.12,2.6,55,38,63,87,23,0.6,207,FALSE
+2017-04-15,"Xingang","Chiayi County",41,"Good",1.4,0.18,20,16,16,6.1,6.8,0.7,0.9,242,FALSE
+2017-04-15,"Tucheng","New Taipei City",26,"Good",1.6,0.25,NA,13,NA,11,12,0.8,0.9,164,FALSE
+2017-04-15,"Annan","Tainan City",135,NA,4.8,0.66,13,94,60,19,31,12,2.8,315,FALSE
+2017-04-15,"Matsu","Lienchiang County",87,"Moderate",1.9,0.12,65,48,19,3.2,3.7,0.4,3,190,FALSE
+2017-04-15,"Guanyin","Taoyuan City",27,"Good",2.2,0.18,23,47,8,5.4,7.1,1.7,11,82,FALSE
+2017-04-15,"Wanli","New Taipei City",50,"Good",1.5,0.17,6.7,20,11,5.3,6.7,1.4,2,192,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",31,"Good",2.2,0.57,5,38,6,22,25,3.5,0.5,119,FALSE
+2017-04-15,"Chaozhou","Pingtung County",NA,NA,3.8,0.46,61,82,57,10,NA,NA,NA,NA,TRUE
+2017-04-15,"Wanli","New Taipei City",65,"Moderate",8.3,0.17,40,31,24,5.6,7.6,2,2.5,45,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",86,"Moderate",14,0.55,15,48,27,24,26,2.1,0.8,113,FALSE
+2017-04-15,"Nantou","Nantou County",65,"Moderate",NA,NA,30,76,22,NA,NA,NA,3.6,303,FALSE
+2017-04-15,"Nantou","Nantou County",103,NA,0.9,0.49,31,54,29,18,20,1.7,1,40,FALSE
+2017-04-15,"Toufen","Miaoli County",61,"Moderate",2.6,0.2,78,37,23,4.6,5.8,1.1,2.5,293,FALSE
+2017-04-15,"Tamsui","New Taipei City",63,"Moderate",NA,NA,57,65,30,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Keelung","Keelung City",31,"Good",1.5,0.1,22,6,7,3.4,4.5,1.1,3.1,77,FALSE
+2017-04-15,"Hualien","Hualien County",26,"Good",0.2,0.09,18,13,5,0.8,2.8,2,3.6,148,FALSE
+2017-04-15,"Annan","Tainan City",27,"Good",NA,0.34,8.6,30,7,13,14,1.8,0.6,42,FALSE
+2017-04-15,"Dayuan","Taoyuan City",63,"Moderate",2.5,0.24,47,50,30,13,16,2.1,3.3,49,FALSE
+2017-04-15,"Xitun","Taichung City",77,"Moderate",3,0.32,55,51,16,10,12,1.3,0.5,211,FALSE
+2017-04-15,"Guanyin","Taoyuan City",44,"Good",1.5,0.08,31,26,8,2.7,3.3,0.6,2.3,306,FALSE
+2017-04-15,"Magong","Penghu County",45,"Good",NA,NA,NA,NA,NA,NA,NA,NA,5.2,81,FALSE
+2017-04-15,"Yonghe","New Taipei City",59,"Moderate",1.7,0.68,38,35,16,26,40,13,2.4,48,FALSE
+2017-04-15,"Tainan","Tainan City",101,NA,3.6,0.32,68,69,36,6.7,7.4,0.6,2.9,306,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",55,"Moderate",9.2,0.86,4.5,31,14,32,43,12,0.5,181,FALSE
+2017-04-15,"Datong","Taipei City",64,"Moderate",0.7,0.28,NA,50,5,5.1,6.5,1.4,NA,NA,FALSE
+2017-04-15,"Zhushan","Nantou County",152,"Unhealthy",NA,0.42,3.8,56,43,21,22,1.2,0.6,352,FALSE
+2017-04-15,"Chaozhou","Pingtung County",24,"Good",2.8,0.15,19,35,3,4.7,7.5,2.8,2,219,FALSE
+2017-04-15,"Xizhi","New Taipei City",51,"Moderate",2.3,0.34,35,35,15,17,19,1.6,2.2,39,FALSE
+2017-04-15,"Shanhua","Tainan City",110,NA,4.2,0.36,46,62,34,11,13,2.1,4.7,318,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",32,"Good",3.1,0.18,14,29,6,6.5,9.2,2.7,1.7,202,FALSE
+2017-04-15,"Chiayi","Chiayi City",80,"Moderate",2.4,0.37,51,66,37,10,12,1.3,0.5,104,FALSE
+2017-04-15,"Zhongli","Taoyuan City",46,"Good",8.1,0.77,1,35,15,15,35,20,1.1,186,FALSE
+2017-04-15,"Xindian","New Taipei City",36,"Good",1.3,0.48,29,30,13,16,18,1.9,1.8,128,FALSE
+2017-04-15,"Yonghe","New Taipei City",53,"Moderate",0.9,0.31,21,26,14,7.7,8.8,1.2,1,113,FALSE
+2017-04-15,"Zhongshan","Taipei City",42,"Good",1.7,0.93,2.5,15,NA,44,74,30,0.9,250,FALSE
+2017-04-15,"Puli","Nantou County",42,"Good",2,0.35,23,11,13,13,15,1.4,1.6,37,FALSE
+2017-04-15,"Guanshan","Taitung County",27,"Good",1.1,NA,5.6,29,6,4.7,8.3,3.6,0.5,290,FALSE
+2017-04-15,"Xianxi","Changhua County",67,"Moderate",1.9,0.22,40,14,15,3.6,4.4,0.8,1,42,FALSE
+2017-04-15,"Xindian","New Taipei City",66,"Moderate",2.8,0.34,83,29,29,11,12,1.8,2.4,329,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",27,"Good",5.2,0.23,19,23,11,11,18,6.4,1.3,217,FALSE
+2017-04-15,"Wanhua","Taipei City",39,"Good",-0.4,0.43,29,18,NA,15,19,4.1,3.8,105,FALSE
+2017-04-15,"Dongshan","Yilan County",27,"Good",1.7,0.29,11,32,11,7.4,15,7.6,0.6,90,FALSE
+2017-04-15,"Taixi","Yunlin County",75,"Moderate",1.2,0.16,31,36,24,5.9,7,1.1,6.5,33,FALSE
+2017-04-15,"Puzi","Chiayi County",78,"Moderate",3.2,0.29,22,89,35,11,12,1,0.8,106,FALSE
+2017-04-15,"Lunbei","Yunlin County",77,"Moderate",3.8,0.2,53,67,24,14,15,0.8,2.5,348,FALSE
+2017-04-15,"Tucheng","New Taipei City",24,"Good",1.7,0.22,38,7,7,6.2,7,0.9,1.3,149,FALSE
+2017-04-15,"Songshan","Taipei City",128,NA,1.8,0.27,52,52,40,4.5,5.5,1,2.8,47,FALSE
+2017-04-15,"Guanyin","Taoyuan City",54,"Moderate",4.3,0.2,34,34,18,6.9,7.5,0.6,8.4,67,TRUE
+2017-04-15,"Nantou","Nantou County",59,"Moderate",4.5,0.72,1.3,49,20,23,46,24,0.8,137,FALSE
+2017-04-15,"Tainan","Tainan City",119,NA,2.2,0.42,33,65,36,15,16,1.3,1.6,93,FALSE
+2017-04-15,"Daliao","Kaohsiung City",26,"Good",1.9,0.27,6.8,32,9,9.8,14,4.2,1.3,156,FALSE
+2017-04-15,"Shanhua","Tainan City",110,NA,3.3,0.35,46,128,30,14,15,0.7,4.6,350,FALSE
+2017-04-15,"Douliu","Yunlin County",80,"Moderate",2.7,0.27,11,49,18,26,28,2.8,1.4,25,FALSE
+2017-04-15,"Songshan","Taipei City",72,"Moderate",2.9,0.35,72,40,36,16,19,2.8,1.8,32,FALSE
+2017-04-15,"Guanyin","Taoyuan City",82,"Moderate",3.6,0.37,35,92,30,15,16,0.8,7.5,78,FALSE
+2017-04-15,"Renwu","Kaohsiung City",154,"Unhealthy",2.2,0.47,11,109,58,16,17,1,1.9,331,TRUE
+2017-04-15,"Lunbei","Yunlin County",73,"Moderate",2.1,0.21,27,38,17,NA,NA,NA,1.9,8.7,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",103,"Unhealthy for Sensitive Groups",2.4,0.25,52,87,34,8.5,9.2,0.7,4.9,325,FALSE
+2017-04-15,"Hengchun","Pingtung County",71,"Moderate",0.8,0.23,60,18,2,1.7,2.6,0.9,5.9,41,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",61,"Moderate",6.5,0.65,2.6,56,13,32,37,4.9,0.6,256,FALSE
+2017-04-15,"Puli","Nantou County",90,"Moderate",2.2,0.22,31,50,32,7.5,8.5,1,1.9,76,FALSE
+2017-04-15,"Zhushan","Nantou County",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Guting","Taipei City",26,"Good",1.7,0.43,11,13,NA,14,18,3.9,0.4,122,FALSE
+2017-04-15,"Renwu","Kaohsiung City",121,NA,9.6,1.18,17,90,52,63,95,32,0.5,18,FALSE
+2017-04-15,"Zhongshan","Taipei City",29,"Good",1.5,0.3,26,22,14,11,19,7.9,3.1,120,FALSE
+2017-04-15,"Dali","Taichung City",56,"Moderate",1.7,0.26,48,47,9,7,8.3,1.3,3,13,FALSE
+2017-04-15,"Linkou","New Taipei City",52,"Moderate",1.5,0.13,38,46,19,6.7,9,2.3,4.1,261,FALSE
+2017-04-15,"Erlin","Changhua County",76,"Moderate",3.7,0.21,29,61,23,11,15,3.8,3.7,45,FALSE
+2017-04-15,"Shanhua","Tainan City",53,"Moderate",NA,NA,NA,NA,NA,NA,NA,NA,6.2,240,FALSE
+2017-04-15,"Changhua","Changhua County",126,NA,3.3,0.67,9,63,49,28,29,0.9,1.7,354,FALSE
+2017-04-15,"Taitung","Taitung County",25,"Good",1.1,0.43,24,25,8,9.5,11,1.7,1.1,312,FALSE
+2017-04-15,"Nantou","Nantou County",43,"Good",0.9,0.17,18,23,13,3.5,3.6,0.1,1.6,149,FALSE
+2017-04-15,"Daliao","Kaohsiung City",44,"Good",4.4,0.27,19,44,16,8.4,15,6.9,1.6,98,FALSE
+2017-04-15,"Puzi","Chiayi County",72,"Moderate",3.2,0.23,40,102,18,7.8,9.1,1.3,3.8,97,FALSE
+2017-04-15,"Cailiao","New Taipei City",54,"Moderate",2.4,0.31,50,23,16,10,13,2.6,3.3,55,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",47,"Good",2.7,0.41,23,21,11,19,22,2.7,0.9,134,FALSE
+2017-04-15,"Banqiao","New Taipei City",83,"Moderate",17,0.62,46,105,49,22,24,2.8,2.3,291,FALSE
+2017-04-15,"Sanchong","New Taipei City",55,"Moderate",4.5,1.31,NA,58,4,47,116,69,NA,NA,FALSE
+2017-04-15,"Yilan","Yilan County",41,"Good",2.5,0.19,33,35,10,5.7,7.9,2.1,2,52,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",28,"Good",5.8,0.27,22,20,17,13,14,0.7,1.9,104,TRUE
+2017-04-15,"Zhudong","Hsinchu County",139,"Unhealthy for Sensitive Groups",1.5,0.41,41,62,37,5.2,6.3,1.1,5,42,TRUE
+2017-04-15,"Hukou","Hsinchu County",60,"Moderate",3,0.18,56,21,13,1.1,1.5,0.4,2.6,358,FALSE
+2017-04-15,"Matsu","Lienchiang County",83,"Moderate",3.2,0.31,55,60,31,4.7,5.2,0.5,3.8,44,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",88,"Moderate",2.3,0.33,37,59,16,11,15,3.5,4.1,37,FALSE
+2017-04-15,"Dali","Taichung City",134,NA,4.5,1.13,31,92,45,49,62,14,1.4,271,FALSE
+2017-04-15,"Wanhua","Taipei City",57,"Moderate",1.4,0.71,4.3,23,8,16,28,12,0.6,50,FALSE
+2017-04-15,"Shalu","Taichung City",77,"Moderate",4.9,0.38,31,52,31,14,15,0.8,1.7,173,FALSE
+2017-04-15,"Linkou","New Taipei City",65,"Moderate",4.3,0.55,1.9,66,33,38,46,8.5,0.9,171,FALSE
+2017-04-15,"Tucheng","New Taipei City",114,NA,5,0.59,54,79,50,23,25,2.4,2.6,352,FALSE
+2017-04-15,"Yangming","Taipei City",67,"Moderate",2.5,0.23,66,31,25,3.2,3.9,0.6,NA,NA,FALSE
+2017-04-15,"Tamsui","New Taipei City",43,"Good",3.1,0.33,9.9,27,8,9.9,12,1.6,NA,NA,FALSE
+2017-04-15,"Zhongli","Taoyuan City",53,"Moderate",5,1.14,32,39,16,29,55,26,1.6,126,FALSE
+2017-04-15,"Renwu","Kaohsiung City",98,"Moderate",3,0.17,54,189,38,7.5,9.5,2,2.5,328,FALSE
+2017-04-15,"Fengshan","Kaohsiung City",112,"Unhealthy for Sensitive Groups",6,0.6,14,113,29,33,34,0.8,0.9,23,TRUE
+2017-04-15,"Chiayi","Chiayi City",77,"Moderate",4,0.33,25,75,15,17,18,0.9,2,230,FALSE
+2017-04-15,"Xizhi","New Taipei City",76,"Moderate",2.4,0.59,35,41,25,24,26,2.2,0.5,110,FALSE
+2017-04-15,"Shalu","Taichung City",71,"Moderate",2.4,0.38,42,65,29,10,12,1.5,6.7,63,FALSE
+2017-04-15,"Xizhi","New Taipei City",52,"Moderate",4.3,0.52,7.6,13,NA,36,64,28,1.3,75,TRUE
+2017-04-15,"Renwu","Kaohsiung City",67,"Moderate",5.5,0.29,68,44,22,8.1,9.8,1.8,1.6,316,FALSE
+2017-04-15,"Dayuan","Taoyuan City",57,"Moderate",2,0.22,41,39,4,9.3,9.9,0.6,5.2,58,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",38,"Good",2.2,0.32,36,26,13,11,12,1.1,4.8,70,FALSE
+2017-04-15,"Wanli","New Taipei City",48,"Good",1.7,0.14,55,34,17,1.9,3,1,7.3,56,TRUE
+2017-04-15,"Qianjin","Kaohsiung City",56,"Moderate",5.9,1.13,20,81,14,41,60,19,1.2,139,TRUE
+2017-04-15,"Toufen","Miaoli County",49,"Good",-0.3,0.49,27,26,15,14,16,2.2,4.4,73,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",28,"Good",3.6,0.1,9.7,29,3,7.9,15,6.6,5.4,179,FALSE
+2017-04-15,"Xizhi","New Taipei City",30,"Good",1.3,0.42,21,18,10,18,26,7.3,1.2,139,FALSE
+2017-04-15,"Puzi","Chiayi County",62,"Moderate",2.2,0.37,48,108,35,8.4,9.2,0.9,3,64,FALSE
+2017-04-15,"Hualien","Hualien County",25,"Good",2.1,0.26,33,8,4,11,13,2.1,3.7,27,TRUE
+2017-04-15,"Xianxi","Changhua County",80,"Moderate",2.2,0.34,20,38,28,16,16,0.3,1.6,14,FALSE
+2017-04-15,"Puzi","Chiayi County",87,"Moderate",3.1,0.2,61,46,16,5,6.2,1.1,1.9,280,FALSE
+2017-04-15,"Erlin","Changhua County",31,"Good",3,0.11,40,23,14,2.7,3.5,0.8,1.9,97,FALSE
+2017-04-15,"Tainan","Tainan City",103,"Unhealthy for Sensitive Groups",2.4,0.39,16,109,22,17,20,3,2.3,14,FALSE
+2017-04-15,"Douliu","Yunlin County",105,NA,2,0.42,43,82,58,17,18,1,2.3,7.4,FALSE
+2017-04-15,"Taixi","Yunlin County",41,"Good",1.9,0.11,23,32,12,2.5,4.8,2.3,4.8,238,FALSE
+2017-04-15,"Miaoli","Miaoli County",74,"Moderate",2.6,0.24,45,52,27,10,9.9,-0.1,3.4,60,FALSE
+2017-04-15,"Erlin","Changhua County",114,"Unhealthy for Sensitive Groups",2.1,0.48,29,114,37,7.4,8.2,0.8,1.6,59,TRUE
+2017-04-15,"Taoyuan","Taoyuan City",32,"Good",8.2,0.93,2.2,26,17,18,49,32,0.6,57,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",31,"Good",1.6,0.17,15,34,8,8.3,12,3.3,2.8,213,FALSE
+2017-04-15,"Mailiao","Yunlin County",75,"Moderate",4.9,0.36,33,50,24,14,19,4.5,3.8,11,TRUE
+2017-04-15,"Shilin","Taipei City",47,"Good",6.4,0.52,32,44,20,22,24,1.9,1.2,106,FALSE
+2017-04-15,"Dali","Taichung City",31,"Good",1.9,0.51,20,30,6,15,18,2.9,4.8,32,TRUE
+2017-04-15,"Kinmen","Kinmen County",73,"Moderate",3.7,0.39,36,36,17,17,18,1.2,1.5,68,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",38,"Good",7.6,0.45,16,31,14,15,23,7.2,3.9,167,FALSE
+2017-04-15,"Pingtung","Pingtung County",84,"Moderate",1.9,0.27,57,57,30,6.4,8.1,1.7,2.2,310,FALSE
+2017-04-15,"Sanchong","New Taipei City",88,"Moderate",8.9,1.32,NA,63,28,32,59,27,NA,NA,FALSE
+2017-04-15,"Xindian","New Taipei City",48,"Good",2.6,0.42,24,36,13,23,25,2.3,1.5,141,FALSE
+2017-04-15,"Songshan","Taipei City",85,"Moderate",5.5,0.56,18,34,27,30,34,3.7,1,36,FALSE
+2017-04-15,"Annan","Tainan City",77,"Moderate",3.3,0.25,54,69,17,11,12,0.8,3.3,334,FALSE
+2017-04-15,"Yonghe","New Taipei City",37,"Good",0.9,0.39,24,17,8,10,13,2.3,0.9,268,TRUE
+2017-04-15,"Mailiao","Yunlin County",57,"Moderate",6.1,0.39,41,51,28,21,24,3.5,6.3,61,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",22,"Good",1.1,0.15,28,25,9,6.4,8.4,2,6.2,91,FALSE
+2017-04-15,"Tamsui","New Taipei City",36,"Good",1.5,0.22,35,29,11,5.9,7.3,1.4,NA,NA,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",71,"Moderate",4.2,0.31,64,53,19,10,11,0.5,1.9,257,TRUE
+2017-04-15,"Kinmen","Kinmen County",127,NA,4.7,0.31,23,67,43,11,12,0.8,2,50,FALSE
+2017-04-15,"Datong","Taipei City",44,"Good",1.1,0.78,NA,39,15,35,61,26,NA,NA,TRUE
+2017-04-15,"Cailiao","New Taipei City",49,"Good",1.4,0.26,52,23,13,9.9,11,0.9,1.9,193,FALSE
+2017-04-15,"Toufen","Miaoli County",34,"Good",1.7,0.26,22,22,10,8.8,9.3,0.5,1.8,44,TRUE
+2017-04-15,"Annan","Tainan City",29,"Good",1.4,0.09,15,25,5,5,6.5,1.5,3,124,FALSE
+2017-04-15,"Zhongming","Taichung City",76,"Moderate",3.8,0.82,5.9,52,38,47,52,5,1.4,185,FALSE
+2017-04-15,"Wanhua","Taipei City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",107,NA,6.8,0.35,60,73,39,21,23,1.7,1.5,288,FALSE
+2017-04-15,"Dali","Taichung City",85,"Moderate",5.2,0.95,1.7,77,34,27,60,33,1.1,261,TRUE
+2017-04-15,"Puli","Nantou County",133,"Unhealthy for Sensitive Groups",0.8,0.37,11,32,29,7.9,8.9,1,0.5,154,TRUE
+2017-04-15,"Chiayi","Chiayi City",19,"Good",1.9,0.34,1.8,26,13,13,15,1.9,1.2,99,FALSE
+2017-04-15,"Toufen","Miaoli County",74,"Moderate",1.3,0.27,47,31,20,12,12,0.6,2.8,72,TRUE
+2017-04-15,"Tucheng","New Taipei City",32,"Good",1.3,0.35,34,1,NA,9.5,11,1,1.3,140,FALSE
+2017-04-15,"Meinong","Kaohsiung City",33,"Good",0.6,0.1,5.3,17,9,2.2,3.2,1,0.5,99,FALSE
+2017-04-15,"Changhua","Changhua County",153,"Unhealthy",3.4,0.26,53,64,54,7.5,7.6,0.1,4.4,305,FALSE
+2017-04-15,"Shanhua","Tainan City",72,"Moderate",3.4,0.16,15,28,13,6.2,7.9,1.7,1.3,98,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",44,"Good",1.6,0.44,39,40,4,9.9,12,2.3,1.6,241,FALSE
+2017-04-15,"Songshan","Taipei City",46,"Good",2,0.52,2.3,12,8,17,27,9.9,0.9,70,FALSE
+2017-04-15,"Xitun","Taichung City",45,"Good",2.5,0.17,64,35,11,8.3,9,0.7,2.1,261,FALSE
+2017-04-15,"Taitung","Taitung County",30,"Good",NA,NA,NA,NA,NA,NA,NA,NA,1.1,78,FALSE
+2017-04-15,"Longtan","Taoyuan City",49,"Good",5.2,0.24,29,34,14,13,15,1.3,7.1,69,TRUE
+2017-04-15,"Kinmen","Kinmen County",66,"Moderate",5.4,0.22,29,55,26,8.6,11,2.1,1.6,287,FALSE
+2017-04-15,"Fengshan","Kaohsiung City",34,"Good",1.9,0.34,8,33,7,12,16,3.3,1.1,344,FALSE
+2017-04-15,"Sanyi","Miaoli County",21,"Good",1,0.23,32,11,NA,4.2,4.7,0.5,3.4,37,FALSE
+2017-04-15,"Douliu","Yunlin County",73,"Moderate",2.5,0.36,7.6,30,20,21,23,1.4,0.5,16,TRUE
+2017-04-15,"Erlin","Changhua County",37,"Good",2.9,0.09,31,25,17,4,5.2,1.3,4.9,273,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",111,NA,4.1,0.44,28,101,37,22,23,1.1,1.1,8.5,FALSE
+2017-04-15,"Yilan","Yilan County",64,"Moderate",2.7,0.31,46,50,20,7.2,8.8,1.6,2.2,113,FALSE
+2017-04-15,"Lunbei","Yunlin County",113,NA,2,0.29,49,44,36,7.8,8.4,0.6,1.3,0,FALSE
+2017-04-15,"Kinmen","Kinmen County",33,"Good",1.8,0.15,35,16,12,3.1,4.1,1,2.7,138,FALSE
+2017-04-15,"Puzi","Chiayi County",38,"Good",1.6,0.11,24,45,4,3.1,5.3,2.2,4.3,241,FALSE
+2017-04-15,"Chaozhou","Pingtung County",151,NA,3.4,0.44,66,100,29,13,16,3,1.7,191,FALSE
+2017-04-15,"Xindian","New Taipei City",77,"Moderate",1.4,0.27,67,50,27,7,8.1,1.1,2.6,138,FALSE
+2017-04-15,"Yonghe","New Taipei City",48,"Good",3.8,0.96,61,42,19,34,43,8.7,2.8,55,FALSE
+2017-04-15,"Chaozhou","Pingtung County",81,"Moderate",3.2,0.27,38,75,32,11,12,0.7,1.1,127,FALSE
+2017-04-15,"Xianxi","Changhua County",112,NA,9.8,0.54,32,84,55,21,25,3.7,1.9,200,FALSE
+2017-04-15,"Dongshan","Yilan County",57,"Moderate",2.5,0.16,28,30,25,6.3,10,4,1.7,356,FALSE
+2017-04-15,"Kinmen","Kinmen County",48,"Good",1.3,0.34,16,27,15,15,16,0.7,0.7,123,FALSE
+2017-04-15,"Renwu","Kaohsiung City",89,"Moderate",5.2,0.9,3.9,60,20,32,71,39,1.6,325,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",78,"Moderate",1.5,0.33,48,37,15,8.1,9.5,1.4,1.7,302,FALSE
+2017-04-15,"Xingang","Chiayi County",59,"Moderate",2.1,0.14,48,31,18,2,3,1,2.3,251,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",46,"Good",2.2,0.32,24,35,16,14,14,0.8,1.6,43,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",29,"Good",1.8,0.17,15,22,3,8.8,10,1.7,5.3,234,FALSE
+2017-04-15,"Guanshan","Taitung County",19,"Good",0.7,NA,8.1,19,8,2.1,4.3,2.2,2.1,75,FALSE
+2017-04-15,"Zhushan","Nantou County",46,"Good",2.2,0.11,29,30,19,4.7,5.5,0.9,3,281,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",42,"Good",5.4,0.53,9,30,9,28,37,8.6,2.8,160,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",100,"Moderate",3.9,0.51,61,114,26,19,22,3.3,0.7,229,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",115,NA,5.3,0.45,34,64,40,36,40,4.1,1.8,54,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",32,"Good",3.1,0.28,34,33,10,15,20,4.9,3.7,39,TRUE
+2017-04-15,"Nantou","Nantou County",23,"Good",3,0.53,4,29,11,7.6,22,14,0.8,152,FALSE
+2017-04-15,"Tainan","Tainan City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Chaozhou","Pingtung County",41,"Good",0.9,0.13,5.3,43,15,3.5,4.8,1.3,1,38,FALSE
+2017-04-15,"Datong","Taipei City",27,"Good",NA,NA,NA,24,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",25,"Good",1.6,0.45,11,10,NA,27,29,1.9,1.2,141,FALSE
+2017-04-15,"Matsu","Lienchiang County",125,NA,4.2,0.38,66,75,46,3.3,4.1,0.8,2.2,87,FALSE
+2017-04-15,"Linkou","New Taipei City",62,"Moderate",5.4,0.38,5.3,43,21,NA,NA,NA,1.3,244,FALSE
+2017-04-15,"Chiayi","Chiayi City",44,"Good",2.3,0.16,12,47,NA,7.6,8.6,1,0.6,94,FALSE
+2017-04-15,"Banqiao","New Taipei City",119,NA,1.9,0.71,39,88,49,24,28,3.9,2.7,67,FALSE
+2017-04-15,"Annan","Tainan City",29,"Good",2.1,0.18,6.6,21,12,12,14,1.9,1.1,80,FALSE
+2017-04-15,"Dali","Taichung City",96,"Moderate",1.7,0.66,10,72,41,17,24,7.4,1.2,243,FALSE
+2017-04-15,"Songshan","Taipei City",63,"Moderate",2.1,0.27,58,42,25,12,14,2.1,2.2,74,FALSE
+2017-04-15,"Xindian","New Taipei City",31,"Good",1.6,0.52,18,25,11,22,24,2.6,1.2,69,FALSE
+2017-04-15,"Tamsui","New Taipei City",80,"Moderate",3.5,0.23,70,37,25,7.2,8.3,1.1,NA,NA,FALSE
+2017-04-15,"Linkou","New Taipei City",70,"Moderate",5.1,0.95,9.6,46,32,43,46,3.4,1.4,132,FALSE
+2017-04-15,"Guanyin","Taoyuan City",37,"Good",4,0.16,8.8,30,14,13,14,0.8,1.6,205,FALSE
+2017-04-15,"Guanshan","Taitung County",33,"Good",NA,NA,18,14,6,2.4,5,2.5,2.1,159,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",24,"Good",3.1,0.14,22,22,5,4.9,6.5,1.6,3.1,159,FALSE
+2017-04-15,"Nantou","Nantou County",48,"Good",1.5,0.45,24,43,13,21,21,0.6,0.9,49,FALSE
+2017-04-15,"Yangming","Taipei City",37,"Good",1.8,0.13,40,7,NA,0.9,1.1,0.2,NA,NA,FALSE
+2017-04-15,"Erlin","Changhua County",55,"Moderate",2.6,0.13,46,25,11,2.3,2.9,0.5,3,313,FALSE
+2017-04-15,"Dali","Taichung City",48,"Good",3.2,0.19,49,20,16,11,13,1.6,2.8,288,FALSE
+2017-04-15,"Tainan","Tainan City",116,NA,7.7,0.85,32,103,59,36,47,10,1.7,325,FALSE
+2017-04-15,"Changhua","Changhua County",32,"Good",0.8,0.24,37,17,12,4.5,4.8,0.3,8.4,15,TRUE
+2017-04-15,"Puzi","Chiayi County",64,"Moderate",2.8,0.23,39,80,17,7.7,8.8,1.1,3.1,343,TRUE
+2017-04-15,"Qianjin","Kaohsiung City",17,"Good",2.1,0.17,14,7,5,2.8,4.3,1.5,2.2,288,FALSE
+2017-04-15,"Pingtung","Pingtung County",107,"Unhealthy for Sensitive Groups",4,0.86,23,152,55,32,33,0.4,1.1,292,TRUE
+2017-04-15,"Banqiao","New Taipei City",93,"Moderate",5,0.92,23,63,33,35,43,8.8,1.9,19,FALSE
+2017-04-15,"Erlin","Changhua County",148,NA,5.7,0.42,77,111,53,6.5,7.4,0.9,2.7,267,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",109,NA,3.7,0.43,50,50,38,13,14,1.3,0.8,326,FALSE
+2017-04-15,"Magong","Penghu County",59,"Moderate",2.3,0.17,45,36,15,1.6,1.7,0.1,6.6,19,FALSE
+2017-04-15,"Xinying","Tainan City",60,"Moderate",5.1,0.31,17,49,17,14,15,1.1,2.9,42,FALSE
+2017-04-15,"Banqiao","New Taipei City",78,"Moderate",8,0.39,1.3,55,21,20,24,3.3,1.3,252,FALSE
+2017-04-15,"Changhua","Changhua County",111,NA,1.6,0.27,21,63,45,12,13,0.9,1.7,48,FALSE
+2017-04-15,"Matsu","Lienchiang County",58,"Moderate",2.7,0.18,57,33,10,4.6,6.1,1.5,4.4,55,FALSE
+2017-04-15,"Xindian","New Taipei City",81,"Moderate",2,0.74,11,49,28,35,46,11,1.7,137,FALSE
+2017-04-15,"Xindian","New Taipei City",90,"Moderate",2,0.54,14,32,21,20,23,2.9,1.7,185,FALSE
+2017-04-15,"Zhongli","Taoyuan City",35,"Good",2.9,0.45,19,32,7,15,22,7.4,0.8,210,FALSE
+2017-04-15,"Tainan","Tainan City",158,NA,3,0.88,34,91,71,21,23,2.5,1,113,FALSE
+2017-04-15,"Wanli","New Taipei City",72,"Moderate",2.9,0.19,18,45,24,7.7,8.7,1,0.8,189,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",12,"Good",5.2,0.18,7.3,13,NA,12,15,3.3,2.9,35,FALSE
+2017-04-15,"Wanhua","Taipei City",33,"Good",3,0.68,21,28,14,22,41,19,1.3,151,FALSE
+2017-04-15,"Hengchun","Pingtung County",19,"Good",2.5,0.06,12,16,4,1.2,2.9,1.7,3.3,92,FALSE
+2017-04-15,"Longtan","Taoyuan City",53,"Moderate",2.8,0.54,10,32,18,32,38,6.9,1.4,64,TRUE
+2017-04-15,"Hsinchu","Hsinchu City",74,"Moderate",1.4,0.66,12,42,26,34,37,2.9,1.4,77,FALSE
+2017-04-15,"Yangming","Taipei City",33,"Good",2.6,0.09,27,11,6,2,2.3,0.3,NA,NA,FALSE
+2017-04-15,"Xianxi","Changhua County",61,"Moderate",4.2,0.34,37,28,22,19,20,1.9,6.1,38,FALSE
+2017-04-15,"Douliu","Yunlin County",132,NA,2.7,0.58,57,96,55,23,25,2.6,1.3,33,FALSE
+2017-04-15,"Miaoli","Miaoli County",82,"Moderate",3.2,0.41,37,41,32,9.6,11,1.8,2.6,17,FALSE
+2017-04-15,"Sanyi","Miaoli County",71,"Moderate",1.1,0.27,19,43,31,8.9,9.8,0.9,2.8,31,FALSE
+2017-04-15,"Dongshan","Yilan County",28,"Good",1.3,0.19,37,15,NA,3.7,4.5,0.8,1.7,257,TRUE
+2017-04-15,"Annan","Tainan City",125,NA,2.1,0.38,27,100,36,9.8,11,0.8,1.7,314,FALSE
+2017-04-15,"Kinmen","Kinmen County",105,NA,6.4,0.58,17,71,39,20,22,1.8,2.4,101,FALSE
+2017-04-15,"Shilin","Taipei City",46,"Good",4,0.41,9.2,31,17,16,21,5.1,1.2,341,FALSE
+2017-04-15,"Matsu","Lienchiang County",65,"Moderate",3.2,0.14,50,45,14,5.2,6.3,1.1,3.3,175,FALSE
+2017-04-15,"Mailiao","Yunlin County",121,"Unhealthy for Sensitive Groups",4,0.26,17,83,46,15,16,0.6,1.7,189,TRUE
+2017-04-15,"Datong","Taipei City",29,"Good",2.4,1.02,NA,24,9,31,71,40,NA,NA,FALSE
+2017-04-15,"Linkou","New Taipei City",29,"Good",9.4,0.17,11,31,15,16,33,17,4.5,102,FALSE
+2017-04-15,"Lunbei","Yunlin County",60,"Moderate",1.8,0.33,2.4,44,23,23,26,3.5,1,116,FALSE
+2017-04-15,"Longtan","Taoyuan City",44,"Good",1.9,0.45,24,33,14,21,24,2.5,1.7,20,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",39,"Good",7.8,0.12,20,31,13,9.7,9.7,-0.1,2.2,281,FALSE
+2017-04-15,"Fengshan","Kaohsiung City",32,"Good",1.5,0.23,6.5,29,8,10,12,1.6,1.5,78,FALSE
+2017-04-15,"Renwu","Kaohsiung City",70,"Moderate",1.2,0.28,55,77,16,8.6,9.1,0.6,3.7,303,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",36,"Good",3,0.24,11,16,12,10,11,1,3.4,103,FALSE
+2017-04-15,"Xianxi","Changhua County",77,"Moderate",2.3,0.49,2.7,54,35,21,35,14,0.4,30,TRUE
+2017-04-15,"Hualien","Hualien County",74,"Moderate",1.1,0.23,64,44,13,4.7,6.2,1.5,1.7,58,FALSE
+2017-04-15,"Tainan","Tainan City",33,"Good",2.8,0.2,19,45,12,10,12,1.4,1.9,53,FALSE
+2017-04-15,"Renwu","Kaohsiung City",106,NA,3.1,0.45,34,62,44,17,18,0.9,1.7,329,FALSE
+2017-04-15,"Dongshan","Yilan County",54,"Moderate",2.5,0.46,7.6,41,16,14,25,11,1.4,59,FALSE
+2017-04-15,"Zhushan","Nantou County",151,"Unhealthy",2.5,0.41,8.6,91,50,12,13,1.2,0.6,326,FALSE
+2017-04-15,"Yangming","Taipei City",37,"Good",1.8,0.11,39,3,NA,0.8,1,0.2,NA,NA,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",37,"Good",4.8,0.16,30,19,14,3.3,4.1,0.8,3.9,271,FALSE
+2017-04-15,"Longtan","Taoyuan City",74,"Moderate",4,0.35,38,42,15,16,19,2.6,3.8,63,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",120,"Unhealthy for Sensitive Groups",4,0.44,36,84,34,23,27,3.3,3.6,48,TRUE
+2017-04-15,"Zhudong","Hsinchu County",45,"Good",1.4,0.26,45,27,15,9.7,13,2.8,2.8,351,FALSE
+2017-04-15,"Shilin","Taipei City",31,"Good",2.6,0.31,42,19,7,6.7,6.7,0,3.1,64,FALSE
+2017-04-15,"Pingtung","Pingtung County",49,"Good",2.1,0.22,7,40,11,9.4,11,1.8,1.6,37,FALSE
+2017-04-15,"Wanhua","Taipei City",67,"Moderate",0.5,0.66,17,NA,17,22,30,8.4,0.8,189,FALSE
+2017-04-15,"Douliu","Yunlin County",59,"Moderate",1.6,0.18,18,33,11,6.7,7.6,0.9,0.9,143,FALSE
+2017-04-15,"Shilin","Taipei City",32,"Good",5.9,0.25,24,8,8,20,24,4,2.3,128,TRUE
+2017-04-15,"Shilin","Taipei City",42,"Good",1.1,0.18,45,25,7,5.4,6.2,0.8,3.5,108,FALSE
+2017-04-15,"Xindian","New Taipei City",51,"Moderate",1.3,0.16,47,32,16,2.6,3.4,0.8,1.7,83,TRUE
+2017-04-15,"Mailiao","Yunlin County",123,NA,2.3,0.33,19,98,47,7.8,9.5,1.7,1.6,32,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",50,"Good",3,0.16,50,24,NA,6.2,7.1,0.9,1.3,268,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",107,"Unhealthy for Sensitive Groups",2.2,0.34,21,63,35,12,14,2.1,2,14,TRUE
+2017-04-15,"Toufen","Miaoli County",67,"Moderate",1.7,0.28,46,48,22,6.9,7.9,1,3.9,57,TRUE
+2017-04-15,"Zhongshan","Taipei City",30,"Good",3,1.68,16,21,10,32,65,33,1.6,291,FALSE
+2017-04-15,"Nantou","Nantou County",19,"Good",1,0.51,14,16,2,12,13,0.5,2.5,339,TRUE
+2017-04-15,"Hengchun","Pingtung County",39,"Good",2.7,0.06,22,48,10,2.3,3,0.7,4.1,96,FALSE
+2017-04-15,"Banqiao","New Taipei City",74,"Moderate",6.6,0.46,52,46,24,17,21,3.8,1.8,350,FALSE
+2017-04-15,"Dongshan","Yilan County",35,"Good",0.7,0.27,38,21,3,4.1,5.3,1.2,1.8,255,FALSE
+2017-04-15,"Dongshan","Yilan County",58,"Moderate",5,0.41,39,57,28,15,19,4.3,2.8,93,FALSE
+2017-04-15,"Nantou","Nantou County",49,"Good",1.8,0.24,39,35,16,5.1,6.4,1.2,2.5,273,FALSE
+2017-04-15,"Shanhua","Tainan City",54,"Moderate",1.8,0.11,11,34,7,6.7,7.9,1.2,1.2,148,FALSE
+2017-04-15,"Tamsui","New Taipei City",30,"Good",4.1,0.2,29,21,8,5.6,7.7,2.1,NA,NA,TRUE
+2017-04-15,"Nantou","Nantou County",127,NA,3.4,0.46,59,74,36,16,17,1,2,307,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",77,"Moderate",2.7,0.18,44,70,11,NA,NA,NA,0.7,224,FALSE
+2017-04-15,"Erlin","Changhua County",38,"Good",3.4,0.56,24,34,16,18,22,3.7,4.4,95,FALSE
+2017-04-15,"Zhudong","Hsinchu County",54,"Moderate",0.3,0.26,38,21,7,7.4,9.1,1.7,1.8,311,FALSE
+2017-04-15,"Banqiao","New Taipei City",70,"Moderate",NA,0.71,51,45,24,26,32,5.7,1.1,225,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",42,"Good",4.1,0.86,2.3,33,12,16,45,29,0.5,249,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",36,"Good",2.6,0.56,12,34,12,16,27,10,0.6,264,FALSE
+2017-04-15,"Changhua","Changhua County",67,"Moderate",3.2,0.44,9.8,40,26,25,25,0.6,4.7,6.7,FALSE
+2017-04-15,"Hukou","Hsinchu County",42,"Good",2.4,0.2,30,39,12,7.5,8.2,0.7,1.5,37,FALSE
+2017-04-15,"Toufen","Miaoli County",NA,NA,2.1,0.28,36,37,25,8.6,11,2.5,4.3,56,TRUE
+2017-04-15,"Xinying","Tainan City",120,NA,4.4,0.32,49,67,48,11,12,1.9,3.1,337,FALSE
+2017-04-15,"Yilan","Yilan County",64,"Moderate",2.4,0.33,42,46,23,6.1,6.4,0.3,0.9,334,FALSE
+2017-04-15,"Pingtung","Pingtung County",86,"Moderate",6,0.4,35,68,47,16,16,0.7,0.5,245,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",25,"Good",2.6,0.37,33,27,4,15,25,9.8,3.1,76,TRUE
+2017-04-15,"Annan","Tainan City",30,"Good",0.7,0.4,3.4,23,15,18,24,5.4,0.6,75,FALSE
+2017-04-15,"Miaoli","Miaoli County",68,"Moderate",2.4,0.36,41,39,21,10,11,1.2,1.8,32,FALSE
+2017-04-15,"Annan","Tainan City",84,"Moderate",3.9,0.64,37,48,37,19,22,2.9,1.6,182,FALSE
+2017-04-15,"Dongshan","Yilan County",36,"Good",2.2,0.33,24,31,14,18,25,7.4,2.2,285,TRUE
+2017-04-15,"Shilin","Taipei City",74,"Moderate",2.3,0.53,22,25,10,35,40,5,1.3,146,FALSE
+2017-04-15,"Cailiao","New Taipei City",22,"Good",3.3,0.17,20,19,4,5.6,10,4.5,5.1,80,FALSE
+2017-04-15,"Wanli","New Taipei City",54,"Moderate",2.2,0.14,48,73,12,6.1,8,1.9,4.6,61,FALSE
+2017-04-15,"Lunbei","Yunlin County",66,"Moderate",1.4,0.17,36,67,18,6.2,7.8,1.6,3.1,51,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",89,"Moderate",3.5,0.51,39,91,29,17,21,3.7,4.2,76,FALSE
+2017-04-15,"Puli","Nantou County",70,"Moderate",-0.1,0.3,30,21,17,9.8,11,1,1.9,275,TRUE
+2017-04-15,"Zhushan","Nantou County",106,NA,3.7,0.28,45,66,27,14,15,1.1,1.6,255,FALSE
+2017-04-15,"Wanhua","Taipei City",23,"Good",4.4,0.74,22,37,15,24,33,8.9,1.1,257,FALSE
+2017-04-15,"Zhongli","Taoyuan City",24,"Good",0.6,0.82,33,NA,NA,25,42,17,1.4,179,FALSE
+2017-04-15,"Hengchun","Pingtung County",51,"Moderate",3.6,0.19,51,25,8,2.8,3.7,1,11,37,FALSE
+2017-04-15,"Chaozhou","Pingtung County",56,"Moderate",2,0.15,17,35,14,7.2,8.8,1.5,0.8,47,FALSE
+2017-04-15,"Zhongli","Taoyuan City",113,NA,7.2,0.88,24,68,37,24,36,12,0.9,220,FALSE
+2017-04-15,"Xingang","Chiayi County",95,"Moderate",3,0.29,28,64,33,8.5,9.5,1,0.9,219,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",119,NA,3.2,0.53,59,58,33,18,20,2,1.6,113,FALSE
+2017-04-15,"Mailiao","Yunlin County",132,NA,4.5,0.48,35,87,52,10,12,1.4,2.6,45,FALSE
+2017-04-15,"Keelung","Keelung City",30,"Good",1.1,0.31,33,24,12,11,13,1.7,1.5,71,TRUE
+2017-04-15,"Tainan","Tainan City",137,NA,2.9,0.46,15,93,60,13,14,0.5,2.9,47,FALSE
+2017-04-15,"Yangming","Taipei City",83,"Moderate",1.9,0.12,44,20,20,7.2,8.1,1,NA,NA,FALSE
+2017-04-15,"Lunbei","Yunlin County",94,"Moderate",8.5,0.61,20,52,35,21,31,9.3,3.5,14,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",NA,NA,4.3,0.51,48,61,34,23,NA,NA,NA,NA,TRUE
+2017-04-15,"Guting","Taipei City",89,"Moderate",4.3,0.97,16,68,32,42,48,5.8,1.4,118,FALSE
+2017-04-15,"Zhudong","Hsinchu County",35,"Good",1.6,0.2,36,13,14,4.2,5.5,1.3,4,64,FALSE
+2017-04-15,"Sanchong","New Taipei City",48,"Good",2.6,0.69,NA,52,11,19,54,35,NA,NA,FALSE
+2017-04-15,"Magong","Penghu County",49,"Good",1.4,0.19,36,42,12,3.3,5,1.8,3.8,143,FALSE
+2017-04-15,"Tucheng","New Taipei City",109,NA,2.8,0.51,55,87,48,7.3,9.2,2,2,205,FALSE
+2017-04-15,"Erlin","Changhua County",90,"Moderate",4,0.49,32,79,36,12,13,0.8,1.7,82,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",146,NA,3.2,0.71,58,58,33,18,19,1,1.2,258,FALSE
+2017-04-15,"Sanchong","New Taipei City",73,"Moderate",2.5,1.11,NA,66,11,38,117,79,NA,NA,FALSE
+2017-04-15,"Shalu","Taichung City",55,"Moderate",5.3,0.21,41,34,20,14,16,1.7,2,331,FALSE
+2017-04-15,"Datong","Taipei City",44,"Good",1.9,0.62,NA,NA,10,25,51,26,NA,NA,FALSE
+2017-04-15,"Wanli","New Taipei City",66,"Moderate",2,0.11,43,59,14,0.2,1.5,1.3,14,23,FALSE
+2017-04-15,"Yonghe","New Taipei City",67,"Moderate",4.3,0.75,33,41,24,28,42,14,1.5,83,FALSE
+2017-04-15,"Longtan","Taoyuan City",40,"Good",-0.3,0.54,34,27,7,29,32,3.2,1.9,90,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",97,"Moderate",2.2,0.38,60,75,15,11,12,1.1,3.7,1.1,FALSE
+2017-04-15,"Xinying","Tainan City",35,"Good",1.8,0.22,18,26,9,5.3,6.4,1.1,1.6,69,FALSE
+2017-04-15,"Dayuan","Taoyuan City",112,NA,3,0.4,22,92,51,17,18,1,1.7,214,FALSE
+2017-04-15,"Xitun","Taichung City",125,NA,7.6,1.2,3.4,88,53,56,95,39,0.5,215,FALSE
+2017-04-15,"Guanshan","Taitung County",29,"Good",1.1,NA,28,24,9,1.4,4.5,3.2,1.4,184,FALSE
+2017-04-15,"Changhua","Changhua County",31,"Good",1.9,0.41,27,14,10,12,13,1.1,9.1,10,TRUE
+2017-04-15,"Hengchun","Pingtung County",44,"Good",1.5,0.13,45,18,8,2,2.3,0.3,8.6,32,TRUE
+2017-04-15,"Zhudong","Hsinchu County",76,"Moderate",3.3,0.5,53,52,25,16,24,8.6,2.1,174,FALSE
+2017-04-15,"Songshan","Taipei City",22,"Good",3.6,0.6,5.5,7,6,20,45,25,1.2,68,TRUE
+2017-04-15,"Kinmen","Kinmen County",156,"Unhealthy",7.6,0.56,19,122,74,32,44,12,2.3,332,TRUE
+2017-04-15,"Puzi","Chiayi County",93,"Moderate",2.9,0.38,47,82,39,7.2,8.6,1.5,3.6,345,FALSE
+2017-04-15,"Hualien","Hualien County",42,"Good",1,0.15,26,18,10,1.2,2,0.8,2.6,231,FALSE
+2017-04-15,"Renwu","Kaohsiung City",91,"Moderate",3.7,0.61,28,108,23,19,20,1.1,1.9,316,FALSE
+2017-04-15,"Songshan","Taipei City",48,"Good",2,0.4,36,34,21,20,27,7.5,3,216,FALSE
+2017-04-15,"Zhushan","Nantou County",148,"Unhealthy for Sensitive Groups",4,0.35,16,70,43,9,15,6,1.3,309,FALSE
+2017-04-15,"Wanhua","Taipei City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Changhua","Changhua County",74,"Moderate",3.7,0.63,5.9,37,20,27,30,3.1,0.8,59,FALSE
+2017-04-15,"Datong","Taipei City",83,"Moderate",2.4,1.64,NA,66,25,49,71,22,NA,NA,FALSE
+2017-04-15,"Meinong","Kaohsiung City",78,"Moderate",1,0.22,23,42,23,5.2,5.8,0.6,0.4,57,FALSE
+2017-04-15,"Meinong","Kaohsiung City",42,"Good",1.7,0.2,24,18,17,3.8,4.9,1.1,1.1,112,FALSE
+2017-04-15,"Keelung","Keelung City",26,"Good",0.9,0.32,18,13,NA,10,12,1.5,0.5,205,FALSE
+2017-04-15,"Zhudong","Hsinchu County",123,NA,1.3,0.38,6.1,53,19,5,6.2,1.2,1,147,FALSE
+2017-04-15,"Xitun","Taichung City",103,NA,1.6,0.33,47,82,53,6.5,8.1,1.6,3.9,74,FALSE
+2017-04-15,"Miaoli","Miaoli County",62,"Moderate",2.1,0.29,62,49,25,8.2,9.6,1.5,5.1,54,FALSE
+2017-04-15,"Shilin","Taipei City",31,"Good",1.2,0.16,34,20,5,3.7,5.3,1.6,2.2,102,FALSE
+2017-04-15,"Taixi","Yunlin County",62,"Moderate",1.7,0.12,41,31,23,3,4.3,1.2,4.4,317,FALSE
+2017-04-15,"Xingang","Chiayi County",141,NA,3.5,0.21,74,67,37,5.5,6.2,0.7,3.5,337,FALSE
+2017-04-15,"Annan","Tainan City",102,NA,3.4,0.3,62,78,43,5.4,6.3,0.9,4.9,307,FALSE
+2017-04-15,"Chiayi","Chiayi City",44,"Good",3.2,0.17,39,26,11,6.2,6.9,0.7,3,305,FALSE
+2017-04-15,"Shilin","Taipei City",50,"Good",1,0.3,46,36,23,7,8.5,1.5,2,28,TRUE
+2017-04-15,"Puli","Nantou County",39,"Good",2.5,0.33,22,20,10,15,16,1.3,0.6,212,FALSE
+2017-04-15,"Wanhua","Taipei City",29,"Good",2,0.81,14,21,5,31,63,32,0.9,195,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Datong","Taipei City",28,"Good",1.5,0.67,NA,23,7,23,45,23,NA,NA,FALSE
+2017-04-15,"Magong","Penghu County",54,"Moderate",1.9,0.25,49,23,12,2.3,3.1,0.7,5,83,FALSE
+2017-04-15,"Matsu","Lienchiang County",67,"Moderate",2.2,0.26,50,46,24,1.1,1.1,0,4.4,52,FALSE
+2017-04-15,"Xingang","Chiayi County",53,"Moderate",1.3,0.17,43,27,6,5,5.4,0.4,4.6,3.2,FALSE
+2017-04-15,"Xianxi","Changhua County",115,NA,8,0.6,34,54,30,22,24,1.9,4.8,47,FALSE
+2017-04-15,"Annan","Tainan City",94,"Moderate",2.5,0.43,25,63,29,12,13,1.6,1.7,55,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",98,"Moderate",2.2,0.57,16,88,28,28,31,2.5,3.5,353,TRUE
+2017-04-15,"Xinying","Tainan City",48,"Good",2.7,0.21,5.3,33,11,10,13,2.5,1.7,189,FALSE
+2017-04-15,"Nantou","Nantou County",52,"Moderate",1.5,0.36,9.8,25,10,20,21,1.2,0.7,40,TRUE
+2017-04-15,"Linyuan","Kaohsiung City",41,"Good",1.5,0.2,42,17,9,3.6,4.8,1.3,2.5,172,FALSE
+2017-04-15,"Tainan","Tainan City",74,"Moderate",1.6,0.82,20,28,27,32,34,2,2.4,43,FALSE
+2017-04-15,"Shanhua","Tainan City",27,"Good",2.4,0.14,25,33,13,3.6,5.6,2,4.1,18,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",40,"Good",5.2,0.31,9.6,38,11,14,15,1.2,1.8,30,FALSE
+2017-04-15,"Hualien","Hualien County",32,"Good",2.4,0.14,30,22,10,4.1,5.6,1.5,1.9,121,FALSE
+2017-04-15,"Dali","Taichung City",77,"Moderate",2.3,0.73,17,53,9,29,31,2,1.6,100,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",19,"Good",1.6,0.24,14,20,2,11,15,4.6,1.5,61,FALSE
+2017-04-15,"Xizhi","New Taipei City",54,"Moderate",1.4,0.28,43,33,17,11,12,1.6,1.4,162,FALSE
+2017-04-15,"Banqiao","New Taipei City",71,"Moderate",2.3,0.27,64,49,23,6.9,9.3,2.5,4.2,315,FALSE
+2017-04-15,"Fengyuan","Taichung City",52,"Moderate",1.3,0.36,48,49,17,4.7,6.6,1.9,1.6,61,FALSE
+2017-04-15,"Xinying","Tainan City",57,"Moderate",1.3,0.22,9.3,40,19,4.7,5.4,0.7,1,60,FALSE
+2017-04-15,"Tainan","Tainan City",80,"Moderate",2.6,0.46,60,109,29,11,12,1.1,4.2,14,FALSE
+2017-04-15,"Wanli","New Taipei City",31,"Good",2.8,0.19,30,3,5,7.4,8.4,1,0.7,173,FALSE
+2017-04-15,"Lunbei","Yunlin County",152,NA,2.9,0.46,26,98,67,16,17,0.7,1.1,95,FALSE
+2017-04-15,"Renwu","Kaohsiung City",61,"Moderate",1.5,0.17,33,102,18,7.3,7.8,0.5,2.1,236,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",61,"Moderate",3.2,0.88,14,46,17,36,40,4.6,1.1,138,TRUE
+2017-04-15,"Lunbei","Yunlin County",100,"Moderate",2.4,0.47,29,79,50,15,15,0.2,3.2,356,TRUE
+2017-04-15,"Puzi","Chiayi County",65,"Moderate",2.8,0.25,38,56,17,11,14,3.1,2.7,75,FALSE
+2017-04-15,"Taixi","Yunlin County",28,"Good",2.1,0.09,26,25,13,4.9,5.8,1,2.9,231,FALSE
+2017-04-15,"Wanhua","Taipei City",30,"Good",3.5,0.81,62,18,NA,NA,NA,NA,1.6,30,FALSE
+2017-04-15,"Fengshan","Kaohsiung City",118,NA,5.8,0.7,118,124,52,21,22,0.8,2.4,299,FALSE
+2017-04-15,"Qianzhen","Kaohsiung City",105,NA,4,0.67,33,71,39,21,24,2.7,1.5,17,FALSE
+2017-04-15,"Tucheng","New Taipei City",42,"Good",2.4,0.3,34,27,9,12,14,1.3,1.6,0.5,TRUE
+2017-04-15,"Yangming","Taipei City",44,"Good",1.5,0.13,48,NA,NA,1.4,1.9,0.5,NA,NA,FALSE
+2017-04-15,"Zhongshan","Taipei City",91,"Moderate",2.6,0.56,8,43,26,18,20,1.7,0.8,153,FALSE
+2017-04-15,"Hukou","Hsinchu County",48,"Good",3.1,0.25,14,34,15,12,13,1.2,1.8,169,FALSE
+2017-04-15,"Wanhua","Taipei City",33,"Good",0.3,0.24,14,21,11,6.5,8.7,2.2,1.2,191,FALSE
+2017-04-15,"Dongshan","Yilan County",26,"Good",1.2,0.22,14,21,2,11,12,1.5,0.5,171,FALSE
+2017-04-15,"Puli","Nantou County",108,NA,2.1,0.37,71,58,37,15,16,0.7,1.7,269,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",93,"Moderate",2.5,0.28,46,85,11,15,15,0.2,1.4,254,FALSE
+2017-04-15,"Chaozhou","Pingtung County",109,NA,2.9,0.24,53,67,25,6.5,7.7,1.2,2.6,285,FALSE
+2017-04-15,"Hengchun","Pingtung County",23,"Good",1.2,0.07,17,25,2,2.1,3,0.9,4.9,36,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",26,"Good",5.1,0.19,20,30,6,5.8,7.7,1.9,0.9,295,FALSE
+2017-04-15,"Datong","Taipei City",44,"Good",3.5,2.2,NA,42,15,30,116,86,NA,NA,FALSE
+2017-04-15,"Wanli","New Taipei City",127,NA,3,0.41,61,103,50,4.3,5.5,1.3,8.1,27,FALSE
+2017-04-15,"Cailiao","New Taipei City",106,NA,3.8,1.84,1.5,60,37,33,103,70,1,313,FALSE
+2017-04-15,"Tainan","Tainan City",63,"Moderate",1.5,0.47,31,65,20,16,18,1.5,1.9,2.5,TRUE
+2017-04-15,"Lunbei","Yunlin County",99,"Moderate",4.9,0.33,26,64,33,16,18,1.5,3.2,313,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",53,"Moderate",7.8,0.31,9.9,33,18,14,16,1.2,0.4,29,FALSE
+2017-04-15,"Wanli","New Taipei City",28,"Good",3,0.19,8.1,16,10,5.3,8.2,2.9,1.8,204,FALSE
+2017-04-15,"Chiayi","Chiayi City",154,NA,3.8,0.64,1.4,95,62,16,26,9.9,1.3,215,FALSE
+2017-04-15,"Shilin","Taipei City",40,"Good",1,0.16,40,10,9,3,3.9,0.9,5.6,48,FALSE
+2017-04-15,"Taitung","Taitung County",24,"Good",0.7,0.34,21,12,4,2.7,5.3,2.6,1.4,323,TRUE
+2017-04-15,"Linkou","New Taipei City",51,"Moderate",2.2,0.14,38,36,17,6.2,7.6,1.4,2.5,68,FALSE
+2017-04-15,"Guanyin","Taoyuan City",40,"Good",3.2,0.16,36,36,12,6.5,6.7,0.2,7.7,73,FALSE
+2017-04-15,"Cailiao","New Taipei City",44,"Good",9.5,0.41,49,22,9,13,16,3.1,3.4,125,FALSE
+2017-04-15,"Hengchun","Pingtung County",37,"Good",2.8,0.14,36,21,12,2.1,3.1,1,5,19,FALSE
+2017-04-15,"Keelung","Keelung City",54,"Moderate",2.4,0.27,44,24,18,12,15,2.5,1.7,212,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",20,"Good",1.1,0.17,3.8,17,12,12,13,1.5,1.5,76,FALSE
+2017-04-15,"Wanli","New Taipei City",NA,NA,NA,NA,NA,42,13,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Sanchong","New Taipei City",30,"Good",1.5,0.32,NA,29,NA,14,28,14,NA,NA,FALSE
+2017-04-15,"Xingang","Chiayi County",124,NA,5.5,0.7,25,76,52,16,24,7.7,2.7,314,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",38,"Good",1.4,0.18,5.7,22,11,10,12,1.8,1.5,36,FALSE
+2017-04-15,"Matsu","Lienchiang County",62,"Moderate",2.1,0.15,37,15,16,4.5,5.1,0.6,4.3,37,TRUE
+2017-04-15,"Tucheng","New Taipei City",25,"Good",1.1,0.26,12,13,9,10,13,3,1.7,148,FALSE
+2017-04-15,"Zhushan","Nantou County",66,"Moderate",2.1,0.33,32,31,22,18,19,1,0.9,259,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",65,"Moderate",2.1,0.24,31,46,20,14,15,1,1.4,331,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",113,NA,6.8,0.57,65,62,32,21,24,2.3,1.4,261,FALSE
+2017-04-15,"Yilan","Yilan County",28,"Good",1.5,0.26,13,16,7,5.7,6.3,0.6,0.9,183,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",34,"Good",2.6,0.23,17,23,11,6.9,7.2,0.3,1.4,307,FALSE
+2017-04-15,"Guting","Taipei City",37,"Good",1.7,0.25,12,23,8,8.3,10,1.8,1.2,167,FALSE
+2017-04-15,"Guanshan","Taitung County",19,"Good",0.9,NA,6.3,19,3,1.6,2,0.4,1.5,238,TRUE
+2017-04-15,"Toufen","Miaoli County",38,"Good",3.8,0.18,8.4,38,13,12,15,3.1,1.7,121,FALSE
+2017-04-15,"Xindian","New Taipei City",38,"Good",0.8,0.25,33,18,18,6.2,9.9,3.7,2.7,129,FALSE
+2017-04-15,"Banqiao","New Taipei City",115,NA,2.1,0.39,63,84,43,9.1,9.8,0.8,1.7,76,FALSE
+2017-04-15,"Douliu","Yunlin County",42,"Good",2,0.24,19,35,14,8.8,10,1.7,3.3,223,FALSE
+2017-04-15,"Dali","Taichung City",30,"Good",1.9,0.1,34,23,8,5.1,6.9,1.8,3.6,275,FALSE
+2017-04-15,"Datong","Taipei City",40,"Good",3.8,1.22,NA,28,7,42,97,54,NA,NA,FALSE
+2017-04-15,"Tamsui","New Taipei City",28,"Good",2.2,0.56,2,24,7,17,30,13,NA,NA,FALSE
+2017-04-15,"Dali","Taichung City",28,"Good",2,0.31,7.3,30,2,11,15,4.3,1.2,272,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",89,"Moderate",2.7,0.63,50,44,22,16,18,1.5,1.1,231,FALSE
+2017-04-15,"Fengyuan","Taichung City",22,"Good",1.7,0.15,31,7,4,7.4,11,3.9,3.5,353,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",91,"Moderate",2.5,0.56,32,58,29,24,26,1.3,1.2,67,FALSE
+2017-04-15,"Yonghe","New Taipei City",25,"Good",1.1,0.87,3.3,9,12,26,46,20,0.6,26,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",72,"Moderate",3.4,0.3,12,44,21,11,13,2.1,1.7,41,FALSE
+2017-04-15,"Tamsui","New Taipei City",45,"Good",2.1,0.18,NA,46,10,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",90,"Moderate",3.9,0.23,59,42,25,3.5,5.4,2,2.2,219,FALSE
+2017-04-15,"Chaozhou","Pingtung County",37,"Good",0.7,0.23,14,29,5,3.9,4.6,0.6,1.3,14,FALSE
+2017-04-15,"Pingtung","Pingtung County",52,"Moderate",3.3,0.36,57,25,18,9,9.6,0.6,2.7,307,TRUE
+2017-04-15,"Lunbei","Yunlin County",98,"Moderate",3.9,0.4,40,64,38,8.3,9.7,1.4,0.4,168,FALSE
+2017-04-15,"Tucheng","New Taipei City",72,"Moderate",4.4,0.36,84,49,31,14,17,2.5,1.5,229,FALSE
+2017-04-15,"Xingang","Chiayi County",103,NA,1.4,0.48,12,86,35,13,18,5.3,1.2,123,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",134,"Unhealthy for Sensitive Groups",3.2,0.4,47,97,43,18,18,0.5,3.2,354,TRUE
+2017-04-15,"Zhongshan","Taipei City",24,"Good",2.1,0.68,6.5,15,NA,24,37,12,0.9,239,FALSE
+2017-04-15,"Guanshan","Taitung County",61,"Moderate",1.5,NA,44,58,19,5.7,7.1,1.4,2.8,56,FALSE
+2017-04-15,"Hukou","Hsinchu County",79,"Moderate",3.4,0.24,46,73,30,7.3,7.8,0.5,1.4,300,FALSE
+2017-04-15,"Yilan","Yilan County",59,"Moderate",3,0.23,21,38,15,7.9,8.7,0.8,0.8,190,FALSE
+2017-04-15,"Xingang","Chiayi County",140,NA,1.9,0.55,15,101,55,20,21,1.7,0.5,220,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",64,"Moderate",7.8,0.35,68,69,17,15,18,3.1,6.6,65,FALSE
+2017-04-15,"Chiayi","Chiayi City",49,"Good",2.6,0.47,42,52,14,16,18,2.3,3.7,319,FALSE
+2017-04-15,"Zhongshan","Taipei City",47,"Good",2.4,1.18,3.7,12,NA,50,84,34,0.9,131,FALSE
+2017-04-15,"Banqiao","New Taipei City",35,"Good",3.1,0.6,17,27,8,18,28,9.3,2.2,71,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",44,"Good",3.8,0.24,60,38,11,4.4,5.2,0.9,7,310,FALSE
+2017-04-15,"Hukou","Hsinchu County",50,"Good",1.5,0.2,47,40,12,3.3,4.8,1.5,7.3,37,FALSE
+2017-04-15,"Puzi","Chiayi County",104,NA,2.1,0.21,41,50,20,3.8,5.8,2,3.4,266,FALSE
+2017-04-15,"Hukou","Hsinchu County",62,"Moderate",3.4,0.2,19,38,21,7.5,13,5.7,1,159,FALSE
+2017-04-15,"Sanchong","New Taipei City",65,"Moderate",3.5,1.28,NA,61,25,34,68,34,NA,NA,FALSE
+2017-04-15,"Lunbei","Yunlin County",52,"Moderate",2.8,0.32,33,32,20,10,13,2.5,3.4,85,FALSE
+2017-04-15,"Taitung","Taitung County",34,"Good",0.8,0.46,12,25,12,11,12,1.4,1.1,303,FALSE
+2017-04-15,"Guting","Taipei City",31,"Good",1.3,0.29,12,11,7,9.7,12,2.5,0.6,146,FALSE
+2017-04-15,"Puli","Nantou County",60,"Moderate",2.1,0.24,23,30,17,10,11,0.6,0.6,239,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",74,"Moderate",2.1,0.48,58,55,18,18,20,2.1,2.3,21,FALSE
+2017-04-15,"Fengyuan","Taichung City",32,"Good",2.4,0.41,8.9,32,4,12,21,9,0.6,30,FALSE
+2017-04-15,"Dongshan","Yilan County",51,"Moderate",2.8,0.16,31,35,16,3.9,5,1.2,2.8,192,FALSE
+2017-04-15,"Taixi","Yunlin County",16,"Good",1,0.21,13,29,10,11,12,0.3,2.4,143,FALSE
+2017-04-15,"Lunbei","Yunlin County",78,"Moderate",2.4,0.45,9,53,39,18,19,0.4,2,129,FALSE
+2017-04-15,"Dayuan","Taoyuan City",21,"Good",4.8,0.16,22,30,12,13,20,6.6,7.1,33,FALSE
+2017-04-15,"Zhushan","Nantou County",73,"Moderate",1.9,0.25,24,20,14,13,13,0.7,1.5,358,FALSE
+2017-04-15,"Fengshan","Kaohsiung City",94,"Moderate",3.3,0.39,21,69,62,18,18,0.8,2.8,347,FALSE
+2017-04-15,"Longtan","Taoyuan City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Sanchong","New Taipei City",25,"Good",0.9,0.6,NA,19,NA,27,45,18,NA,NA,FALSE
+2017-04-15,"Sanchong","New Taipei City",36,"Good",2.7,1.22,NA,39,7,21,75,55,NA,NA,FALSE
+2017-04-15,"Puli","Nantou County",66,"Moderate",0.9,0.27,59,27,21,6.5,8.1,1.6,4.5,276,FALSE
+2017-04-15,"Yangming","Taipei City",39,"Good",1.5,0.26,29,21,15,7.1,7.4,0.4,NA,NA,TRUE
+2017-04-15,"Datong","Taipei City",50,"Good",3.4,0.67,NA,57,11,25,37,13,NA,NA,FALSE
+2017-04-15,"Xinying","Tainan City",80,"Moderate",3.2,0.28,28,57,20,20,21,0.6,2,31,FALSE
+2017-04-15,"Keelung","Keelung City",29,"Good",7.2,0.26,39,8,5,17,19,1.9,1.5,266,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",126,"Unhealthy for Sensitive Groups",3.4,0.52,32,80,28,9.7,14,3.9,3.9,73,TRUE
+2017-04-15,"Hsinchu","Hsinchu City",31,"Good",1.5,0.19,33,11,6,6.1,6.3,0.2,2.2,74,TRUE
+2017-04-15,"Nanzi","Kaohsiung City",116,"Unhealthy for Sensitive Groups",4.2,0.51,52,91,62,17,20,2.4,2.4,286,FALSE
+2017-04-15,"Toufen","Miaoli County",88,"Moderate",3.2,0.37,41,71,32,9.8,11,0.7,3.7,64,TRUE
+2017-04-15,"Longtan","Taoyuan City",34,"Good",2.4,0.22,6.2,20,8,6.8,16,8.8,1.6,92,FALSE
+2017-04-15,"Sanyi","Miaoli County",30,"Good",1.4,0.26,28,18,11,9.7,12,1.8,4.9,16,TRUE
+2017-04-15,"Hengchun","Pingtung County",43,"Good",1.2,0.18,44,23,9,2.3,3.2,0.9,7.9,35,TRUE
+2017-04-15,"Hukou","Hsinchu County",79,"Moderate",3.5,0.35,46,51,16,8.9,11,2.3,3.7,43,FALSE
+2017-04-15,"Nantou","Nantou County",115,NA,2.1,0.5,9.9,67,42,17,17,0.9,1.5,154,FALSE
+2017-04-15,"Keelung","Keelung City",91,"Moderate",2.5,0.54,14,60,29,19,30,11,1,233,FALSE
+2017-04-15,"Puli","Nantou County",24,"Good",2.3,0.25,27,6,3,6.2,7,0.9,0.7,259,FALSE
+2017-04-15,"Xindian","New Taipei City",64,"Moderate",6.8,0.4,66,40,30,15,19,3.5,2.3,277,FALSE
+2017-04-15,"Guanyin","Taoyuan City",43,"Good",7.8,0.2,41,27,5,22,23,1.4,3,76,FALSE
+2017-04-15,"Puli","Nantou County",23,"Good",2.2,0.25,19,11,7,5.9,8.6,2.7,3,245,FALSE
+2017-04-15,"Shilin","Taipei City",32,"Good",1.7,0.27,20,14,8,15,16,0.9,1.1,218,FALSE
+2017-04-15,"Shalu","Taichung City",31,"Good",2.3,0.18,15,21,8,8.4,9.8,1.5,2,156,FALSE
+2017-04-15,"Keelung","Keelung City",73,"Moderate",2.6,0.57,29,30,20,NA,NA,NA,2.7,89,TRUE
+2017-04-15,"Qianzhen","Kaohsiung City",156,NA,19,0.42,49,108,51,30,35,5.6,2.4,287,FALSE
+2017-04-15,"Hukou","Hsinchu County",35,"Good",2.5,0.35,34,18,7,8.9,11,1.9,3.9,46,FALSE
+2017-04-15,"Guanshan","Taitung County",15,"Good",2.4,NA,7.8,21,4,3.2,7.5,4.3,1.1,159,FALSE
+2017-04-15,"Hengchun","Pingtung County",37,"Good",1.3,0.12,38,20,9,2.5,2.9,0.4,10,24,TRUE
+2017-04-15,"Hsinchu","Hsinchu City",31,"Good",3.7,0.3,8.2,23,14,15,16,1,0.7,202,FALSE
+2017-04-15,"Xizhi","New Taipei City",40,"Good",1.4,0.15,37,29,11,6,7.9,1.9,1.9,25,FALSE
+2017-04-15,"Erlin","Changhua County",29,"Good",2,0.13,17,33,NA,1.7,2,0.3,2.5,203,FALSE
+2017-04-15,"Hengchun","Pingtung County",64,"Moderate",1.4,0.23,61,42,19,1.3,3.1,1.8,4.3,287,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",109,NA,3,0.39,36,57,26,11,13,1.5,1.5,350,FALSE
+2017-04-15,"Renwu","Kaohsiung City",96,"Moderate",4.1,0.68,9.7,133,38,42,45,2.9,1.6,326,FALSE
+2017-04-15,"Banqiao","New Taipei City",87,"Moderate",5.9,1.11,1.5,51,26,35,48,13,0.4,183,FALSE
+2017-04-15,"Yilan","Yilan County",25,"Good",1.8,0.27,9.2,22,8,6.5,7.3,0.8,1,297,FALSE
+2017-04-15,"Yilan","Yilan County",33,"Good",2.5,0.12,21,NA,NA,NA,NA,NA,2.9,100,FALSE
+2017-04-15,"Nantou","Nantou County",81,"Moderate",1.7,0.5,3.8,54,32,21,25,3.4,0.9,42,FALSE
+2017-04-15,"Sanchong","New Taipei City",48,"Good",7.7,1.11,NA,39,9,22,106,85,NA,NA,FALSE
+2017-04-15,"Dali","Taichung City",62,"Moderate",2.8,0.68,13,30,8,29,35,6,1.6,266,FALSE
+2017-04-15,"Taixi","Yunlin County",56,"Moderate",1.6,0.21,19,24,17,7.7,8.9,1.3,3.1,118,FALSE
+2017-04-15,"Nantou","Nantou County",121,NA,2.2,0.51,13,78,46,25,27,2.3,1.2,37,FALSE
+2017-04-15,"Datong","Taipei City",31,"Good",1.7,0.36,NA,22,12,14,19,5,NA,NA,TRUE
+2017-04-15,"Xitun","Taichung City",69,"Moderate",2.5,0.22,81,90,28,11,13,2.4,3.1,352,FALSE
+2017-04-15,"Toufen","Miaoli County",54,"Moderate",6.7,0.23,2,37,22,18,25,6.7,1,118,FALSE
+2017-04-15,"Yilan","Yilan County",26,"Good",1.5,0.47,24,12,7,11,12,0.8,1,65,FALSE
+2017-04-15,"Shanhua","Tainan City",22,"Good",2,0.19,4.6,24,3,8.8,10,1.4,2.7,174,FALSE
+2017-04-15,"Zhongshan","Taipei City",53,"Moderate",4.4,0.47,5.7,24,14,24,29,5.2,0.8,213,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",29,"Good",8.2,0.31,12,19,8,15,25,9.8,1.1,171,FALSE
+2017-04-15,"Lunbei","Yunlin County",56,"Moderate",1.5,0.25,28,39,9,5.2,6.2,1.1,2.4,13,TRUE
+2017-04-15,"Xindian","New Taipei City",154,NA,6.9,0.92,2.6,89,58,42,54,12,0.9,209,FALSE
+2017-04-15,"Keelung","Keelung City",39,"Good",1.4,0.21,40,25,11,4.7,5.2,0.5,2.5,79,FALSE
+2017-04-15,"Xianxi","Changhua County",57,"Moderate",3.3,0.22,20,37,16,10,11,0.9,4,30,FALSE
+2017-04-15,"Daliao","Kaohsiung City",83,"Moderate",4,0.52,6.6,61,31,24,36,12,2.4,341,TRUE
+2017-04-15,"Chiayi","Chiayi City",102,NA,3.2,0.33,46,86,36,10,11,0.9,1.8,284,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",85,"Moderate",13,0.59,47,50,26,28,33,4.3,1,199,FALSE
+2017-04-15,"Tamsui","New Taipei City",33,"Good",1.9,0.17,35,13,6,3.8,5.1,1.2,NA,NA,FALSE
+2017-04-15,"Changhua","Changhua County",80,"Moderate",1.3,0.29,55,55,37,5.4,5.5,0.1,5.6,18,FALSE
+2017-04-15,"Puzi","Chiayi County",57,"Moderate",3.1,0.28,19,47,12,11,12,0.8,0.8,353,FALSE
+2017-04-15,"Dali","Taichung City",52,"Moderate",1.8,0.3,41,46,11,13,15,1.8,2.9,25,FALSE
+2017-04-15,"Erlin","Changhua County",82,"Moderate",2.2,0.29,22,67,38,9.8,11,1.7,0.7,105,FALSE
+2017-04-15,"Xinying","Tainan City",88,"Moderate",1.6,0.32,27,85,31,14,15,1.2,1,342,FALSE
+2017-04-15,"Pingtung","Pingtung County",43,"Good",1.9,0.31,14,21,NA,11,12,1.1,1,325,FALSE
+2017-04-15,"Shilin","Taipei City",74,"Moderate",2.9,0.39,29,49,22,18,20,1.7,2,293,FALSE
+2017-04-15,"Zhongshan","Taipei City",33,"Good",3.2,0.9,7.5,18,NA,35,52,17,0.5,98,FALSE
+2017-04-15,"Toufen","Miaoli County",36,"Good",1.8,0.41,23,18,11,28,30,1.9,1.2,57,FALSE
+2017-04-15,"Puli","Nantou County",60,"Moderate",1.2,0.24,41,28,19,7.1,8.1,1,2.4,229,FALSE
+2017-04-15,"Nantou","Nantou County",85,"Moderate",0.1,0.39,3.2,54,26,12,14,2.5,0.9,53,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",55,"Moderate",3.4,0.44,49,69,25,14,16,2.2,3.2,74,FALSE
+2017-04-15,"Dali","Taichung City",24,"Good",2.2,0.5,28,21,2,17,21,3.9,2.3,314,FALSE
+2017-04-15,"Lunbei","Yunlin County",43,"Good",1,0.18,21,28,20,5.7,6.7,1,1.4,161,FALSE
+2017-04-15,"Hukou","Hsinchu County",95,"Moderate",7.4,1.16,3.2,84,45,54,64,10,1.3,79,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",64,"Moderate",2.6,0.72,37,46,23,22,29,7,1.5,35,FALSE
+2017-04-15,"Miaoli","Miaoli County",70,"Moderate",4.1,0.44,16,39,21,20,22,1.6,0.5,297,TRUE
+2017-04-15,"Lunbei","Yunlin County",78,"Moderate",2.9,0.17,18,38,24,4.4,7.5,3.1,1.3,214,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",93,"Moderate",4,0.45,35,64,33,11,12,0.8,1.7,55,FALSE
+2017-04-15,"Tamsui","New Taipei City",60,"Moderate",3,0.14,44,29,20,2.6,3.2,0.6,NA,NA,FALSE
+2017-04-15,"Yilan","Yilan County",52,"Moderate",1.4,0.28,52,45,17,4.5,5.9,1.4,3.2,75,FALSE
+2017-04-15,"Hengchun","Pingtung County",45,"Good",1.8,0.15,47,33,18,2.2,2.9,0.7,6.4,36,TRUE
+2017-04-15,"Renwu","Kaohsiung City",39,"Good",3.9,0.17,9.2,39,5,14,21,6.5,0.8,342,FALSE
+2017-04-15,"Mailiao","Yunlin County",91,"Moderate",2.8,0.21,38,76,29,8.6,11,2.6,5.5,8.4,FALSE
+2017-04-15,"Annan","Tainan City",51,"Moderate",3.2,0.27,1.1,45,14,17,21,3.8,1.2,80,FALSE
+2017-04-15,"Toufen","Miaoli County",62,"Moderate",2.9,0.17,11,35,20,13,14,1.3,1.2,190,FALSE
+2017-04-15,"Shilin","Taipei City",87,"Moderate",2.3,0.29,67,50,30,6.7,8,1.2,3.4,286,FALSE
+2017-04-15,"Hualien","Hualien County",26,"Good",1.4,0.2,21,23,4,4.9,6.4,1.4,1.7,37,FALSE
+2017-04-15,"Tamsui","New Taipei City",73,"Moderate",2.4,0.33,25,42,24,19,28,8.7,NA,NA,FALSE
+2017-04-15,"Miaoli","Miaoli County",29,"Good",2.3,0.49,13,25,10,23,27,3.9,1.2,46,FALSE
+2017-04-15,"Chiayi","Chiayi City",29,"Good",1.1,0.12,21,20,4,2.9,2.9,0,2.7,223,FALSE
+2017-04-15,"Fuxing","Kaohsiung City",89,"Moderate",5.3,1.08,7.9,82,49,37,48,11,1,217,FALSE
+2017-04-15,"Yangming","Taipei City",45,"Good",4.6,0.16,49,21,8,3.8,4.7,0.8,NA,NA,FALSE
+2017-04-15,"Wanli","New Taipei City",108,NA,3.1,0.27,61,139,37,4.1,5.6,1.5,9.1,24,FALSE
+2017-04-15,"Dali","Taichung City",40,"Good",1.9,0.48,31,36,21,21,22,1.4,3.5,310,FALSE
+2017-04-15,"Zhudong","Hsinchu County",24,"Good",2,0.29,2.4,27,10,7.7,13,5.1,1,153,FALSE
+2017-04-15,"Songshan","Taipei City",59,"Moderate",0.8,0.2,53,17,17,4.2,5.4,1.2,4.4,39,FALSE
+2017-04-15,"Tainan","Tainan City",56,"Moderate",1.9,0.32,16,32,12,16,17,1.6,2.3,29,FALSE
+2017-04-15,"Douliu","Yunlin County",129,NA,2.1,0.34,15,46,50,8.9,11,2.5,1.4,52,FALSE
+2017-04-15,"Zhudong","Hsinchu County",79,"Moderate",2.3,0.27,17,45,38,6.5,8.7,2.3,1,140,FALSE
+2017-04-15,"Linyuan","Kaohsiung City",78,"Moderate",6.1,0.4,17,43,31,15,15,0.8,1.7,37,FALSE
+2017-04-15,"Erlin","Changhua County",81,"Moderate",1.2,0.42,15,85,32,14,15,1,1.1,190,FALSE
+2017-04-15,"Changhua","Changhua County",103,NA,1.6,0.38,30,42,22,14,16,1.9,3.2,74,FALSE
+2017-04-15,"Changhua","Changhua County",44,"Good",3,0.24,15,27,12,9.4,11,2,1.5,359,FALSE
+2017-04-15,"Miaoli","Miaoli County",58,"Moderate",2.7,0.77,24,71,NA,18,27,8.8,1,190,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",23,"Good",1.8,0.29,10,20,NA,13,15,2.3,1.4,233,FALSE
+2017-04-15,"Taitung","Taitung County",34,"Good",0.7,0.27,38,7,3,2.9,4.1,1.2,1.5,302,FALSE
+2017-04-15,"Guanshan","Taitung County",21,"Good",1,NA,32,14,3,0.9,2,1.1,2,213,FALSE
+2017-04-15,"Guting","Taipei City",32,"Good",4.3,0.29,31,14,10,13,16,2.4,3.1,83,TRUE
+2017-04-15,"Dongshan","Yilan County",38,"Good",0.7,0.22,41,26,8,2.4,3,0.6,2,236,TRUE
+2017-04-15,"Longtan","Taoyuan City",42,"Good",1.7,0.57,14,30,3,25,28,3,0.8,38,FALSE
+2017-04-15,"Fengyuan","Taichung City",53,"Moderate",3.9,0.26,60,37,22,8,11,2.6,3.4,231,FALSE
+2017-04-15,"Shalu","Taichung City",62,"Moderate",2.6,0.78,2.9,46,18,32,39,7.5,0.7,2.8,TRUE
+2017-04-15,"Hualien","Hualien County",31,"Good",NA,NA,7.8,19,15,NA,NA,NA,2.1,261,FALSE
+2017-04-15,"Yonghe","New Taipei City",41,"Good",2.1,0.46,28,10,13,16,19,3.1,2.4,89,FALSE
+2017-04-15,"Chaozhou","Pingtung County",54,"Moderate",2.1,0.21,53,44,29,5.3,6.7,1.4,2.2,255,FALSE
+2017-04-15,"Zhongli","Taoyuan City",51,"Moderate",4.1,0.46,23,29,15,20,24,3.9,1.2,78,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",56,"Moderate",5.1,0.3,3.9,30,18,20,21,1,1,192,FALSE
+2017-04-15,"Miaoli","Miaoli County",55,"Moderate",3.4,0.34,51,65,21,20,26,5.4,2.7,311,FALSE
+2017-04-15,"Magong","Penghu County",22,"Good",8.3,0.13,15,10,9,6.2,14,7.4,2.5,175,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",31,"Good",2.3,0.61,39,32,7,26,34,8.2,3.1,68,FALSE
+2017-04-15,"Wanli","New Taipei City",146,NA,1.8,0.34,80,109,48,5.2,6.1,0.9,5.8,26,FALSE
+2017-04-15,"Xianxi","Changhua County",135,"Unhealthy for Sensitive Groups",2.9,0.5,51,126,67,13,15,1.9,1.9,189,TRUE
+2017-04-15,"Xitun","Taichung City",68,"Moderate",4.9,0.34,NA,39,24,11,14,2.6,2.7,299,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",43,"Good",3.1,0.2,42,39,15,9.1,9.7,0.6,1.3,353,FALSE
+2017-04-15,"Lunbei","Yunlin County",105,NA,3.2,0.39,44,75,52,7.5,10,2.9,1.6,319,FALSE
+2017-04-15,"Renwu","Kaohsiung City",79,"Moderate",9.3,0.74,16,37,29,35,36,1,0.9,12,FALSE
+2017-04-15,"Zhongshan","Taipei City",48,"Good",0.7,0.32,60,40,22,7.5,8.2,0.7,1,137,FALSE
+2017-04-15,"Tucheng","New Taipei City",79,"Moderate",2.4,0.29,61,55,32,8.5,9.3,0.7,2.4,321,FALSE
+2017-04-15,"Fengyuan","Taichung City",52,"Moderate",2,0.5,25,32,10,9.7,12,2.7,1,44,FALSE
+2017-04-15,"Miaoli","Miaoli County",34,"Good",1.4,0.25,19,16,8,7.6,9.3,1.7,1.3,309,FALSE
+2017-04-15,"Zhongshan","Taipei City",31,"Good",2.3,0.33,7.5,14,5,11,16,5,1.6,239,FALSE
+2017-04-15,"Changhua","Changhua County",83,"Moderate",0.6,0.44,34,47,12,16,17,0.9,4.4,0,FALSE
+2017-04-15,"Tamsui","New Taipei City",28,"Good",1.9,0.16,31,10,3,2.8,3.3,0.6,NA,NA,FALSE
+2017-04-15,"Meinong","Kaohsiung City",90,"Moderate",2.7,0.29,36,48,26,9.4,10,1,1.5,197,FALSE
+2017-04-15,"Chaozhou","Pingtung County",39,"Good",2.9,0.16,33,40,13,5,6.7,1.6,3.9,257,FALSE
+2017-04-15,"Dongshan","Yilan County",28,"Good",2.2,0.17,11,28,2,6.5,12,5.3,2.2,289,FALSE
+2017-04-15,"Shalu","Taichung City",33,"Good",1.1,0.3,35,26,4,7.5,8.7,1.2,10,4.7,TRUE
+2017-04-15,"Dayuan","Taoyuan City",30,"Good",4.3,0.47,14,35,12,16,17,1.4,1.8,160,FALSE
+2017-04-15,"Shilin","Taipei City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",103,NA,2.5,0.27,53,89,27,3.5,4,0.5,3.2,45,FALSE
+2017-04-15,"Zhongshan","Taipei City",36,"Good",3.3,0.91,3.5,19,13,22,50,29,2,285,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",95,"Moderate",5,1.22,2.8,90,39,49,74,25,0.8,187,FALSE
+2017-04-15,"Chiayi","Chiayi City",118,NA,3.8,0.78,3.8,64,38,25,32,7.5,2.6,313,FALSE
+2017-04-15,"Guanshan","Taitung County",34,"Good",1,NA,46,24,9,2.9,4.3,1.4,2.7,70,FALSE
+2017-04-15,"Xitun","Taichung City",112,NA,1.7,0.65,3.1,80,40,30,44,14,0.5,237,FALSE
+2017-04-15,"Puli","Nantou County",96,"Moderate",2.4,0.44,39,55,41,12,16,3.6,1.2,287,FALSE
+2017-04-15,"Lunbei","Yunlin County",78,"Moderate",2,0.15,24,23,22,11,15,4.6,1.5,323,FALSE
+2017-04-15,"Shalu","Taichung City",155,"Unhealthy",5.3,1.38,1.8,61,32,37,70,32,0.8,154,FALSE
+2017-04-15,"Lunbei","Yunlin County",95,"Moderate",4.6,0.31,41,49,37,11,13,1.6,1.7,322,FALSE
+2017-04-15,"Wanli","New Taipei City",67,"Moderate",0.9,0.18,60,57,15,1.1,2,0.8,1.7,96,FALSE
+2017-04-15,"Tamsui","New Taipei City",53,"Moderate",3.3,0.56,4.6,41,14,15,24,9.4,NA,NA,FALSE
+2017-04-15,"Hsinchu","Hsinchu City",40,"Good",2.2,0.31,36,31,16,16,17,1.4,3.8,63,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",57,"Moderate",2.5,0.4,38,44,21,18,19,0.8,1.8,121,FALSE
+2017-04-15,"Puli","Nantou County",54,"Moderate",2.3,0.27,10,39,17,8.3,9.7,1.4,1.6,300,FALSE
+2017-04-15,"Puli","Nantou County",37,"Good",1.2,0.16,28,18,9,3.9,5.5,1.6,1.5,237,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",45,"Good",5.3,0.34,33,25,18,1.1,1.2,0.2,0.8,133,FALSE
+2017-04-15,"Shanhua","Tainan City",88,"Moderate",6.2,0.28,68,66,39,7.2,8.3,1.1,2.3,271,FALSE
+2017-04-15,"Matsu","Lienchiang County",80,"Moderate",1.2,0.16,60,12,2,1.9,2.1,0.2,2.1,63,FALSE
+2017-04-15,"Dali","Taichung City",31,"Good",2.9,0.14,27,37,6,10,12,1.9,3.5,267,FALSE
+2017-04-15,"Hengchun","Pingtung County",18,"Good",2.6,0.07,12,16,5,2.5,3,0.6,4,44,FALSE
+2017-04-15,"Nantou","Nantou County",32,"Good",1.3,0.13,5.8,24,3,6,6.4,0.4,1.2,161,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",76,"Moderate",3,0.33,25,28,24,14,18,4.2,1.1,192,FALSE
+2017-04-15,"Mailiao","Yunlin County",134,"Unhealthy for Sensitive Groups",NA,NA,24,195,20,NA,NA,NA,8.2,3.2,FALSE
+2017-04-15,"Shilin","Taipei City",39,"Good",1.7,0.18,44,6,7,1.8,3.9,2.1,2.7,102,TRUE
+2017-04-15,"Xinying","Tainan City",35,"Good",1.5,0.21,13,24,12,6.1,8.6,2.6,1.8,95,FALSE
+2017-04-15,"Zhongming","Taichung City",64,"Moderate",2.1,0.42,13,33,19,19,23,3.6,1.1,307,FALSE
+2017-04-15,"Guanyin","Taoyuan City",29,"Good",1.3,0.18,32,21,7,10,11,0.8,1.4,98,FALSE
+2017-04-15,"Keelung","Keelung City",24,"Good",1.4,0.35,9.7,16,6,12,13,1.4,0.5,254,FALSE
+2017-04-15,"Yonghe","New Taipei City",123,"Unhealthy for Sensitive Groups",1.3,0.55,39,65,38,13,15,2.3,2.6,102,TRUE
+2017-04-15,"Miaoli","Miaoli County",158,"Unhealthy",3.6,0.84,35,131,97,14,16,2.1,5.3,33,TRUE
+2017-04-15,"Chaozhou","Pingtung County",106,"Unhealthy for Sensitive Groups",6.2,0.36,83,79,38,12,13,1,2.9,230,TRUE
+2017-04-15,"Sanchong","New Taipei City",30,"Good",1.9,0.45,NA,18,2,20,39,19,NA,NA,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",80,"Moderate",2,0.34,43,42,10,13,14,1,1.1,314,FALSE
+2017-04-15,"Taixi","Yunlin County",97,"Moderate",3.1,0.4,56,74,39,8.3,8.6,0.3,9.3,16,TRUE
+2017-04-15,"Qianzhen","Kaohsiung City",102,"Unhealthy for Sensitive Groups",3.7,0.5,4.4,90,43,28,31,3.4,1.1,354,TRUE
+2017-04-15,"Songshan","Taipei City",159,NA,11,0.39,112,53,35,16,18,1.8,2.5,54,FALSE
+2017-04-15,"Shilin","Taipei City",52,"Moderate",1.1,0.37,33,19,6,5.3,6.2,0.9,4,90,FALSE
+2017-04-15,"Taitung","Taitung County",38,"Good",1.1,0.18,23,23,9,1.5,1.9,0.4,3.1,317,TRUE
+2017-04-15,"Linkou","New Taipei City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",97,"Moderate",4.9,0.46,16,51,22,29,31,2.3,1,358,FALSE
+2017-04-15,"Hualien","Hualien County",81,"Moderate",1.1,0.41,56,70,29,8,8.5,0.5,2.5,61,FALSE
+2017-04-15,"Sanchong","New Taipei City",39,"Good",4.6,1.23,NA,41,7,39,102,62,NA,NA,FALSE
+2017-04-15,"Zhudong","Hsinchu County",98,"Moderate",4.6,0.69,33,67,49,27,38,10,1.2,216,FALSE
+2017-04-15,"Meinong","Kaohsiung City",99,"Moderate",1.6,0.38,14,86,36,12,13,0.7,0.4,185,TRUE
+2017-04-15,"Dayuan","Taoyuan City",84,"Moderate",5,0.22,77,31,NA,14,15,1,3.4,349,FALSE
+2017-04-15,"Hengchun","Pingtung County",38,"Good",2.4,0.1,39,11,2,0.7,2.8,2.1,3.4,33,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",161,NA,2.2,0.48,114,126,77,17,18,1.3,4.2,293,FALSE
+2017-04-15,"Douliu","Yunlin County",74,"Moderate",3.9,0.38,8.3,44,29,18,19,0.6,0.8,98,TRUE
+2017-04-15,"Chaozhou","Pingtung County",118,"Unhealthy for Sensitive Groups",3.2,0.49,31,123,57,17,19,1.2,0.9,278,TRUE
+2017-04-15,"Annan","Tainan City",27,"Good",0.3,0.13,22,21,3,NA,NA,NA,4.3,244,FALSE
+2017-04-15,"Lunbei","Yunlin County",291,NA,1.5,0.19,27,352,27,8,9.5,1.5,5.3,10,FALSE
+2017-04-15,"Changhua","Changhua County",45,"Good",1.3,0.17,56,30,6,4.7,5.7,0.9,3,86,FALSE
+2017-04-15,"Daliao","Kaohsiung City",82,"Moderate",3.2,0.52,29,84,39,26,27,1.7,0.4,270,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",101,NA,6,0.54,24,82,52,19,20,1.1,1.8,27,FALSE
+2017-04-15,"Guanshan","Taitung County",28,"Good",1.3,NA,32,12,4,1.4,3.3,1.9,2.2,54,FALSE
+2017-04-15,"Chaozhou","Pingtung County",36,"Good",1.3,0.07,15,39,18,3,4,1.1,2.1,227,FALSE
+2017-04-15,"Shilin","Taipei City",44,"Good",1.4,0.18,47,43,10,3.4,6,2.6,3.4,98,TRUE
+2017-04-15,"Fengyuan","Taichung City",35,"Good",3.3,0.38,27,27,8,12,17,5.1,1.8,316,FALSE
+2017-04-15,"Dali","Taichung City",92,"Moderate",1.9,0.41,45,74,25,17,19,2.1,2.6,339,FALSE
+2017-04-15,"Taixi","Yunlin County",81,"Moderate",1.5,0.25,43,NA,29,3.5,4.6,1,4.3,28,FALSE
+2017-04-15,"Annan","Tainan City",124,"Unhealthy for Sensitive Groups",3.6,0.9,4.8,85,60,29,66,38,1.3,82,TRUE
+2017-04-15,"Zhongli","Taoyuan City",36,"Good",2.2,0.28,35,29,13,9.6,16,6.7,2.9,115,FALSE
+2017-04-15,"Xingang","Chiayi County",56,"Moderate",0,0.17,19,29,17,9,9.4,0.4,1.2,12,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",50,"Good",2.8,0.23,38,16,NA,8.7,10,1.4,2.8,91,FALSE
+2017-04-15,"Wanhua","Taipei City",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Tucheng","New Taipei City",55,"Moderate",1.7,0.44,29,31,18,18,20,2,1.2,170,FALSE
+2017-04-15,"Shilin","Taipei City",35,"Good",2,0.43,32,27,7,18,20,1.4,1.1,117,FALSE
+2017-04-15,"Kinmen","Kinmen County",133,NA,3.9,0.25,31,74,44,22,22,0.9,2.5,157,FALSE
+2017-04-15,"Zhongshan","Taipei City",38,"Good",1.2,0.56,24,19,NA,23,30,7,2.2,174,FALSE
+2017-04-15,"Yangming","Taipei City",58,"Moderate",3.4,0.13,46,17,12,2.7,2.8,0.1,NA,NA,FALSE
+2017-04-15,"Meinong","Kaohsiung City",123,NA,NA,NA,NA,55,34,NA,NA,NA,1.9,284,FALSE
+2017-04-15,"Yilan","Yilan County",32,"Good",1.2,0.25,43,20,8,4.2,5.2,1.1,1,242,FALSE
+2017-04-15,"Tucheng","New Taipei City",75,"Moderate",1.2,0.31,54,44,24,6.1,6.9,0.8,1.1,300,FALSE
+2017-04-15,"Pingtung","Pingtung County",140,NA,5.7,0.48,74,59,27,19,20,1.1,1.2,226,FALSE
+2017-04-15,"Xingang","Chiayi County",104,"Unhealthy for Sensitive Groups",2.5,0.28,28,100,42,10,11,1.1,2.3,318,TRUE
+2017-04-15,"Zhudong","Hsinchu County",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",135,"Unhealthy for Sensitive Groups",4.1,0.58,47,108,60,18,22,4.1,1.9,3.8,FALSE
+2017-04-15,"Xingang","Chiayi County",36,"Good",2.5,0.25,12,19,13,13,13,0.4,0.8,327,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",106,"Unhealthy for Sensitive Groups",5.8,0.74,34,95,51,29,35,6.2,0.9,231,TRUE
+2017-04-15,"Xinying","Tainan City",73,"Moderate",1.7,0.24,32,46,18,11,11,0.5,4.5,13,FALSE
+2017-04-15,"Xitun","Taichung City",38,"Good",2.2,0.21,43,21,11,8.4,11,2.2,4.4,6.6,TRUE
+2017-04-15,"Qianzhen","Kaohsiung City",129,"Unhealthy for Sensitive Groups",2.9,0.85,19,160,50,30,33,2.9,2.3,17,TRUE
+2017-04-15,"Magong","Penghu County",15,"Good",3.5,0.18,17,11,NA,11,13,2.8,1.1,164,FALSE
+2017-04-15,"Magong","Penghu County",46,"Good",1.2,0.19,45,36,15,1.3,2.4,1.2,5.7,17,FALSE
+2017-04-15,"Taitung","Taitung County",20,"Good",1.1,0.2,5.3,28,5,2.9,4.4,1.5,1.2,298,FALSE
+2017-04-15,"Puli","Nantou County",104,NA,2.3,0.47,55,67,38,19,20,1.2,2,264,FALSE
+2017-04-15,"Taitung","Taitung County",21,"Good",1.8,0.23,16,15,5,2.1,4.8,2.7,2.2,133,FALSE
+2017-04-15,"Datong","Taipei City",47,"Good",4.5,1.6,NA,59,19,33,90,57,NA,NA,FALSE
+2017-04-15,"Keelung","Keelung City",19,"Good",1.4,0.25,5.6,15,8,11,13,2.4,1.8,247,FALSE
+2017-04-15,"Zuoying","Kaohsiung City",140,NA,3.9,0.49,19,100,37,19,19,0.6,1.6,327,FALSE
+2017-04-15,"Dayuan","Taoyuan City",69,"Moderate",0.6,0.2,50,61,15,15,18,2.8,8.6,20,FALSE
+2017-04-15,"Lunbei","Yunlin County",32,"Good",1.2,0.04,18,28,8,3.6,3.8,0.2,5,196,FALSE
+2017-04-15,"Magong","Penghu County",74,"Moderate",1.6,0.22,55,43,15,2.9,4,1.1,5,101,FALSE
+2017-04-15,"Xizhi","New Taipei City",50,"Good",4.7,0.64,7.8,23,19,44,64,20,1.2,45,FALSE
+2017-04-15,"Xizhi","New Taipei City",32,"Good",0.9,0.19,29,16,8,7.4,9.7,2.4,1.5,98,FALSE
+2017-04-15,"Songshan","Taipei City",64,"Moderate",1.8,0.62,35,64,30,29,34,5.5,0.9,72,FALSE
+2017-04-15,"Longtan","Taoyuan City",84,"Moderate",3.3,0.39,102,58,27,15,17,1.4,2.9,35,FALSE
+2017-04-15,"Qianjin","Kaohsiung City",156,"Unhealthy",3.9,0.26,63,46,27,5.2,6,0.8,4.1,325,FALSE
+2017-04-15,"Miaoli","Miaoli County",50,"Good",1.5,0.21,58,38,14,4.6,5.5,0.8,3.4,49,FALSE
+2017-04-15,"Zhudong","Hsinchu County",70,"Moderate",2.9,0.49,23,51,28,20,21,1.2,1.2,141,FALSE
+2017-04-15,"Wanli","New Taipei City",45,"Good",2.6,0.21,37,30,11,9.2,9.6,0.4,1.9,182,FALSE
+2017-04-15,"Wanhua","Taipei City",34,"Good",1.3,0.38,31,34,13,22,23,1.4,3,96,FALSE
+2017-04-15,"Xingang","Chiayi County",83,"Moderate",1.9,0.53,32,38,27,14,16,1.7,1.1,75,FALSE
+2017-04-15,"Xinzhuang","New Taipei City",93,"Moderate",3.7,0.23,24,33,13,19,21,2.6,4.7,38,FALSE
+2017-04-15,"Pingzhen","Taoyuan City",45,"Good",2.8,0.5,16,33,14,22,23,1,0.8,179,FALSE
+2017-04-15,"Puzi","Chiayi County",87,"Moderate",3.9,0.3,86,143,30,6.6,7.2,0.5,3.8,350,FALSE
+2017-04-15,"Taoyuan","Taoyuan City",68,"Moderate",4.3,0.5,39,46,21,22,27,5.7,1.2,83,FALSE
+2017-04-15,"Tucheng","New Taipei City",32,"Good",1.3,0.76,12,16,9,24,27,2.4,1.1,323,TRUE
+2017-04-15,"Yilan","Yilan County",44,"Good",2.5,0.27,19,32,15,6.8,7.3,0.5,0.7,224,FALSE
+2017-04-15,"Renwu","Kaohsiung City",NA,NA,6.9,0.38,41,62,15,17,NA,NA,NA,NA,TRUE
+2017-04-15,"Taoyuan","Taoyuan City",93,"Moderate",3.2,0.61,35,68,37,32,35,2.7,1.7,298,FALSE
+2017-04-15,"Wanhua","Taipei City",64,"Moderate",6.5,0.6,32,29,21,35,60,25,2.1,194,FALSE
+2017-04-15,"Zhongshan","Taipei City",55,"Moderate",0.6,0.7,22,38,8,36,39,3.6,0.5,73,FALSE
+2017-04-15,"Dongshan","Yilan County",29,"Good",1.9,0.29,23,27,14,7.4,11,3.9,0.8,67,FALSE
+2017-04-15,"Wanli","New Taipei City",62,"Moderate",1.6,0.15,48,55,18,2,2.7,0.7,8.7,43,FALSE
+2017-04-15,"Qiaotou","Kaohsiung City",74,"Moderate",2.4,0.26,12,58,29,14,14,0.2,1.6,79,FALSE
+2017-04-15,"Douliu","Yunlin County",119,NA,4.2,0.4,7.2,67,49,32,34,2.2,1,62,FALSE
+2017-04-15,"Pingtung","Pingtung County",121,NA,3,0.27,34,43,28,5.5,5.9,0.4,0.5,305,FALSE
+2017-04-15,"Songshan","Taipei City",65,"Moderate",2.4,0.48,5.7,23,8,18,27,9.1,1.6,220,FALSE
+2017-04-15,"Longtan","Taoyuan City",106,NA,1.7,0.37,47,66,33,5.9,7.3,1.4,7.3,56,FALSE
+2017-04-15,"Zhushan","Nantou County",68,"Moderate",1.3,0.27,15,39,19,9,9.4,0.4,1.3,174,FALSE
+2017-04-15,"Erlin","Changhua County",NA,NA,2.2,0.3,38,22,NA,9.4,NA,NA,NA,NA,TRUE
+2017-04-15,"Meinong","Kaohsiung City",121,NA,3.8,0.46,89,78,44,8.6,10,1.8,2.2,276,FALSE
+2017-04-15,"Dali","Taichung City",69,"Moderate",2.6,0.3,58,45,30,8,9.2,1.2,2.4,1.2,FALSE
+2017-04-15,"Wanhua","Taipei City",26,"Good",1.4,0.68,16,22,7,28,55,27,1.3,203,FALSE
+2017-04-15,"Nantou","Nantou County",57,"Moderate",2.6,0.26,9.6,36,20,11,12,1,1.3,158,FALSE
+2017-04-15,"Changhua","Changhua County",44,"Good",1,0.35,46,15,2,14,16,1.6,3.5,5,FALSE
+2017-04-15,"Keelung","Keelung City",19,"Good",1.8,0.14,22,11,4,3.7,5.2,1.5,2.6,116,FALSE
+2017-04-15,"Sanchong","New Taipei City",89,"Moderate",2.6,1.36,NA,65,33,26,78,53,NA,NA,FALSE
+2017-04-15,"Nanzi","Kaohsiung City",36,"Good",3.8,0.14,20,41,11,5.4,5.9,0.5,1,350,FALSE
+2017-04-15,"Kinmen","Kinmen County",85,"Moderate",4.7,0.39,60,72,32,13,13,0.6,3.4,70,TRUE
+2017-04-15,"Xinying","Tainan City",77,"Moderate",1.8,0.37,23,50,25,11,11,0.5,0.9,77,FALSE
+2017-04-15,"Xingang","Chiayi County",48,"Good",2.3,0.3,51,39,16,7.2,8.6,1.4,4.3,301,FALSE
+2017-04-15,"Fengyuan","Taichung City",38,"Good",1.2,0.2,40,19,8,5.9,6.7,0.8,3.1,11,FALSE
+2017-04-15,"Yilan","Yilan County",22,"Good",1.8,0.12,11,20,5,4,4.7,0.7,0.8,314,FALSE
+2017-04-15,"Wanli","New Taipei City",69,"Moderate",3.1,0.26,69,154,37,3.1,5.1,2,5.6,41,FALSE
+2017-04-15,"Guting","Taipei City",41,"Good",1.1,0.18,47,17,16,4.6,5.8,1.2,2.9,90,FALSE
+2017-04-15,"Chaozhou","Pingtung County",79,"Moderate",2,0.22,16,47,20,5.3,6.6,1.3,1.4,31,FALSE
+2017-04-15,"Longtan","Taoyuan City",63,"Moderate",1.6,0.22,38,32,25,6.3,7.8,1.5,3.7,312,FALSE
+2017-04-15,"Shilin","Taipei City",29,"Good",1.3,0.36,23,6,6,9.3,11,1.3,2.5,326,FALSE
+2017-04-15,"Dongshan","Yilan County",36,"Good",1.3,0.36,11,35,12,10,13,3.1,0.6,200,FALSE
+2017-04-15,"Shilin","Taipei City",94,"Moderate",6.4,0.98,23,54,28,42,43,1,1.8,105,FALSE
+2017-04-15,"Taitung","Taitung County",30,"Good",1.3,0.28,36,45,8,4.2,6.3,2.1,4.9,12,TRUE
+2017-04-15,"Nantou","Nantou County",82,"Moderate",1.9,0.39,65,54,33,13,16,3.1,2.7,31,FALSE
+2017-04-15,"Xinying","Tainan City",25,"Good",2.7,0.35,2.8,28,5,15,23,8.4,1.6,5.4,FALSE
+2017-04-15,"Pingtung","Pingtung County",155,"Unhealthy",4.4,0.57,93,129,81,18,19,0.2,2,247,FALSE
+2017-04-15,"Zhongming","Taichung City",42,"Good",3.9,0.41,31,31,22,18,21,3.1,1.8,46,FALSE
+2017-04-15,"Xiaogang","Kaohsiung City",157,NA,12,0.7,96,129,56,29,30,1.6,3.1,252,FALSE
+2017-04-15,"Wanli","New Taipei City",62,"Moderate",3.5,0.1,6.8,11,8,7.2,8.5,1.3,1.9,213,FALSE
+2017-04-15,"Changhua","Changhua County",104,NA,3.2,0.46,22,58,50,17,24,7.6,3.5,328,FALSE
+2017-04-15,"Miaoli","Miaoli County",26,"Good",3.4,0.21,27,21,3,9.8,11,1.5,2.4,59,FALSE
+2017-04-15,"Chiayi","Chiayi City",19,"Good",2.6,0.19,19,12,NA,5.5,6.8,1.4,0.9,157,FALSE

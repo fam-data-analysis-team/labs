@@ -1,0 +1,35 @@
+% latex table generated in R 4.4.3 by xtable 1.8-4 package
+% Tue Apr 15 11:45:42 2025
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & county & lower & mean & upper \\ 
+  \hline
+1 & Changhua County & 64.83 & 73.44 & 82.05 \\ 
+  2 & Chiayi City & 45.09 & 65.25 & 85.41 \\ 
+  3 & Chiayi County & 67.23 & 77.94 & 88.65 \\ 
+  4 & Hsinchu City & 30.14 & 42.00 & 53.86 \\ 
+  5 & Hsinchu County & 52.76 & 62.68 & 72.60 \\ 
+  6 & Hualien County & 25.63 & 39.55 & 53.46 \\ 
+  7 & Kaohsiung City & 74.07 & 80.12 & 86.17 \\ 
+  8 & Keelung City & 27.53 & 40.00 & 52.47 \\ 
+  9 & Kinmen County & 60.33 & 92.22 & 124.11 \\ 
+  10 & Lienchiang County & 60.12 & 74.20 & 88.28 \\ 
+  11 & Miaoli County & 52.52 & 59.18 & 65.83 \\ 
+  12 & Nantou County & 69.35 & 79.19 & 89.03 \\ 
+  13 & New Taipei City & 54.22 & 58.76 & 63.30 \\ 
+  14 & Penghu County & 39.95 & 51.43 & 62.90 \\ 
+  15 & Pingtung County & 50.63 & 63.27 & 75.92 \\ 
+  16 & Taichung City & 55.43 & 63.74 & 72.04 \\ 
+  17 & Tainan City & 67.33 & 76.13 & 84.93 \\ 
+  18 & Taipei City & 44.31 & 49.10 & 53.89 \\ 
+  19 & Taitung County & 23.30 & 28.00 & 32.70 \\ 
+  20 & Taoyuan City & 55.36 & 62.96 & 70.56 \\ 
+  21 & Yilan County & 33.69 & 38.68 & 43.66 \\ 
+  22 & Yunlin County & 73.72 & 83.55 & 93.37 \\ 
+   \hline
+\end{tabular}
+\caption{Таблиця даних} 
+\label{tab:data}
+\end{table}
