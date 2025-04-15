@@ -1,0 +1,122 @@
+---
+title: "3_CI"
+output: html_document
+date: "2025-04-14"
+---
+
+Статистики, що мають асимптотично нормальний розподiл, для якого асимптотичну дисперсiю важко оцiнити.
+
+Дослідження всіх даних у одній колонці:	aqi, so2, co, o3, pm10, pm2.5, no2, nox, no, windspeed, windirec
+
+```{r full-spearman-bootstrap-all-ci, message=FALSE, warning=FALSE}
+
+# --- Завантаження бібліотек ---
+library(dplyr)
+library(boot)
+library(readr)
+library(purrr)
+library(parallel)
+library(knitr)
+
+# --- Зчитування даних ---
+data <- readRDS("data/processed/air_quality_trimmed.rds")
+
+# --- Параметри ---
+set.seed(100)
+test_mode <- TRUE
+sample_size <- if (test_mode) 10000 else nrow(data)
+R_boot <- if (test_mode) 1000 else 2000
+
+# --- Вибір числових змінних і зменшення вибірки ---
+numeric_data <- data %>%
+  select(where(is.numeric)) %>%
+  slice_sample(n = sample_size)
+
+# --- Генерація пар змінних ---
+var_names <- names(numeric_data)
+var_pairs <- combn(var_names, 2, simplify = FALSE)
+
+# --- Бутстреп-функція ---
+
+boot_ci_spearman <- function(pair) {
+  x <- numeric_data[[pair[1]]]
+  y <- numeric_data[[pair[2]]]
+  
+  df <- data.frame(x = x, y = y)
+  df <- df[complete.cases(df), ]
+  
+  if (nrow(df) < 20) return(NULL)
+  if (!is.numeric(df$x) || !is.numeric(df$y)) return(NULL)
+  
+  tryCatch({
+    boot_out <- boot(data = df, statistic = function(data, ind) {
+      cor(data[ind, 1], data[ind, 2], method = "spearman")
+    }, R = R_boot)
+    
+    ci_all <- boot.ci(boot_out, type = c("norm", "basic", "perc", "bca"))
+    
+    tibble::tibble(
+      Var1 = pair[1],
+      Var2 = pair[2],
+      Estimate = round(boot_out$t0, 3),
+      Norm_L = round(ci_all$normal[2], 4),
+      Norm_U = round(ci_all$normal[3], 4),
+      Basic_L = round(ci_all$basic[4], 4),
+      Basic_U = round(ci_all$basic[5], 4),
+      Perc_L = round(ci_all$percent[4], 4),
+      Perc_U = round(ci_all$percent[5], 4),
+      Bca_L = round(ci_all$bca[4], 4),
+      Bca_U = round(ci_all$bca[5], 4)
+    )
+  }, error = function(e) return(NULL))
+}
+
+
+# --- Паралельна обробка всіх пар ---
+cl <- makeCluster(detectCores() - 1)
+clusterExport(cl, varlist = c("numeric_data", "boot_ci_spearman", "R_boot"), envir = environment())
+invisible(clusterEvalQ(cl, {
+  library(boot)
+  library(dplyr)
+}))
+
+
+results_list <- parLapply(cl, var_pairs, boot_ci_spearman)
+stopCluster(cl)
+
+# --- Об'єднання результатів ---
+results <- bind_rows(results_list)
+
+# --- Збереження в CSV ---
+write_csv(results, if (test_mode) "CI_spearman_bootstrap.csv" else "spearman_bootstrap_intervals_full.csv")
+
+# --- Markdown-таблиця всіх результатів ---
+if (nrow(results) > 0) {
+  kable(
+    results %>%
+      mutate(Interval_Normal = paste0("(", Norm_L, ", ", Norm_U, ")"),
+             Interval_Basic = paste0("(", Basic_L, ", ", Basic_U, ")"),
+             Interval_Percentile = paste0("(", Perc_L, ", ", Perc_U, ")"),
+             Interval_BCa = paste0("(", Bca_L, ", ", Bca_U, ")")) %>%
+      select(Var1, Var2, Estimate,
+             Interval_Normal, Interval_Basic,
+             Interval_Percentile, Interval_BCa),
+    caption = "Бутстреп-довірчі інтервали для коефіцієнтів Спірмана",
+    format = "markdown"
+  )
+} else {
+  cat("**Жодна пара змінних не пройшла фільтр мінімальної кількості спостережень.**")
+}
+
+```
+
+Інтервали для кореляції Спірмана дозволяють оцінити, в якому певному діапазоні знаходиться істинний коефіцієнт кореляції (в нашому випадку з ймовірністю 95%). Аналіз довірчих інтервалів для коефіцієнтів кореляції Спірмана дозволяє оцінити, наскільки сильно і стабільно змінні корелюють між собою, і чи є статистично значущі різниці в характері залежностей між різними парами змінних.
+
+Якщо довірчі інтервали для кореляції Спірмана між двома змінними досить вузькі й не охоплюють нуль, це може свідчити про стабільну і статистично значущу монотонну залежність між цими змінними.
+
+ВИСНОВКИ: 
+ - Для більшості кореляцій, інтервали не охоплюють нуль, що може свідчити про статистичну значущість цих кореляцій. Це в свою чергу можем вказувати на те, що між змінними є справжня лінійна залежність, а не випадкова.
+ - Інтервали для коефіцієнтів кореляції різняться між методами (Normal, Basic, Percentile, Bca), але загальна картина не сильно змінюється, і всі інтервали підтверджують позитивні або негативні кореляції.  
+ -
+ -
+
