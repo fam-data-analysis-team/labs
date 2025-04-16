@@ -4,7 +4,9 @@ output: html_document
 date: "2025-04-14"
 ---
 
-Статистики, що мають асимптотично нормальний розподiл, для якого асимптотичну дисперсiю важко оцiнити.
+Статистики, асимптотичний розподiл яких невiдомий.
+
+Ми обрали бутстреп як метод оцінки довірчих інтервалів, оскільки не маємо підстав вважати, що розподіл коефіцієнтів кореляції між усіма змінними є нормально наближеним. 
 
 Дослідження всіх даних у одній колонці:	aqi, so2, co, o3, pm10, pm2.5, no2, nox, no, windspeed, windirec
 
@@ -17,6 +19,7 @@ library(readr)
 library(purrr)
 library(parallel)
 library(knitr)
+library(tibble)
 
 # --- Зчитування даних ---
 data <- readRDS("data/processed/air_quality_trimmed.rds")
@@ -36,8 +39,7 @@ numeric_data <- data %>%
 var_names <- names(numeric_data)
 var_pairs <- combn(var_names, 2, simplify = FALSE)
 
-# --- Бутстреп-функція ---
-
+# --- Основна бутстреп-функція (усі типи крім studentized) ---
 boot_ci_spearman <- function(pair) {
   x <- numeric_data[[pair[1]]]
   y <- numeric_data[[pair[2]]]
@@ -55,7 +57,7 @@ boot_ci_spearman <- function(pair) {
     
     ci_all <- boot.ci(boot_out, type = c("norm", "basic", "perc", "bca"))
     
-    tibble::tibble(
+    tibble(
       Var1 = pair[1],
       Var2 = pair[2],
       Estimate = round(boot_out$t0, 3),
@@ -71,41 +73,86 @@ boot_ci_spearman <- function(pair) {
   }, error = function(e) return(NULL))
 }
 
-
-# --- Паралельна обробка всіх пар ---
+# --- Паралельне обчислення інтервалів (окрім studentized) ---
 cl <- makeCluster(detectCores() - 1)
 clusterExport(cl, varlist = c("numeric_data", "boot_ci_spearman", "R_boot"), envir = environment())
 invisible(clusterEvalQ(cl, {
   library(boot)
   library(dplyr)
+  library(tibble)
 }))
-
 
 results_list <- parLapply(cl, var_pairs, boot_ci_spearman)
 stopCluster(cl)
 
-# --- Об'єднання результатів ---
-results <- bind_rows(results_list)
+main_results <- bind_rows(results_list)
 
-# --- Збереження в CSV ---
-write_csv(results, if (test_mode) "CI_spearman_bootstrap.csv" else "spearman_bootstrap_intervals_full.csv")
+# --- Studentized ---
+boot_ci_studentized <- function(pair) {
+  x <- numeric_data[[pair[1]]]
+  y <- numeric_data[[pair[2]]]
+  
+  df <- data.frame(x = x, y = y)
+  df <- df[complete.cases(df), ]
+  if (nrow(df) < 20) return(NULL)
+  
+  tryCatch({
+    se_fun <- function(data, indices) {
+      d <- data[indices, ]
+      r <- cor(d$x, d$y, method = "spearman")
+      se <- sd(replicate(50, {
+        ind_x <- sample(nrow(d), replace = TRUE)
+        ind_y <- sample(nrow(d), replace = TRUE)
+        cor(d[ind_x, "x"], d[ind_y, "y"], method = "spearman")
+      }))
+      return(c(r, se))
+    }
+    
+    boot_out <- boot(data = df, statistic = se_fun, R = R_boot)
+    ci_stud <- boot.ci(boot_out, type = "stud")
+    
+    if (is.null(ci_stud$student)) return(NULL)
+    
+    tibble(
+      Var1 = pair[1],
+      Var2 = pair[2],
+      Stud_L = round(ci_stud$student[4], 4),
+      Stud_U = round(ci_stud$student[5], 4)
+    )
+  }, error = function(e) return(NULL))
+}
 
-# --- Markdown-таблиця всіх результатів ---
-if (nrow(results) > 0) {
+# --- Обчислення studentized окремо ---
+studentized_results <- map(main_results %>% select(Var1, Var2) %>% split(., seq(nrow(.))),
+                           ~boot_ci_studentized(unlist(.x))) %>%
+  bind_rows()
+
+# --- Об'єднання з основними результатами ---
+final_results <- main_results %>%
+  left_join(studentized_results, by = c("Var1", "Var2"))
+
+# --- Збереження результатів ---
+write_csv(final_results, if (test_mode) "CI_spearman_all_TEST.csv" else "CI_spearman_all_FULL.csv")
+
+# --- Виведення таблиці ---
+if (nrow(final_results) > 0) {
   kable(
-    results %>%
+    final_results %>%
       mutate(Interval_Normal = paste0("(", Norm_L, ", ", Norm_U, ")"),
              Interval_Basic = paste0("(", Basic_L, ", ", Basic_U, ")"),
              Interval_Percentile = paste0("(", Perc_L, ", ", Perc_U, ")"),
-             Interval_BCa = paste0("(", Bca_L, ", ", Bca_U, ")")) %>%
+             Interval_BCa = paste0("(", Bca_L, ", ", Bca_U, ")"),
+             Interval_Studentized = ifelse(is.na(Stud_L), NA,
+                                           paste0("(", Stud_L, ", ", Stud_U, ")"))) %>%
       select(Var1, Var2, Estimate,
              Interval_Normal, Interval_Basic,
-             Interval_Percentile, Interval_BCa),
-    caption = "Бутстреп-довірчі інтервали для коефіцієнтів Спірмана",
+             Interval_Percentile, Interval_BCa,
+             Interval_Studentized),
+    caption = "Довірчі інтервали для коефіцієнтів Спірмана",
     format = "markdown"
   )
 } else {
-  cat("**Жодна пара змінних не пройшла фільтр мінімальної кількості спостережень.**")
+  cat("**Жодна пара змінних не пройшла фільтр.**")
 }
 
 ```
@@ -114,9 +161,13 @@ if (nrow(results) > 0) {
 
 Якщо довірчі інтервали для кореляції Спірмана між двома змінними досить вузькі й не охоплюють нуль, це може свідчити про стабільну і статистично значущу монотонну залежність між цими змінними.
 
+Для більшості пар змінних інтервали, отримані різними методами, були близькими. Найширші —  BCa та ДОПИСАТИ. 
+
+Найбільш надійними вважаються інтервали BCa, оскільки вони враховують зміщення і прискорення бутстреп-розподілу. Якщо обчислювально ресурсоємно — достатньо студентізованих або перцентильних. 
+
 ВИСНОВКИ: 
  - Для більшості кореляцій, інтервали не охоплюють нуль, що може свідчити про статистичну значущість цих кореляцій. Це в свою чергу можем вказувати на те, що між змінними є справжня лінійна залежність, а не випадкова.
  - Інтервали для коефіцієнтів кореляції різняться між методами (Normal, Basic, Percentile, Bca), але загальна картина не сильно змінюється, і всі інтервали підтверджують позитивні або негативні кореляції.  
- -
+ - Бутстреп-довірчі інтервали підтверджують наявність статистично значущого зв’язку між [X] та [Y], оскільки 0 не входить у жоден з інтервалів. Для пари [X1] та [Y2] інтервал охоплює 0, отже, висновок про залежність непевний.
  -
 
