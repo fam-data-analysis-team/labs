@@ -1,0 +1,35 @@
+% latex table generated in R 4.4.2 by xtable 1.8-4 package
+% Wed Apr 16 14:46:05 2025
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrrrr}
+  \hline
+ & county & N & SD & lower & mean & upper \\ 
+  \hline
+1 & Changhua County & 264580.00 & 29.35 & 55.87 & 55.99 & 56.10 \\ 
+  2 & Chiayi City & 63116.00 & 35.38 & 63.55 & 63.83 & 64.10 \\ 
+  3 & Chiayi County & 125864.00 & 32.21 & 61.42 & 61.60 & 61.77 \\ 
+  4 & Hsinchu City & 66796.00 & 24.66 & 49.06 & 49.25 & 49.43 \\ 
+  5 & Hsinchu County & 125585.00 & 23.52 & 47.80 & 47.93 & 48.06 \\ 
+  6 & Hualien County & 63002.00 & 14.00 & 32.51 & 32.62 & 32.73 \\ 
+  7 & Kaohsiung City & 779483.00 & 34.61 & 64.99 & 65.06 & 65.14 \\ 
+  8 & Keelung City & 62700.00 & 18.85 & 42.64 & 42.79 & 42.93 \\ 
+  9 & Kinmen County & 62976.00 & 33.20 & 63.18 & 63.44 & 63.70 \\ 
+  10 & Lienchiang County & 62471.00 & 30.82 & 62.16 & 62.40 & 62.64 \\ 
+  11 & Miaoli County & 191775.00 & 24.56 & 48.58 & 48.69 & 48.80 \\ 
+  12 & Nantou County & 189077.00 & 30.79 & 58.68 & 58.82 & 58.96 \\ 
+  13 & New Taipei City & 798842.00 & 21.73 & 46.27 & 46.32 & 46.37 \\ 
+  14 & Penghu County & 62765.00 & 24.12 & 47.62 & 47.81 & 48.00 \\ 
+  15 & Pingtung County & 275748.00 & 32.45 & 56.03 & 56.15 & 56.27 \\ 
+  16 & Taichung City & 321868.00 & 27.46 & 52.41 & 52.51 & 52.60 \\ 
+  17 & Tainan City & 329388.00 & 32.84 & 60.55 & 60.66 & 60.77 \\ 
+  18 & Taipei City & 439860.00 & 20.56 & 45.51 & 45.57 & 45.63 \\ 
+  19 & Taitung County & 125374.00 & 12.70 & 29.89 & 29.96 & 30.03 \\ 
+  20 & Taoyuan City & 393394.00 & 24.19 & 48.99 & 49.07 & 49.14 \\ 
+  21 & Yilan County & 128933.00 & 15.08 & 36.45 & 36.53 & 36.61 \\ 
+  22 & Yunlin County & 250424.00 & 32.82 & 60.00 & 60.13 & 60.26 \\ 
+   \hline
+\end{tabular}
+\caption{Таблиця даних} 
+\label{tab:data}
+\end{table}

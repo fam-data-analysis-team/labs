@@ -1,0 +1,319 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}   % Підтримка UTF-8
+\usepackage[ukrainian]{babel} % Підтримка української мови
+\usepackage[ukrainian=nohyphenation]{hyphsubst}
+\usepackage{booktabs}
+\usepackage[T2A]{fontenc}      % Кодова таблиця для кирилиці
+\usepackage{amsmath, amsfonts} % Для математики, якщо потрібно
+\usepackage{hyperref}          % Для створення посилань
+\usepackage{listings}          % Пакет для вставки коду
+\usepackage{graphicx}
+\usepackage{csvsimple}
+\usepackage{parskip}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{multicol} % Для багатостовпчикового тексту
+
+\usetheme{Madrid}
+
+% Прибираєм навігацію з кожного слайду
+\beamertemplatenavigationsymbolsempty
+
+\title{Лабораторна робота №2}
+\subtitle{Статистичне виведення}
+\subtitle{Команда №9}
+
+% [], щоб прибрати імена з кожного слайду
+\author[]{
+  Баранівська В.О.,
+  Корсун Є. В.,
+  Хмарук О. Ю.,
+  Літковський А.С.,
+  Кудін Н. А.
+}
+\date{2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% \graphicspath{{../../../}} % Ensure this path is correct or remove it if not needed
+
+%Короткий підсумок ЛР 1 (якщо є свіжі погляди, можна ще зменшити/додати/змінити)
+\begin{frame}
+  \section{Узагальнення ЛР 1}
+
+  \frametitle{Зміст}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Набір даних}
+
+  Було вирішено дослідити якість повітря Тайваню. Уряд провінції намагається
+  контролювати та покращувати якість повітря. Тому 17 грудня 2017 року була введена
+  реформа \textit{Air Pollution Control Action Plan}.
+
+  \begin{center}
+    
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Набір даних}
+
+  Загальний опис датасету:
+
+  \begin{enumerate}
+    \item Кількість рядків: 5\,882\,208
+    \item Кількість стовпців: 25
+
+    \begin{itemize}
+      \item Числові: 19
+      \item Факторні: 4
+      \item Дата: 1
+      \item Інші: 1
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Питання EDA}
+
+  \begin{enumerate}
+    \item Чи впливає швидкість вітру на концентрацію частинок PM2.5 і PM10?
+    \item Чи існує кореляція між рівнем забруднення повітря і типом головного забруднювача
+    в різних районах?
+    \item Як зміни в концентрації озону  впливають на загальний рівень забруднення повітря?
+    \item Які регіони мають найвищий середній рівень забруднення повітря протягом року?
+    \item Як змінюється якість повітря протягом доби в різних районах?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Питання EDA}
+
+  \begin{enumerate}
+    \setcounter{enumi}{5}
+
+    \item Як змінюється концентрація PM2.5 і PM10 в залежності від швидкості вітру і напрямку вітру
+    в різних регіонах?
+    \item Як змінився загальний рівень забруднення по регіонам після початку реформи?
+    \item Чи існує залежність між початком реформ та показниками забруднення?
+    \item Як змінюється якість повітря залежно від станції виміру у містах?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \section{Висновки EDA}
+
+  \frametitle{Зміст}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Висновки EDA}
+
+Було проведено розвідковий аналіз результатів виміру якости повітря у регіонах Тайваню з 2016 року по 2024. 
+
+Не вдалось відповісти на деякі поставлені питання, 
+через значну кількість відсутніх даних у стовпці $'pollutant'$, а саме: 
+\begin{enumerate}
+    
+    \item  Чи існує кореляція між рівнем забруднення повітря (AQI) і типом головного забруднювача (pollutant) в різних районах?
+    
+\end{enumerate}
+Відповідь на це питання сподіваємось уряд Тайваню, зможе в скорому часі оприлюднити, 
+тому що зараз можна лише припускати, що саме впливає на такий рівень забруднення.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Чи впливає швидкість вітру (windspeed) на концентрацію частинок PM2.5 і PM10?}
+
+  Ні, на жаль, швидкість вітру має не значний вплив на концентрацію цих частинок, так як це тверді речовини. 
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як зміни в концентрації  $O_3$  та $SO_2$ впливають на загальний рівень забруднення повітря (AQI)?}
+
+  Концентрація $O_3$ має більший вплив на загальний рівень AQI ніж $SO_2$.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінюється якість повітря (status) протягом доби в різних районах?}
+
+  Протягом доби якість повітря не зазнає значних змін. В загальному є незначне покращення пообіді.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Які регіони (county) мають найвищий середній рівень забруднення повітря (AQI) протягом року?}
+
+  Найвищий середній рівень забруднення повітря (AQI) протягом року мають такі регіони: 
+  \begin{multicols}{2}
+    \begin{itemize}
+        \item Kinmen County
+        \item Kaohsiung City
+        \item Lienchiang County
+        \item Tainan City
+        \item Chiayi County
+        \item Nantou County
+        \item Chiayi City
+        \item Changhua County
+        \item Yunlin County
+        \item Taichung City
+    \end{itemize}
+    \end{multicols} 
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінився загальний рівень забруднення по регіонам після початку реформи?}
+
+  Загальний рівень AQI по регіонам зменшується, тобто показники покращуються після початку реформи.
+  Більш явні зміни помітні через декілька років, після початку, що є цілком логічним. 
+  Якщо уряд продовжить вводити обмеження та покращувати систему реформ, то показники в усій республіці нормалізуються. 
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Чи існує залежність між початком реформ та показниками забруднення??}
+
+  Після побудови низки гарфіків, було відмічено, що після реформи суттєво змінився 
+  лише показник концентрації $S0_2$ та незначні зміними $NO$. Всі інші показники, не зазнали суттєвих змін.
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Як змінюється якість повітря залежно від станції виміру у містах?}
+
+  Якість повітря змінюється нерівномірно у містах. Тобто саме від станції виміру не залежить, 
+    на це впливають інші фактори, які зазначені вище.
+
+\end{frame}
+
+% Частина про довірчі інтервали, графік таблиці, висновки по кожному з 5 блоків 
+
+\begin{frame}
+  \section{Довірчі інтервали}
+
+  \frametitle{Зміст}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Розподіл довірчих інтервалів}
+  Для цiлей цiєї лабораторної роботи всi статистики можна подiлити на три групи:
+  \begin{enumerate}
+    \renewcommand{\theenumi}{\Roman{enumi}}
+    \item  статистики, для яких загальновiдомо, що вони мають асимптотично нормальний розподiл,
+    дисперсiю якого можна просто оцiнити. 
+    %До таких статистик належать вибiркове середнє, вибiркова дисперсiя,рiзницi середнiх, частка спостережень, якi задовольняють певний критерiй;
+     
+    \item статистики, для яких загальновiдомо, що вони мають асимптотично нормальний розподiл, але для
+    яких асимптотичну дисперсiю важко оцiнити. 
+    %До таких статистик належать у першу чергу медiани та iншi квантилi (дисперсiя залежить вiд невiдомої щiльности розподiлу);
+
+    \item  статистики, асимптотичний розподiл яких у загальному випадку не є вiдомий. До таких статистик
+    належать коефiцiєнти кореляцiї Пiрсона та Спiрмана та деякi iншi.
+  \end{enumerate}
+\end{frame} 
+
+\begin{frame}
+  \frametitle{Розподіл довірчих інтервалів}
+  Було досліджено числові дані з таких колонок:
+  \begin{multicols}{2}
+    \begin{itemize}
+        \item AQI
+        \item $SO_2$
+        \item $CO$
+        \item $O_3$
+        \item $pm_{10}$
+        \item $pm_{2.5}$
+        \item $NO_2$
+        \item $NO_x$
+        \item $NO$
+        \item windspeed
+        \item winddirection
+    \end{itemize}
+    \end{multicols} 
+  Було обчислено довірчі інтервали для статистик I, II, III груп.
+\end{frame}  
+
+\begin{frame}
+  \frametitle{Розподіл довірчих інтервалів}
+  Додатково було досліджено такі питання:
+  \begin{itemize}
+    \item Як змінюється якість повітря (AQI): 
+    \begin{itemize}
+        \item впродовж доби
+        \item по місяцях (сезонам)
+        \item по регіонам до та після реформи
+        \item по регіонам за 2016-2017 та 2023-2024 роки
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Перша група}
+
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Друга група}
+
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Третя група}
+
+  
+\end{frame}
+
+
+
+  
+% Блок про формулювання/тестування гiпотез, якi доречнi за наслiдком проведеного ранiше розвiдкового аналiзу.
+
+\begin{frame}
+  \section{Гіпотези}
+
+  \frametitle{Зміст}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Формування гіпотез}
+
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Тестування гіпотез}
+
+  
+\end{frame}
+
+% Висновки по ЛР2
+
+\begin{frame}
+  \section{Висновок}
+
+  \frametitle{Зміст}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Узагальнений висновок}
+  Статичтичні методи, які були використані в цій лабораторній роботі, 
+  дозволяють грунтовно оцінити якість тих чи інших показників якости повітря у регіонах Тайваню.
+  
+\end{frame}
+
+\end{document}

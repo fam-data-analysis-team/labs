@@ -451,7 +451,7 @@ tests</code></pre>
   # var_mean_before = double(),
   # var_mean_after = double(),
   delta = double(),
-  # p_value = double(),
+  p_value = double(),
   p_value_BH = double(),
   reject_BH = logical()
 )
@@ -484,36 +484,59 @@ for (county_name in unique(df$county)) {
     # var_mean_before = var_mean_hat_before,
     # var_mean_after = var_mean_hat_after,
     delta = theta_hat,
-    # p_value = p_value,
+    p_value = p_value,
     p_value_BH = p_value_BH,
     reject_BH = p_value_BH &lt; 0.05
   )
 }
 
 tests</code></pre>
-<pre><code>##               county mean_before mean_after      delta    p_value_BH reject_BH
-## 1     Hsinchu County    68.62315   45.02939 -23.593765  0.000000e+00      TRUE
-## 2      Taichung City    74.63010   42.40491 -32.225194  0.000000e+00      TRUE
-## 3       Hsinchu City    63.94682   41.37018 -22.576644  0.000000e+00      TRUE
-## 4      Miaoli County    66.38956   42.91476 -23.474799  0.000000e+00      TRUE
-## 5       Taoyuan City    64.54564   43.78241 -20.763232  0.000000e+00      TRUE
-## 6    Changhua County    80.26728   46.97688 -33.290407  0.000000e+00      TRUE
-## 7      Nantou County    93.54719   47.14223 -46.404966  0.000000e+00      TRUE
-## 8      Yunlin County    96.00076   45.37147 -50.629293  0.000000e+00      TRUE
-## 9      Chiayi County    87.57876   47.59077 -39.987983  0.000000e+00      TRUE
-## 10       Tainan City    94.27655   45.40709 -48.869455  0.000000e+00      TRUE
-## 11   New Taipei City    62.32621   45.24373 -17.082486  0.000000e+00      TRUE
-## 12   Pingtung County    83.46475   39.95991 -43.504834  0.000000e+00      TRUE
-## 13      Keelung City    56.53361   38.39946 -18.134155  0.000000e+00      TRUE
-## 14       Taipei City    58.32069   45.57595 -12.744737  0.000000e+00      TRUE
-## 15       Chiayi City   100.67057   45.60894 -55.061630  0.000000e+00      TRUE
-## 16      Yilan County    47.14808   35.15205 -11.996032  0.000000e+00      TRUE
-## 17    Kaohsiung City    99.27346   43.72134 -55.552127  0.000000e+00      TRUE
-## 18 Lienchiang County    77.37931   53.07934 -24.299969  0.000000e+00      TRUE
-## 19     Penghu County    61.86656   40.62957 -21.236992  0.000000e+00      TRUE
-## 20    Taitung County    36.16458   27.49730  -8.667281  0.000000e+00      TRUE
-## 21     Kinmen County    96.21423   49.67600 -46.538234  0.000000e+00      TRUE
-## 22    Hualien County    46.79310   33.17740 -13.615708 4.126217e-297      TRUE</code></pre>
+<pre><code>##               county mean_before mean_after      delta       p_value
+## 1     Hsinchu County    68.62315   45.02939 -23.593765  0.000000e+00
+## 2      Taichung City    74.63010   42.40491 -32.225194  0.000000e+00
+## 3       Hsinchu City    63.94682   41.37018 -22.576644  0.000000e+00
+## 4      Miaoli County    66.38956   42.91476 -23.474799  0.000000e+00
+## 5       Taoyuan City    64.54564   43.78241 -20.763232  0.000000e+00
+## 6    Changhua County    80.26728   46.97688 -33.290407  0.000000e+00
+## 7      Nantou County    93.54719   47.14223 -46.404966  0.000000e+00
+## 8      Yunlin County    96.00076   45.37147 -50.629293  0.000000e+00
+## 9      Chiayi County    87.57876   47.59077 -39.987983  0.000000e+00
+## 10       Tainan City    94.27655   45.40709 -48.869455  0.000000e+00
+## 11   New Taipei City    62.32621   45.24373 -17.082486  0.000000e+00
+## 12   Pingtung County    83.46475   39.95991 -43.504834  0.000000e+00
+## 13      Keelung City    56.53361   38.39946 -18.134155  0.000000e+00
+## 14       Taipei City    58.32069   45.57595 -12.744737  0.000000e+00
+## 15       Chiayi City   100.67057   45.60894 -55.061630  0.000000e+00
+## 16      Yilan County    47.14808   35.15205 -11.996032  0.000000e+00
+## 17    Kaohsiung City    99.27346   43.72134 -55.552127  0.000000e+00
+## 18 Lienchiang County    77.37931   53.07934 -24.299969  0.000000e+00
+## 19     Penghu County    61.86656   40.62957 -21.236992  0.000000e+00
+## 20    Taitung County    36.16458   27.49730  -8.667281  0.000000e+00
+## 21     Kinmen County    96.21423   49.67600 -46.538234  0.000000e+00
+## 22    Hualien County    46.79310   33.17740 -13.615708 4.126217e-297
+##       p_value_BH reject_BH
+## 1   0.000000e+00      TRUE
+## 2   0.000000e+00      TRUE
+## 3   0.000000e+00      TRUE
+## 4   0.000000e+00      TRUE
+## 5   0.000000e+00      TRUE
+## 6   0.000000e+00      TRUE
+## 7   0.000000e+00      TRUE
+## 8   0.000000e+00      TRUE
+## 9   0.000000e+00      TRUE
+## 10  0.000000e+00      TRUE
+## 11  0.000000e+00      TRUE
+## 12  0.000000e+00      TRUE
+## 13  0.000000e+00      TRUE
+## 14  0.000000e+00      TRUE
+## 15  0.000000e+00      TRUE
+## 16  0.000000e+00      TRUE
+## 17  0.000000e+00      TRUE
+## 18  0.000000e+00      TRUE
+## 19  0.000000e+00      TRUE
+## 20  0.000000e+00      TRUE
+## 21  0.000000e+00      TRUE
+## 22 4.126217e-297      TRUE</code></pre>
 <p>Для всіх регіонів <span class="math inline">\(p-value\)</span>
 близьке до нуля, тому можна з впевненістю сказати, що реформа спрацювала
 по всьому Тайваню.</p>

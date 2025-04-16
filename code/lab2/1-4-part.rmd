@@ -1,0 +1,541 @@
+﻿---
+
+Статистики, що мають асимптотично нормальний розподiл, дисперсiю якого можна просто оцiнити: вибіркове середнє, вибіркова дисперсія
+
+Дослідження всіх даних у одній колонці:	aqi, so2, co, o3, pm10, pm2.5, no2, nox, no, windspeed, windirec
+
+Дослідження частини даних у одній колонці (або різних груп даних з однієї колонки): aqi по рег. за 16, 17, 23 і 24 роки, aqi по рег. до та після реформи, aqi впродовж доби, aqi по місяцях. (різниця середніх)
+
+---
+
+## Імпортуємо бібліотеки.
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(latex2exp)
+library(msm)
+library(dplyr)
+library(here)
+library(knitr)
+library(tibble)
+library(ggplot2)
+library(xtable)
+
+path <- here("plots", "lab2", "1-4-part")
+folder_path <-  here("notes", "report", "lab2", "1-4-part")
+dir.create(path, recursive = TRUE, showWarnings = FALSE)
+```
+
+
+## Імпортуємо дані. Використовуємо набір даних - tidy(робимо зріз на 10000 рядків для тестування функцій)
+```{r}
+dt <- readRDS(here("data", "processed", "air_quality_tidy.rds")) # %>% slice_sample(n=10000)
+```
+
+Збереження результатів обчислення у CSV форматі, та у форматуванні LaTeX у TXT файл.
+```{r}
+save_data_as_csv_and_latex <- function(data, name_csv_file, name_txt_file, caption = "Таблиця даних", label = "tab:data") {
+  folder_path <-  here("notes", "report", "lab2", "1-4-part")
+  if (!dir.exists(folder_path)) {
+    dir.create(folder_path, recursive = TRUE)
+  }
+  csv_file <- file.path(folder_path, name_csv_file)
+  txt_file <- file.path(folder_path, name_txt_file)
+
+  # Збереження даних у CSV файл
+  write.csv(data, file = csv_file, row.names = FALSE)
+
+  # Створення LaTeX таблиці та збереження у TXT файл
+  latex_table <- xtable::xtable(data, caption = caption, label = label)
+  print(latex_table, type = "latex", file = txt_file)
+
+  cat("Дані збережено у CSV та TXT файли в папці:", folder_path, "\n")
+}
+
+```
+
+# Частина 1 
+Обчислення довірчих інтервалів для вибіркового середнього та вибіркової дисперсії
+для всіх числових колонок.
+```{r}
+variables <- c("aqi", "so2", "co", "o3", "pm10", "pm2.5", 
+               "no2", "nox", "no", "windspeed", "winddirec")
+```
+
+## Функція обчислення довірчих інтревалів вибіркового середнього
+(асимптотика, t-розподіл)
+```{r}
+ci_mean <- function(x, conf.level = 0.95) {
+  n <- sum(!is.na(x))
+  m <- mean(x, na.rm = TRUE)
+  s <- sd(x, na.rm = TRUE)
+  error <- qt((1 + conf.level) / 2, df = n - 1) * s / sqrt(n)
+  c(N = n, SD = s, Error = error, Lower = m - error, Mean = m, Upper = m + error)
+}
+```
+
+## Обчислення емпіричного покриття
+Далі ніде не застосовується, чи потрібно? треба поміркувати, бо як мені здається й так очевидно?
+```{r}
+empirical_coverage <- function(true_value, lower_vec, upper_vec) {
+  mean(true_value >= lower_vec & true_value <= upper_vec) * 100
+}
+```
+
+## Функція обчислення довірчих інтервалів вибіркової диспесії
+(через хі-квадрат)
+```{r}
+ci_variance <- function(x, conf.level = 0.95) {
+  n <- sum(!is.na(x))
+  s2 <- var(x, na.rm = TRUE) # Вибіркова дисперсія
+  df <- n - 1 # Степені вільності
+  alpha <- 1 - conf.level
+  chi2_lower <- qchisq(alpha / 2, df = df)       # Нижня квантиль хі-квадрат
+  chi2_upper <- qchisq(1 - alpha / 2, df = df)   # Верхня квантиль хі-квадрат
+  lower_bound <- df * s2 / chi2_upper          # Нижня межа ДІ для дисперсії
+  upper_bound <- df * s2 / chi2_lower          # Верхня межа ДІ для дисперсії
+  c(N = n, Var = s2, Lower = lower_bound, Variance = s2, Upper = upper_bound) 
+}
+```
+
+## Довірчі інтервали для середнього
+Замість циклу по змінним, застосовується функція sapply.
+```{r}
+ci_means <- t(sapply(dt[, variables], ci_mean))
+```
+
+## Довірчі інтервали для дисперсій
+Замість циклу по змінним, застосовується функція sapply.
+```{r}
+ci_variances <- t(sapply(dt[, variables], ci_variance))
+```
+
+
+## Створення датафрейму для побудови графіків.
+```{r}
+ci_means_df <- as_tibble(ci_means, rownames = "variable") %>%
+  rename(lower = Lower, mean = Mean, upper = Upper)
+
+save_data_as_csv_and_latex(ci_means_df, "ci_means.csv", "ci_means.txt")
+```
+
+```{r}
+ci_variance_df <- as_tibble(ci_variances, rownames = "variable") %>%
+  rename(lower = Lower, variance = Variance, upper = Upper)
+
+save_data_as_csv_and_latex(ci_variance_df, "ci_variance.csv", "ci_variance.txt")
+```
+
+
+# Візуалізація результатів та збереження у відповідному форматі
+```{r}
+mean_plot <- ggplot(ci_means_df, aes(x = mean, y = reorder(variable, mean))) +
+  geom_point(color = "steelblue", size = 2) +
+  geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.5, color = "steelblue") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+  labs(x = TeX("$\\bar{X}$ з 95\\% довірчим інтервалом"),
+       y = "Змінна",
+       title = "Довірчі інтервали для вибіркових середніх") +
+  theme_classic() +
+  theme(
+    axis.title = element_text(size = 16),
+    axis.text = element_text(size = 14),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5)
+  )+
+  scale_x_continuous(breaks = seq(0, 170, by = 5))
+
+ggsave(
+  filename = file.path(path, "ci-means.png"), 
+  plot = mean_plot, 
+  width = 16, height = 10,
+  bg = "white",
+  dpi = 200)
+```
+
+
+```{r}
+var_plot <- ggplot(ci_variance_df, aes(x = variance, y = reorder(variable, variance))) +
+  geom_point(color = "steelblue", size = 2) +
+  geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.5, color = "steelblue") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+  labs(x = TeX("$\\bar{X}$ з 95\\% довірчим інтервалом"),
+       y = "Змінна",
+       title = "Довірчі інтервали для вибіркових дисперсій") +
+  theme_classic() +
+  theme(
+    axis.title = element_text(size = 16),
+    axis.text = element_text(size = 14),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5)
+  )+
+  scale_x_continuous(breaks = seq(0, 13000, by = 1000))
+
+ggsave(
+  filename = file.path(path, "ci-var.png"), 
+  plot = var_plot, 
+  width = 16, height = 10,
+  bg = "white",
+  dpi = 200)
+```
+
+# Висновок 
+## Частина 1
+- Інтервали: Кожна змінна має точку (середнє значення) і горизонтальну лінію (довірчий інтервал). 
+Чим ширше інтервал, тим більша невизначеність або варіабельність даних для цієї змінної.
+
+- Порівняння змінних: Змінні, такі як winddirec і AQI, мають відносно широкі довірчі інтервали для середніх та дисперсії, 
+що свідчить про високу варіабельність або невизначеність. Навпаки, змінні, такі як so2 і co,інші
+мають вузькі інтервали, що вказує на більш стабільні або точні вимірювання.
+
+- Довірчі інтервали для **вибіркових середніх** дозволяють оцінити, в якому діапазоні з заданою імовірністю знаходиться 
+істинне середнє значення показника для генеральної сукупності. 
+Якщо для кількох змінних інтервали не перетинаються — це вказує на статистично значущі відмінності в середніх значеннях.
+
+- Довірчі інтервали для **дисперсій** допомагають оцінити стабільність розсіювання даних. 
+Аналізуючи наші результати, можна стверджувати, що дані по деяким змінним розсіяні. А саме winddirec та частково AQI. 
+Раніше у EDA ми зазначали, що помітна різниця значень AQI через георгафічно-природний вплив.
+
+- Ми не можемо казати, що справжнє середнє лежить у цьому інтервалі з імовірністю 95%
+Ми тільки можемо казати, що будь‐яке значення з цього інтервалу нічим не гірше від отриманого середнього.
+
+---
+# Частина 2
+Вибіркове середнє для: 
+- AQI по регіонам за 16,17,23,24 роки 
+- AQI по регіонам до та після реформи
+---
+
+Зчитуємо лише рік з колонки date.
+```{r}
+dt <- dt %>%
+  mutate(date = as.Date(as.character(date), format = "%Y"),
+         year = year(date))
+```
+
+
+-  AQI по регіонам за 16,17,23,24 роки
+```{r}
+var <- c(2016, 2017, 2023, 2024) 
+
+dt_filtered <- dt %>% 
+  filter(year %in% var) 
+```
+
+Обчислюємо довірчі інтервали для середнього AQI по кожному року в кожному регіоні.
+```{r}
+ci_mean_aqi <- function(y){ 
+  dt_filtered %>%
+    filter(year == y) %>% 
+    group_by(county) %>%
+    summarise(
+        N =  ci_mean(aqi)[1],
+        SD = ci_mean(aqi)[2],
+        lower = ci_mean(aqi)[4],
+        mean  = ci_mean(aqi)[5],
+        upper = ci_mean(aqi)[6]
+    ) %>%
+    mutate(year = y) %>%    
+    select(year, everything())
+}
+
+save_data_as_csv_and_latex(ci_mean_aqi(2016), "2016_ci_mean_aqi.csv", "2016_ci_mean_aqi.txt")
+save_data_as_csv_and_latex(ci_mean_aqi(2017), "2017_ci_mean_aqi.csv", "2017_ci_mean_aqi.txt")
+save_data_as_csv_and_latex(ci_mean_aqi(2023), "2023_ci_mean_aqi.csv", "2023_ci_mean_aqi.txt")
+save_data_as_csv_and_latex(ci_mean_aqi(2024), "2024_ci_mean_aqi.csv", "2024_ci_mean_aqi.txt")
+```
+
+Візуалізація 4 років(на одному графіку).
+```{r}
+ci_2016 <- read_csv(file.path(folder_path, "2016_ci_mean_aqi.csv")) %>%
+  mutate(year = factor("2016"))
+
+ci_2017 <- read_csv(file.path(folder_path, "2017_ci_mean_aqi.csv")) %>%
+  mutate(year = factor("2017"))
+
+ci_2023 <- read_csv(file.path(folder_path, "2023_ci_mean_aqi.csv")) %>%
+  mutate(year = factor("2023"))
+
+ci_2024 <- read_csv(file.path(folder_path, "2024_ci_mean_aqi.csv")) %>%
+  mutate(year = factor("2024"))
+
+combined_ci_data <- bind_rows(ci_2016, ci_2017, ci_2023, ci_2024)
+
+aqi_by_year_region_plot <- ggplot(combined_ci_data, aes(x = county, y = mean, color = year)) +
+  geom_point(position = position_dodge(width = 0.7), size = 3) +
+  geom_errorbar(
+    aes(ymin = lower, ymax = upper),
+    width = 0.3,
+    position = position_dodge(width = 0.7)
+  ) +
+  theme_minimal() +
+  labs(
+    title = "Середній AQI по регіонах за 2016, 2017, 2023 та 2024 роки",
+    x = "Регіон",
+    y = "Середній AQI",
+    color = "Рік"
+  ) +
+  scale_color_viridis_d() +
+  coord_flip() 
+
+ggsave(
+  filename = file.path(path, "aqi_by_year_region.png"),
+  plot = aqi_by_year_region_plot,
+  width = 10,
+  height = 8,
+  bg = "white",
+  dpi = 200
+)
+```
+
+### Висновок: 
+Ми розглядаємо AQI по регіонам і розділимо їх на рік до реформи та рік після: 
+- Розглянемо 16 та 17 роки 
+- Розглянемо 23 та 24 роки 
+
+Загально бачимо позитивні зміни. Збільшується кількість вимірювань в кожному регіоні з кожним роком. 
+Середні показники зменшуються.
+
+
+-  AQI по регіонам до та після реформи
+Розглядаємо часовий період ДО реформи.
+```{r}
+dt_filtered_before_ref <- dt %>% 
+  filter(after_reform == FALSE)
+
+ci_mean_aqi_before_reform <- dt_filtered_before_ref %>% 
+  group_by(county) %>% 
+  summarise(
+      N =  ci_mean(aqi)[1],
+      SD = ci_mean(aqi)[2],
+      lower = ci_mean(aqi)[4],
+      mean  = ci_mean(aqi)[5],
+      upper = ci_mean(aqi)[6]
+  )
+
+save_data_as_csv_and_latex(ci_mean_aqi_before_reform, "ci_mean_aqi_before_reform.csv", "ci_mean_aqi_before_reform.txt")
+```
+
+Часовий період ПІСЛЯ реформи.
+```{r}
+dt_filtered_after_ref <- dt %>% 
+  filter(after_reform == TRUE)
+
+ci_mean_aqi_after_reform <- dt_filtered_after_ref %>% 
+  group_by(county) %>% 
+  summarise(
+    N =  ci_mean(aqi)[1],
+      SD = ci_mean(aqi)[2],
+      lower = ci_mean(aqi)[4],
+      mean  = ci_mean(aqi)[5],
+      upper = ci_mean(aqi)[6] 
+  )
+
+save_data_as_csv_and_latex(ci_mean_aqi_after_reform, "ci_mean_aqi_after_reform.csv", "ci_mean_aqi_after_reform.txt")
+```
+
+Візуалізація ДО та ПІСЛЯ (на одному графіку).
+```{r}
+ci_mean_aqi_before <- read_csv(file.path(folder_path, "ci_mean_aqi_before_reform.csv")) %>%
+  mutate(period = "До реформи")
+ci_mean_aqi_after <- read_csv(file.path(folder_path, "ci_mean_aqi_after_reform.csv")) %>%
+  mutate(period = "Після реформи")
+
+ci_mean_aqi_combined <- bind_rows(ci_mean_aqi_before, ci_mean_aqi_after)
+
+aqi_comparison_plot <- ggplot(ci_mean_aqi_combined, aes(x = county, y = mean, color = period)) +
+  geom_point(position = position_dodge(width = 0.5), size = 3) +
+  geom_errorbar(
+    aes(ymin = lower, ymax = upper),
+    width = 0.2,
+    position = position_dodge(width = 0.5)
+  ) +
+  theme_minimal() +
+  labs(
+    title = "Середній AQI до та після реформи по регіонах",
+    x = "Регіон",
+    y = "Середній AQI",
+    color = "Період"
+  ) +
+  scale_color_manual(values = c("До реформи" = "yellow", "Після реформи" = "steelblue")) +
+  coord_flip() 
+
+ggsave(
+  filename = file.path(path, "aqi_comparison_before_after.png"),
+  plot = aqi_comparison_plot,
+  width = 10,
+  height = 8,
+  bg = "white",
+  dpi = 200
+)
+```
+# Висновок 
+## Частина 2
+Вибіркове середнє для AQI по регіонам за 16,17,23,24 роки та AQI по регіонам до та після реформи
+дозволяє оцінити, в якому діапазоні з заданою імовірністю знаходиться істинне середнє значення показника для генеральної сукупності.
+ 
+Відчуто збільшилась кількість вимірювань, що збільшує вибірку та спостережуваність рехультатів. 
+Якість повітря покращується. Тобто AQI зменшується.
+
+*Коментар*: чому такий розподіл по рокам і чим же відрізняються питання між собою? 
+В першому питанні ми можемо побачити суттєву різницю між значеннями (зріз років). 
+В другому ж питанні ми розглядаємо саме розподіл до/після
+(в загальному і відповідно період "після" значно більший, ніж "до", різний розмір вибірки(нерівномірне спвівідношення?))
+
+---
+
+# Частина 3 
+## Обчислення ДІ різниці середніх для 
+Ця частина скрипту аналізує середні значення AQI в різних розрізах даних: 
+- за часом доби
+- за місяцями
+- за регіонами (до та після реформи).
+Для кожної категорії обчислюються основні статистики та їх довірчі інтервали.
+
+1. Обчислити середні та дисперсію 
+2. Стандартна похибка різниці середніх 
+3. Різниця середніх 
+4. Довірчий інтервал
+
+---
+
+```{r}
+summary_stats_grouped <- function(data, value_col, group_col) {
+  data %>% 
+    group_by(.data[[group_col]]) %>%
+    summarise(across(all_of(value_col), 
+                     ~ list(as_tibble_row(ci_mean(.))), 
+                     .names = "stats")) %>%
+    unnest_wider(stats) %>%
+    rename(!!group_col := 1)
+}
+```
+
+
+```{r}
+add_differences_from_overall <- function(summary_df, overall_mean) {
+  summary_df %>%
+    mutate(
+      Difference = Mean - overall_mean,
+      Lower_Diff = Lower - overall_mean,
+      Upper_Diff = Upper - overall_mean
+    )
+}
+```
+
+Функція для побудови графіків.
+```{r}
+plot_difference_summary <- function(df, x_col, title, filename, path) {
+  p <- ggplot(df, aes_string(x = x_col, y = "Difference")) +
+    geom_point(size = 3, color = "steelblue") +
+    geom_errorbar(aes(ymin = Lower_Diff, ymax = Upper_Diff),
+                  width = 0.2, color = "steelblue") +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
+    theme_minimal() +
+    labs(
+      title = title,
+      x = x_col,
+      y = "Різниця від загального середнього"
+    )
+  
+  ggsave(
+    filename = file.path(path, filename),
+    plot = p, width = 16, height = 10, bg = "white", dpi = 200
+  )
+}
+
+```
+
+```{r}
+overall_stats <- dt %>% summarise(Mean_overall = mean(aqi, na.rm = TRUE))
+```
+
+AQI впродовж доби. Фільтруємо дані відповідно до часу доби.
+```{r}
+dt <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
+df_daytime <- dt %>%
+  mutate(
+    hour_group = lubridate::hour(date) %/% 3,
+    daytime = factor(
+      hour_group,
+      levels = 0:7,
+      labels = c("00-03", "03-06", "06-09", "09-12", "12-15", "15-18", "18-21", "21-24")
+    )
+  )
+print(unique(df_daytime["daytime"]))
+
+daytime_summary <- summary_stats_grouped(df_daytime, "aqi", "daytime")
+daytime_diff <- add_differences_from_overall(daytime_summary, overall_stats$Mean_overall)
+save_data_as_csv_and_latex(daytime_diff, "df_daytime_summary.csv", "df_daytime_summary.txt")
+plot_difference_summary(daytime_diff, "daytime", 
+                        "Різниця середнього AQI за часом доби від загального", 
+                        "daytime_summary.png", path)
+```
+
+
+ - AQI по місяцях. Фільтруємо дані відповідно до місяця.
+```{r}
+dt <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
+df_seasonal <- dt %>%
+  mutate(month = lubridate::month(date, label = TRUE, locale="en"))
+
+print(unique(df_seasonal["month"]))
+
+seasonal_summary <- summary_stats_grouped(df_seasonal, "aqi", "month")
+seasonal_diff <- add_differences_from_overall(seasonal_summary, overall_stats$Mean_overall)
+save_data_as_csv_and_latex(seasonal_diff, "df_seasonal_summary.csv", "df_seasonal_summary.txt")
+plot_difference_summary(seasonal_diff, "month", 
+                        "Різниця середнього AQI по місяцях", 
+                        "seasonal_summary.png", path)
+```
+
+
+- AQI по регіонам до та після реформи. Фільтруємо дані відповідно до регіону та реформи. Обчислення середніх.
+```{r}
+summary_stats <- dt %>%
+  group_by(county, after_reform) %>%
+  summarise(
+    mean_aqi = mean(aqi, na.rm = TRUE),
+    sd_aqi = sd(aqi, na.rm = TRUE),
+    n = sum(!is.na(aqi)),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(
+    names_from = after_reform,
+    values_from = c(mean_aqi, sd_aqi, n),
+    names_sep = "_"
+  )
+
+summary_stats <- summary_stats %>%
+  mutate(
+    Difference = mean_aqi_TRUE - mean_aqi_FALSE,
+    SE_Difference = sqrt((sd_aqi_TRUE^2 / n_TRUE) + (sd_aqi_FALSE^2 / n_FALSE)),
+    # Знаходимо мінімальне df між двома групами для t-розподілу
+    DF = pmin(n_TRUE, n_FALSE) - 1,
+    t_value = qt(0.975, DF),
+    Lower_CI = Difference - t_value * SE_Difference,
+    Upper_CI = Difference + t_value * SE_Difference
+  ) %>%
+  select(-t_value)  # t_value більше не потрібен 
+
+plot_region_difference(summary_stats, "county",
+                       "Різниця середнього AQI (Після - До реформи) по регіонах", 
+                       "aqi_difference_by_region.png", path)
+save_data_as_csv_and_latex(summary_stats, "summary_stats.csv", "summary_stats.txt")
+
+```
+
+# Висновок 
+## Частина 3
+-  AQI впродовж доби
+  + Баичимо, що AQI впродовж доби має різні значення.
+  + Найвищі значення AQI спостерігаються в період з 12 до 15 години, 
+    що може бути пов'язано з підвищеною активністю транспорту та промисловості в цей час.
+
+-  AQI по місяцях 
+  + Бачимо, що AQI впродовж року має різні значення.
+  + Найвищі значення AQI спостерігаються в червні та липні, 
+    що може бути пов'язано з підвищеною температурою повітря та забрудненням від літніх активностей.
+
+-  AQI по регіонам до та після реформи
+  + Бачимо, що загально зміни по регіонам присутні. 
+  + В деяких регіонах спостерігається суттєве зменшення AQI, 
+    в інших регіонах зміни незначні.

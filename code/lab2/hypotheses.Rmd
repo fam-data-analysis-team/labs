@@ -4,6 +4,7 @@ output: html_document
 ---
 
 ```{r setup, include = FALSE}
+library(parallelly)
 library(tidyverse)
 library(viridis)
 library(here)
@@ -19,7 +20,24 @@ theme_set(
   )
 )
 
-dir.create(here("plots", "lab2", "hypotheses"), recursive = TRUE, showWarnings = FALSE)
+plots_dir <- here("plots", "lab2", "hypotheses")
+results_dir <-  here("notes", "report", "lab2", "hypotheses")
+
+dir.create(plots_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
+```
+
+```{r define_save, include = FALSE}
+save_to_csv <- function(theta_hat, test_result, path) {
+  data <- data.frame(
+    theta_hat = theta_hat,
+    p_value = test_result[1],
+    ci_lower = test_result[2],
+    ci_upper = test_result[3]
+  )
+
+  write.csv(data, file = path, row.names = FALSE)
+}
 ```
 
 Для тестування гіпотез використовується тест Волда:
@@ -45,7 +63,7 @@ wald <- function(theta_hat, theta_0, se_theta_hat, alternative, a) {
     stop(paste("Unknown alternative hypothesis:", alternative, sep=" "))
   }
   
-  c(t = T_stat,  p_value = p_value, conf_int = conf_int)
+  c(p_value = p_value, ci_lower = conf_int[1], ci_upper = conf_int[2])
 }
 ```
 
@@ -80,7 +98,7 @@ p <- df %>%
     labs(x = "Інтервал часу (год)")
 
 ggsave(
-  here("plots", "lab2", "hypotheses", "daytime_3hr_vs_aqi.png"), p,
+  file.path(plots_dir, "daytime_3hr_vs_aqi.png"), p,
   bg = "white", dpi = 200, width = 10, height = 8
 )
 ```
@@ -93,7 +111,7 @@ p <- df %>%
     labs(x = "Інтервал часу (год)")
 
 ggsave(
-  here("plots", "lab2", "hypotheses", "daytime_12hr_vs_aqi.png"), p,
+  file.path(plots_dir, "daytime_12hr_vs_aqi.png"), p,
   bg = "white", dpi = 200, width = 10, height = 8
 )
 ```
@@ -124,7 +142,7 @@ p <- df_by_day %>%
   labs(x = "Середнє AQI до 12:00", y = "Середнє AQI після 12:00")
 
 ggsave(
-  here("plots", "lab2", "hypotheses", "aqi_00_12_vs_12_24.png"), p,
+  file.path(plots_dir, "aqi_00_12_vs_12_24.png"), p,
   bg = "white", dpi = 200, width = 10, height = 8
 )
 ```
@@ -151,10 +169,16 @@ $H_0: \mu_{X_i - Y_i} ≥ 0$ vs. $H_1: \mu_{X_i - Y_i} < 0$
 ```{r wald_daytime}
 theta_hat = mean(df_by_day$di)
 se_theta_hat <- sqrt(var(df_by_day$di) / nrow(df_by_day))
+test_result <- wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)
 
 theta_hat
-wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)
+test_result
 ```
+
+```{r wald_daytime_save, include = FALSE}
+save_to_csv(theta_hat, test_result, file.path(results_dir, "hypothesis_daytime.csv"))
+```
+
 
 Отримали низьке $p-value$ і довірчий інтервал, який не включає нуль, тому відкидаємо гіпотезу $H_0$. Це приклад того, коли різниця медіан є статистично значущою, проте її значення, насправді дуже мале.
 
@@ -184,7 +208,7 @@ p <- df %>%
   scale_fill_viridis(option = "viridis", name = "Медіана", direction = -1)
 
 ggsave(
-  here("plots", "lab2", "hypotheses", "season_vs_aqi.png"), p,
+  file.path(plots_dir, "season_vs_aqi.png"), p,
   bg = "white", dpi = 200, width = 10, height = 8
 )
 ```
@@ -225,7 +249,7 @@ var_median_diff <- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
   d <- data[indices,]
   
   boot_out <- boot(  # generate an array of median diffs
-    d, statistic = median_diff, R = 100, strata = d[[gp_col]],
+    d, statistic = median_diff, R = 200, strata = d[[gp_col]],
     gp_col = gp_col, x_gp_lab = x_gp_lab, y_gp_lab = y_gp_lab
   )
   
@@ -234,8 +258,9 @@ var_median_diff <- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
 
 boot_var_median_diff <- function(data, grouping_col, x_group_label, y_group_label) {
   boot_out <- boot(  # generate an array of median diff variances
-    data, statistic = var_median_diff, R = 100, strata = data[[grouping_col]],
-    gp_col = grouping_col, x_gp_lab = x_group_label, y_gp_lab = y_group_label
+    data, statistic = var_median_diff, R = 2000, strata = data[[grouping_col]],
+    gp_col = grouping_col, x_gp_lab = x_group_label, y_gp_lab = y_group_label,
+    parallel = "multicore", ncpus = availableCores()
   )
   
   return(boot_out$t0)  # return the observed value of median diff variance
@@ -274,9 +299,14 @@ med_hat_other <- estimates %>% filter(season == "other") %>% pull(med_hat)
 theta_hat = med_hat_summer - med_hat_other
 se_theta_hat <- sqrt(var_theta_hat)
 
-med_hat_summer
-med_hat_other
-wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)
+test_result <- wald(theta_hat, 0, se_theta_hat, alternative = "less", a = 0.05)
+
+theta_hat
+test_result
+```
+
+```{r wald_season_save, include = FALSE}
+save_to_csv(theta_hat, test_result, file.path(results_dir, "hypothesis_season.csv"))
 ```
 
 Отримали дуже низьке $p-value$ і довірчий інтервал, який не включає нуль, тому відкидаємо гіпотезу $H_0$. Різниця медіан є статистично значущою, і її значення, на відміну від попереднього випадку, суттєве.
@@ -297,7 +327,7 @@ p <- df %>%
   scale_fill_manual(values = c("blue", "yellow"), guide = "none")
 
 ggsave(
-  here("plots", "lab2", "hypotheses", "reform_vs_aqi.png"), p,
+  file.path(plots_dir, "reform_vs_aqi.png"), p,
   bg = "white", dpi = 200, width = 10, height = 8
 )
 ```
@@ -346,9 +376,14 @@ med_hat_after <- estimates %>% filter(after_reform == TRUE) %>% pull(med_hat)
 theta_hat = med_hat_before - med_hat_after
 se_theta_hat <- sqrt(var_theta_hat)
 
-med_hat_before
-med_hat_after
-wald(theta_hat, 0, se_theta_hat, alternative = "greater", a = 0.05)
+test_result <- wald(theta_hat, 0, se_theta_hat, alternative = "greater", a = 0.05)
+
+theta_hat
+test_result
+```
+
+```{r wald_reform_save, include = FALSE}
+save_to_csv(theta_hat, test_result, file.path(results_dir, "hypothesis_reform.csv"))
 ```
 
 Отримали дуже низьке $p-value$ і довірчий інтервал, який не включає нуль. Відкидаємо гіпотезу $H_0$ про те, що з реформою нічого не змінилося або стало гірше. Різниця медіан є статистично значущою.
