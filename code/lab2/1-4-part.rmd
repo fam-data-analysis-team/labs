@@ -475,7 +475,7 @@ plot_difference_summary(daytime_diff, "daytime",
 ```{r}
 dt <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
 df_seasonal <- dt %>%
-  mutate(month = lubridate::month(date, label = TRUE))
+  mutate(month = lubridate::month(date, label = TRUE, locale="en"))
 
 print(unique(df_seasonal["month"]))
 

@@ -17,9 +17,12 @@ library(readr)
 library(purrr)
 library(parallel)
 library(knitr)
+library(here)
 
 # --- Зчитування даних ---
 data <- readRDS("data/processed/air_quality_trimmed.rds")
+
+dir.create(here("data", "lab2"), recursive = TRUE, showWarnings = FALSE)
 
 # --- Параметри ---
 set.seed(100)
@@ -88,7 +91,7 @@ stopCluster(cl)
 results <- bind_rows(results_list)
 
 # --- Збереження в CSV ---
-write_csv(results, if (test_mode) "CI_spearman_bootstrap.csv" else "spearman_bootstrap_intervals_full.csv")
+write_csv(results, here("data", "lab2", if (test_mode) "CI_spearman_bootstrap.csv" else "spearman_bootstrap_intervals_full.csv"))
 
 # --- Markdown-таблиця всіх результатів ---
 if (nrow(results) > 0) {
