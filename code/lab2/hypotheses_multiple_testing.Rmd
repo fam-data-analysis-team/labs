@@ -6,6 +6,16 @@ output: html_document
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(here)
+
+results_dir <-  here("notes", "report", "lab2", "hypotheses")
+
+dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
+```
+
+```{r define_save, include = FALSE}
+save_to_csv <- function(test_results, path) {
+  write.csv(test_results, file = path, row.names = FALSE)
+}
 ```
 
 Для тестування гіпотез використовується тест Волда:
@@ -45,8 +55,6 @@ df <- readRDS(here("data", "processed", "air_quality_tidy.RDS"))
 df <- df %>% filter(!(as.Date("2017-05-25") < date & date < as.Date("2024-03-15")))
 
 df <- df %>% filter(!is.na(aqi))
-
-# df <- df %>% sample_n(100)
 ```
 
 ```{r}
@@ -99,6 +107,10 @@ for (col in c("so2", "co", "o3", "pm10", "pm2.5", "no2", "nox", "no")) {
 tests
 ```
 
+```{r, include = FALSE}
+save_to_csv(tests, file.path(results_dir, "hypothesis_multiple_pollutant.csv"))
+```
+
 Для всіх забруднювачів $p-value$ близьке до нуля, тому можна з впевненістю сказати, що всі концентрації зменшились після реформи.
 
 ## Гіпотеза 2 -- Ефективність у різних регіонах
@@ -113,7 +125,7 @@ tests <- data.frame(
   # var_mean_before = double(),
   # var_mean_after = double(),
   delta = double(),
-  # p_value = double(),
+  p_value = double(),
   p_value_BH = double(),
   reject_BH = logical()
 )
@@ -146,13 +158,17 @@ for (county_name in unique(df$county)) {
     # var_mean_before = var_mean_hat_before,
     # var_mean_after = var_mean_hat_after,
     delta = theta_hat,
-    # p_value = p_value,
+    p_value = p_value,
     p_value_BH = p_value_BH,
     reject_BH = p_value_BH < 0.05
   )
 }
 
 tests
+```
+
+```{r, include = FALSE}
+save_to_csv(tests, file.path(results_dir, "hypothesis_multiple_county.csv"))
 ```
 
 Для всіх регіонів $p-value$ близьке до нуля, тому можна з впевненістю сказати, що реформа спрацювала по всьому Тайваню.

@@ -374,7 +374,7 @@ display: none;
     stop(paste(&quot;Unknown alternative hypothesis:&quot;, alternative, sep=&quot; &quot;))
   }
   
-  c(t = T_stat,  p_value = p_value, conf_int = conf_int)
+  c(p_value = p_value, ci_lower = conf_int[1], ci_upper = conf_int[2])
 }</code></pre>
 <div id="гіпотеза-1-зміни-aqi-впродовж-доби" class="section level2">
 <h2>Гіпотеза 1 – Зміни aqi впродовж доби</h2>
@@ -407,12 +407,13 @@ display: none;
 <span class="math inline">\(H_0: \mu_{X_i - Y_i} ≥ 0\)</span> vs. <span class="math inline">\(H_1: \mu_{X_i - Y_i} &lt; 0\)</span></p>
 <pre class="r"><code>theta_hat = mean(df_by_day$di)
 se_theta_hat &lt;- sqrt(var(df_by_day$di) / nrow(df_by_day))
+test_result &lt;- wald(theta_hat, 0, se_theta_hat, alternative = &quot;less&quot;, a = 0.05)
 
 theta_hat</code></pre>
 <pre><code>## [1] -3.49267</code></pre>
-<pre class="r"><code>wald(theta_hat, 0, se_theta_hat, alternative = &quot;less&quot;, a = 0.05)</code></pre>
-<pre><code>##              t        p_value      conf_int1      conf_int2 
-##  -2.384926e+01  5.153471e-126           -Inf  -3.251784e+00</code></pre>
+<pre class="r"><code>test_result</code></pre>
+<pre><code>##        p_value       ci_lower       ci_upper 
+##  5.153471e-126           -Inf  -3.251784e+00</code></pre>
 <p>Отримали низьке <span class="math inline">\(p-value\)</span> і
 довірчий інтервал, який не включає нуль, тому відкидаємо гіпотезу <span class="math inline">\(H_0\)</span>. Це приклад того, коли різниця медіан
 є статистично значущою, проте її значення, насправді дуже мале.</p>
@@ -458,7 +459,7 @@ var_median_diff &lt;- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
   d &lt;- data[indices,]
   
   boot_out &lt;- boot(  # generate an array of median diffs
-    d, statistic = median_diff, R = 100, strata = d[[gp_col]],
+    d, statistic = median_diff, R = 200, strata = d[[gp_col]],
     gp_col = gp_col, x_gp_lab = x_gp_lab, y_gp_lab = y_gp_lab
   )
   
@@ -467,8 +468,9 @@ var_median_diff &lt;- function(data, indices, gp_col, x_gp_lab, y_gp_lab) {
 
 boot_var_median_diff &lt;- function(data, grouping_col, x_group_label, y_group_label) {
   boot_out &lt;- boot(  # generate an array of median diff variances
-    data, statistic = var_median_diff, R = 100, strata = data[[grouping_col]],
-    gp_col = grouping_col, x_gp_lab = x_group_label, y_gp_lab = y_group_label
+    data, statistic = var_median_diff, R = 2000, strata = data[[grouping_col]],
+    gp_col = grouping_col, x_gp_lab = x_group_label, y_gp_lab = y_group_label,
+    parallel = &quot;multicore&quot;, ncpus = availableCores()
   )
   
   return(boot_out$t0)  # return the observed value of median diff variance
@@ -485,7 +487,7 @@ df_sampled &lt;- df %&gt;% sample_n(10000)</code></pre>
 )
 
 var_theta_hat</code></pre>
-<pre><code>## [1] 0.5439141</code></pre>
+<pre><code>## [1] 0.5457035</code></pre>
 <p>Маючи оцінку <span class="math inline">\(\mathrm
 Var(\hat{\theta})\)</span>, перейдемо до тестування.</p>
 <p><span class="math inline">\(H_0: \theta ≥ 0\)</span> vs. <span class="math inline">\(H_1: \theta &lt; 0\)</span><br />
@@ -498,13 +500,13 @@ med_hat_other &lt;- estimates %&gt;% filter(season == &quot;other&quot;) %&gt;% 
 theta_hat = med_hat_summer - med_hat_other
 se_theta_hat &lt;- sqrt(var_theta_hat)
 
-med_hat_summer</code></pre>
-<pre><code>## [1] 32</code></pre>
-<pre class="r"><code>med_hat_other</code></pre>
-<pre><code>## [1] 56</code></pre>
-<pre class="r"><code>wald(theta_hat, 0, se_theta_hat, alternative = &quot;less&quot;, a = 0.05)</code></pre>
-<pre><code>##              t        p_value      conf_int1      conf_int2 
-##  -3.254214e+01  1.352549e-232           -Inf  -2.278691e+01</code></pre>
+test_result &lt;- wald(theta_hat, 0, se_theta_hat, alternative = &quot;less&quot;, a = 0.05)
+
+theta_hat</code></pre>
+<pre><code>## [1] -24</code></pre>
+<pre class="r"><code>test_result</code></pre>
+<pre><code>##        p_value       ci_lower       ci_upper 
+##  7.689528e-232           -Inf  -2.278492e+01</code></pre>
 <p>Отримали дуже низьке <span class="math inline">\(p-value\)</span> і
 довірчий інтервал, який не включає нуль, тому відкидаємо гіпотезу <span class="math inline">\(H_0\)</span>. Різниця медіан є статистично
 значущою, і її значення, на відміну від попереднього випадку,
@@ -531,7 +533,7 @@ Me_X - Me_Y\)</span>.</p>
 <p>Спочатку знайдемо <span class="math inline">\(\mathrm
 Var(\hat{\theta})\)</span> за допомогою бутстреп.</p>
 <pre class="r"><code>set.seed(0)
-df_sampled &lt;- df %&gt;% filter(!is.na(aqi)) %&gt;% sample_n(10000)
+df_sampled &lt;- df %&gt;% sample_n(10000)
 table(df_sampled$after_reform)</code></pre>
 <pre><code>## 
 ## FALSE  TRUE 
@@ -544,7 +546,7 @@ table(df_sampled$after_reform)</code></pre>
 )
 
 var_theta_hat</code></pre>
-<pre><code>## [1] 0.7793939</code></pre>
+<pre><code>## [1] 0.8783668</code></pre>
 <p>Протестуємо гіпотезу.</p>
 <p><span class="math inline">\(H_0: \theta ≤ 0\)</span> vs. <span class="math inline">\(H_1: \theta &gt; 0\)</span><br />
 <span class="math inline">\(H_0: Me_X - Me_Y ≤ 0\)</span> vs. <span class="math inline">\(H_1: Me_X - Me_Y &gt; 0\)</span></p>
@@ -556,13 +558,13 @@ med_hat_after &lt;- estimates %&gt;% filter(after_reform == TRUE) %&gt;% pull(me
 theta_hat = med_hat_before - med_hat_after
 se_theta_hat &lt;- sqrt(var_theta_hat)
 
-med_hat_before</code></pre>
-<pre><code>## [1] 71</code></pre>
-<pre class="r"><code>med_hat_after</code></pre>
-<pre><code>## [1] 39</code></pre>
-<pre class="r"><code>wald(theta_hat, 0, se_theta_hat, alternative = &quot;greater&quot;, a = 0.05)</code></pre>
-<pre><code>##             t       p_value     conf_int1     conf_int2 
-##  3.624695e+01 5.549840e-288  3.054787e+01           Inf</code></pre>
+test_result &lt;- wald(theta_hat, 0, se_theta_hat, alternative = &quot;greater&quot;, a = 0.05)
+
+theta_hat</code></pre>
+<pre><code>## [1] 32</code></pre>
+<pre class="r"><code>test_result</code></pre>
+<pre><code>##       p_value      ci_lower      ci_upper 
+## 8.260122e-256  3.045842e+01           Inf</code></pre>
 <p>Отримали дуже низьке <span class="math inline">\(p-value\)</span> і
 довірчий інтервал, який не включає нуль. Відкидаємо гіпотезу <span class="math inline">\(H_0\)</span> про те, що з реформою нічого не
 змінилося або стало гірше. Різниця медіан є статистично значущою.</p>
