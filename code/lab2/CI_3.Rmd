@@ -20,6 +20,10 @@ library(purrr)
 library(parallel)
 library(knitr)
 library(tibble)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(forcats)
 
 # --- Зчитування даних ---
 data <- readRDS("data/processed/air_quality_trimmed.rds")
@@ -27,8 +31,8 @@ data <- readRDS("data/processed/air_quality_trimmed.rds")
 # --- Параметри ---
 set.seed(100)
 test_mode <- TRUE
-sample_size <- if (test_mode) 1000 else nrow(data)
-R_boot <- if (test_mode) 200 else 2000
+sample_size <- if (test_mode) 10000 else nrow(data)
+R_boot <- if (test_mode) 1000 else 2000
 
 # --- Вибір числових змінних і зменшення вибірки ---
 numeric_data <- data %>%
