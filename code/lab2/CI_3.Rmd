@@ -95,7 +95,7 @@ boot_ci_all <- function(pair) {
 }
 
 # --- Паралельне обчислення всіх інтервалів ---
-cl <- makeCluster(detectCores() - 1)
+cl <- makeCluster(detectCores())
 clusterExport(cl, varlist = c("numeric_data", "boot_ci_all", "R_boot"), envir = environment())
 invisible(clusterEvalQ(cl, {
   library(boot)
