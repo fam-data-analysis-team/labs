@@ -19,22 +19,16 @@ library(readr)
 library(purrr)
 library(parallel)
 library(knitr)
-
 library(tibble)
-
-library(here)
-
 
 # --- Зчитування даних ---
 data <- readRDS("data/processed/air_quality_trimmed.rds")
 
-dir.create(here("data", "lab2"), recursive = TRUE, showWarnings = FALSE)
-
 # --- Параметри ---
 set.seed(100)
 test_mode <- TRUE
-sample_size <- if (test_mode) 10000 else nrow(data)
-R_boot <- if (test_mode) 1000 else 2000
+sample_size <- if (test_mode) 1000 else nrow(data)
+R_boot <- if (test_mode) 200 else 2000
 
 # --- Вибір числових змінних і зменшення вибірки ---
 numeric_data <- data %>%
@@ -45,64 +39,24 @@ numeric_data <- data %>%
 var_names <- names(numeric_data)
 var_pairs <- combn(var_names, 2, simplify = FALSE)
 
-# --- Основна бутстреп-функція (усі типи крім studentized) ---
-boot_ci_spearman <- function(pair) {
+# --- Основна бутстреп-функція ---
+boot_ci_all <- function(pair) {
   x <- numeric_data[[pair[1]]]
   y <- numeric_data[[pair[2]]]
   
   df <- data.frame(x = x, y = y)
   df <- df[complete.cases(df), ]
-  
   if (nrow(df) < 20) return(NULL)
-  if (!is.numeric(df$x) || !is.numeric(df$y)) return(NULL)
   
   tryCatch({
+    # Основна оцінка + інтервали norm/basic/perc/bca
     boot_out <- boot(data = df, statistic = function(data, ind) {
       cor(data[ind, 1], data[ind, 2], method = "spearman")
     }, R = R_boot)
     
     ci_all <- boot.ci(boot_out, type = c("norm", "basic", "perc", "bca"))
     
-    tibble(
-      Var1 = pair[1],
-      Var2 = pair[2],
-      Estimate = round(boot_out$t0, 3),
-      Norm_L = round(ci_all$normal[2], 4),
-      Norm_U = round(ci_all$normal[3], 4),
-      Basic_L = round(ci_all$basic[4], 4),
-      Basic_U = round(ci_all$basic[5], 4),
-      Perc_L = round(ci_all$percent[4], 4),
-      Perc_U = round(ci_all$percent[5], 4),
-      Bca_L = round(ci_all$bca[4], 4),
-      Bca_U = round(ci_all$bca[5], 4)
-    )
-  }, error = function(e) return(NULL))
-}
-
-# --- Паралельне обчислення інтервалів (окрім studentized) ---
-cl <- makeCluster(detectCores() - 1)
-clusterExport(cl, varlist = c("numeric_data", "boot_ci_spearman", "R_boot"), envir = environment())
-invisible(clusterEvalQ(cl, {
-  library(boot)
-  library(dplyr)
-  library(tibble)
-}))
-
-results_list <- parLapply(cl, var_pairs, boot_ci_spearman)
-stopCluster(cl)
-
-main_results <- bind_rows(results_list)
-
-# --- Studentized ---
-boot_ci_studentized <- function(pair) {
-  x <- numeric_data[[pair[1]]]
-  y <- numeric_data[[pair[2]]]
-  
-  df <- data.frame(x = x, y = y)
-  df <- df[complete.cases(df), ]
-  if (nrow(df) < 20) return(NULL)
-  
-  tryCatch({
+    # Studentized SE-оцінка
     se_fun <- function(data, indices) {
       d <- data[indices, ]
       r <- cor(d$x, d$y, method = "spearman")
@@ -114,31 +68,42 @@ boot_ci_studentized <- function(pair) {
       return(c(r, se))
     }
     
-    boot_out <- boot(data = df, statistic = se_fun, R = R_boot)
-    ci_stud <- boot.ci(boot_out, type = "stud")
+    boot_stud <- boot(data = df, statistic = se_fun, R = R_boot)
+    ci_stud <- boot.ci(boot_stud, type = "stud")
     
-    if (is.null(ci_stud$student)) return(NULL)
-    
+    # Формування результату
     tibble(
       Var1 = pair[1],
       Var2 = pair[2],
-      Stud_L = round(ci_stud$student[4], 4),
-      Stud_U = round(ci_stud$student[5], 4)
+      Estimate = round(boot_out$t0, 3),
+      Norm_L = round(ci_all$normal[2], 4),
+      Norm_U = round(ci_all$normal[3], 4),
+      Basic_L = round(ci_all$basic[4], 4),
+      Basic_U = round(ci_all$basic[5], 4),
+      Perc_L = round(ci_all$percent[4], 4),
+      Perc_U = round(ci_all$percent[5], 4),
+      Bca_L = round(ci_all$bca[4], 4),
+      Bca_U = round(ci_all$bca[5], 4),
+      Stud_L = if (!is.null(ci_stud$student)) round(ci_stud$student[4], 4) else NA_real_,
+      Stud_U = if (!is.null(ci_stud$student)) round(ci_stud$student[5], 4) else NA_real_
     )
   }, error = function(e) return(NULL))
 }
 
-# --- Збереження в CSV ---
-write_csv(results, here("data", "lab2", if (test_mode) "CI_spearman_bootstrap.csv" else "spearman_bootstrap_intervals_full.csv"))
+# --- Паралельне обчислення всіх інтервалів ---
+cl <- makeCluster(detectCores() - 1)
+clusterExport(cl, varlist = c("numeric_data", "boot_ci_all", "R_boot"), envir = environment())
+invisible(clusterEvalQ(cl, {
+  library(boot)
+  library(dplyr)
+  library(tibble)
+}))
 
-# --- Обчислення studentized окремо ---
-studentized_results <- map(main_results %>% select(Var1, Var2) %>% split(., seq(nrow(.))),
-                           ~boot_ci_studentized(unlist(.x))) %>%
-  bind_rows()
+results_list <- parLapply(cl, var_pairs, boot_ci_all)
+stopCluster(cl)
 
-# --- Об'єднання з основними результатами ---
-final_results <- main_results %>%
-  left_join(studentized_results, by = c("Var1", "Var2"))
+# --- Об'єднання результатів ---
+final_results <- bind_rows(results_list)
 
 # --- Збереження результатів ---
 write_csv(final_results, if (test_mode) "CI_spearman_all_TEST.csv" else "CI_spearman_all_FULL.csv")
@@ -162,6 +127,90 @@ if (nrow(final_results) > 0) {
   )
 } else {
   cat("**Жодна пара змінних не пройшла фільтр.**")
+}
+
+# --- ВІЗУАЛІЗАЦІЯ ---
+
+# 1
+if (nrow(final_results) > 0) {
+  df_long <- final_results %>%
+    mutate(Pair = paste(Var1, Var2, sep = " ~ ")) %>%
+    select(Pair, Estimate,
+           Norm_L, Norm_U,
+           Basic_L, Basic_U,
+           Perc_L, Perc_U,
+           Bca_L, Bca_U,
+           Stud_L, Stud_U) %>%
+    pivot_longer(
+      cols = -c(Pair, Estimate),
+      names_to = c("Type", "Bound"),
+      names_sep = "_",
+      values_to = "Value"
+    ) %>%
+    pivot_wider(
+      names_from = Bound,
+      values_from = Value
+    ) %>%
+    filter(!is.na(L) & !is.na(U)) %>%
+    mutate(Type = factor(Type, levels = c("Norm", "Basic", "Perc", "Bca", "Stud")))
+
+  p <-ggplot(df_long, aes(y = fct_reorder(Pair, Estimate), color = Type)) +
+    geom_point(aes(x = Estimate), color = "black", size = 1.5) +
+    geom_errorbarh(aes(xmin = L, xmax = U), height = 0.25, position = position_dodge(width = 0.7)) +
+    geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+    labs(
+      title = "Усі довірчі інтервали коефіцієнтів Спірмана",
+      x = "Оцінка кореляції",
+      y = "Пари змінних",
+      color = "Тип інтервалу"
+    ) +
+    theme_minimal()
+  ggsave("ci_intervals_v1.png", plot = p, width = 10, height = 12, dpi = 300)
+}
+
+# 2
+# 1. CI-графік для ВСІХ інтервалів з 5 секціями, з коригуванням відстаней
+if (nrow(final_results) > 0) {
+  df_long <- final_results %>%
+    mutate(Pair = paste(Var1, Var2, sep = " ~ ")) %>%
+    select(Pair, Estimate,
+           Norm_L, Norm_U,
+           Basic_L, Basic_U,
+           Perc_L, Perc_U,
+           Bca_L, Bca_U,
+           Stud_L, Stud_U) %>%
+    pivot_longer(
+      cols = -c(Pair, Estimate),
+      names_to = c("Type", "Bound"),
+      names_sep = "_",
+      values_to = "Value"
+    ) %>%
+    pivot_wider(
+      names_from = Bound,
+      values_from = Value
+    ) %>%
+    filter(!is.na(L) & !is.na(U)) %>%
+    mutate(Type = factor(Type, levels = c("Norm", "Basic", "Perc", "Bca", "Stud")))
+
+  # Створюємо графік
+  p <- ggplot(df_long, aes(y = fct_reorder(Pair, Estimate), color = Type)) +
+    geom_point(aes(x = Estimate), color = "black", size = 1.5) +
+    geom_errorbarh(aes(xmin = L, xmax = U), height = 0.25, position = position_dodge(width = 0.7)) +
+    geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+    labs(
+      title = "Усі довірчі інтервали коефіцієнтів Спірмана",
+      x = "Оцінка кореляції",
+      y = "Пари змінних",
+      color = "Тип інтервалу"
+    ) +
+    theme_minimal() +
+    facet_wrap(~ Type, scales = "free_y", ncol = 1) + # Додаємо секції для кожного типу інтервалу
+    theme(legend.position = "none", # Вимикаємо легенду
+          strip.text = element_text(size = 12, face = "bold"), # Розмір шрифта для заголовків
+          axis.text.y = element_text(size = 8)) # Розмір шрифта на осі Y
+
+  # Збереження графіку у PNG
+  ggsave("ci_intervals_v2.png", plot = p, width = 10, height = 12, dpi = 300)
 }
 
 ```
