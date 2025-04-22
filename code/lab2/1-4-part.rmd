@@ -74,13 +74,6 @@ ci_mean <- function(x, conf.level = 0.95) {
 }
 ```
 
-## Обчислення емпіричного покриття
-Далі ніде не застосовується, чи потрібно? треба поміркувати, бо як мені здається й так очевидно?
-```{r}
-empirical_coverage <- function(true_value, lower_vec, upper_vec) {
-  mean(true_value >= lower_vec & true_value <= upper_vec) * 100
-}
-```
 
 ## Функція обчислення довірчих інтервалів вибіркової диспесії
 (через хі-квадрат)
@@ -123,7 +116,7 @@ save_data_as_csv_and_latex(ci_means_df, "ci_means.csv", "ci_means.txt")
 ci_variance_df <- as_tibble(ci_variances, rownames = "variable") %>%
   rename(lower = Lower, variance = Variance, upper = Upper)
 
-save_data_as_csv_and_latex(ci_variance_df, "ci_variance.csv", "ci_variance.txt")
+save_data_as_csv_and_latex(format(ci_variance_df), "ci_variance.csv", "ci_variance.txt")
 ```
 
 
@@ -287,6 +280,7 @@ ggsave(
 ```
 
 ### Висновок: 
+
 Ми розглядаємо AQI по регіонам і розділимо їх на рік до реформи та рік після: 
 - Розглянемо 16 та 17 роки 
 - Розглянемо 23 та 24 роки 
@@ -379,10 +373,31 @@ ggsave(
 В першому питанні ми можемо побачити суттєву різницю між значеннями (зріз років). 
 В другому ж питанні ми розглядаємо саме розподіл до/після
 (в загальному і відповідно період "після" значно більший, ніж "до", різний розмір вибірки(нерівномірне спвівідношення?))
-
+На далі в дослдіженнях було б доречніше для всіх порівнянь саме 2016-17 роки,та 2023-24 роки.
 ---
 
 # Частина 3 
+
+Середня різниця - це міра центральної тенденції, 
+яка представляє середню різницю між парними або узгодженими спостереженнями. 
+Вона зазвичай використовується в контексті аналізу даних з узгоджених або 
+парних вибірок, де кожне спостереження в одній групі пов'язане з відповідним 
+спостереженням в іншій групі.
+
+-  обчислюється шляхом взяття суми різниць між парними спостереженнями і 
+ділення її на кількість пар.
+- використовується для оцінки величини та напрямку різниці між парними 
+або зіставленими вибірками, що може бути корисним у різних дослідницьких контекстах,
+ наприклад, для оцінки ефективності лікування або втручання.
+- є ключовою статистикою в аналізі парних або зіставлених вибірок,
+ оскільки вона забезпечує пряме вимірювання середньої зміни або різниці між двома
+  групами.
+- Статистичну значущість середньої різниці часто оцінюють за допомогою 
+t-тесту для залежних вибірок, який враховує парний характер даних і 
+кореляцію між парними спостереженнями.
+- може бути позитивною, негативною або нульовою, залежно від напрямку
+ і величини різниці між парними спостереженнями.
+
 ## Обчислення ДІ різниці середніх для 
 Ця частина скрипту аналізує середні значення AQI в різних розрізах даних: 
 - за часом доби
@@ -464,7 +479,7 @@ print(unique(df_daytime["daytime"]))
 
 daytime_summary <- summary_stats_grouped(df_daytime, "aqi", "daytime")
 daytime_diff <- add_differences_from_overall(daytime_summary, overall_stats$Mean_overall)
-save_data_as_csv_and_latex(daytime_diff, "df_daytime_summary.csv", "df_daytime_summary.txt")
+save_data_as_csv_and_latex(format(daytime_diff,nsmall=3), "df_daytime_summary.csv", "df_daytime_summary.txt")
 plot_difference_summary(daytime_diff, "daytime", 
                         "Різниця середнього AQI за часом доби від загального", 
                         "daytime_summary.png", path)
@@ -481,7 +496,7 @@ print(unique(df_seasonal["month"]))
 
 seasonal_summary <- summary_stats_grouped(df_seasonal, "aqi", "month")
 seasonal_diff <- add_differences_from_overall(seasonal_summary, overall_stats$Mean_overall)
-save_data_as_csv_and_latex(seasonal_diff, "df_seasonal_summary.csv", "df_seasonal_summary.txt")
+save_data_as_csv_and_latex(format(seasonal_diff,nsmall=3), "df_seasonal_summary.csv", "df_seasonal_summary.txt")
 plot_difference_summary(seasonal_diff, "month", 
                         "Різниця середнього AQI по місяцях", 
                         "seasonal_summary.png", path)
@@ -516,10 +531,32 @@ summary_stats <- summary_stats %>%
   ) %>%
   select(-t_value)  # t_value більше не потрібен 
 
-plot_region_difference(summary_stats, "county",
-                       "Різниця середнього AQI (Після - До реформи) по регіонах", 
-                       "aqi_difference_by_region.png", path)
-save_data_as_csv_and_latex(summary_stats, "summary_stats.csv", "summary_stats.txt")
+summary_stats <- summary_stats %>%
+  mutate(
+    Lower_Diff = Lower_CI,
+    Upper_Diff = Upper_CI
+  )
+
+summary_stats$county <- factor(summary_stats$county, 
+                               levels = summary_stats$county[order(summary_stats$Difference)])                 
+
+plot_diff <- ggplot(summary_stats, aes(x = county, y = Difference)) +
+  geom_point(size = 3.5, color = "steelblue") +
+  geom_errorbar(aes(ymin = Lower_CI, ymax = Upper_CI),
+                width = 0.2, color = "darkblue", size = 0.8) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(
+    title = "Різниця середнього AQI (Після - До реформи) по регіонах",
+    x = "Регіон",
+    y = "Різниця від загального середнього"
+  )
+ggsave(
+    filename = file.path(path, 'aqi_difference_by_region.png'),
+    plot = plot_diff, width = 16, height = 10, bg = "white", dpi = 200
+  )
+save_data_as_csv_and_latex(format(summary_stats, nsmall = 3), "summary_stats.csv", "summary_stats.txt")
 
 ```
 
