@@ -1,0 +1,104 @@
+Ініціалізація
+
+```{r}
+# --- Завантаження бібліотек ---
+library(dplyr)
+library(boot)
+library(readr)
+library(purrr)
+library(parallel)
+library(knitr)
+library(tibble)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(forcats)
+library(here)
+
+# --- Зчитування даних ---
+data <- readRDS("data/processed/air_quality_trimmed.rds")
+
+# --- Параметри ---
+set.seed(100)
+
+DATA_DIR <- here("notes", "report", "lab2", "2-5-part") 
+
+dir.create(DATA_DIR, recursive = TRUE)
+```
+
+
+```{r}
+sample_size <- 50000
+R_boot <- 2000 
+
+# --- Вибір числових змінних і зменшення вибірки ---
+numeric_data <- data %>%
+  select(where(is.numeric)) %>%
+  slice_sample(n = sample_size)
+
+# --- Основна бутстреп-функція ---
+boot_ci_all <- function(var, fn) {
+  # tryCatch({
+    # Основна оцінка + інтервали norm/basic/perc/bca
+    boot_out <- boot(data = numeric_data[[var]], statistic = function(data, ind) {
+      fn(data[ind])
+    }, R = R_boot)
+
+    ci_all <- boot.ci(boot_out, type = c("norm", "basic", "perc", "bca"))
+
+    boot_stat_with_var <- function (data, ind, estimate_var = TRUE) {
+      r <- fn(data[ind])
+    
+      if (estimate_var) {
+        boot_out2 <- boot(data[ind], statistic = boot_stat_with_var, R = 200, estimate_var = FALSE)
+       
+        return (c(r, var(boot_out2$t)))
+      } else {
+        return (r)
+      }
+    }
+    
+    boot_stud <- boot(data = numeric_data[[var]], statistic = boot_stat_with_var, R = R_boot)
+    ci_stud <- boot.ci(boot_stud, type = "stud")
+
+    # Формування результату
+    tibble(
+      Var = var,
+      Estimate = boot_out$t0,
+      Norm_L =  ci_all$normal[2],
+      Norm_U =  ci_all$normal[3],
+      Basic_L = ci_all$basic[4],
+      Basic_U = ci_all$basic[5],
+      Perc_L =  ci_all$percent[4],
+      Perc_U =  ci_all$percent[5],
+      Bca_L =   ci_all$bca[4],
+      Bca_U =   ci_all$bca[5],
+      Stud_L = if (!is.null(ci_stud$student)) round(ci_stud$student[4], 4) else NA_real_,
+      Stud_U = if (!is.null(ci_stud$student)) round(ci_stud$student[5], 4) else NA_real_
+    )
+  # }, error = function(e) return(NULL))
+}
+
+run_on_cluster <- function (fn) {
+  cl <- makeCluster(detectCores())
+  clusterExport(cl, varlist = c("numeric_data", "boot_ci_all", "R_boot"), envir = environment())
+  invisible(clusterEvalQ(cl, {
+    library(boot)
+    library(dplyr)
+    library(tibble)
+  }))
+
+  result <- parLapply(cl, vars, boot_ci_all, fn = fn)
+
+  stopCluster(cl)
+
+  return (result)
+}
+
+vars <- numeric_data %>% names()
+
+median_result <- run_on_cluster(fn = \(x) median(x, na.rm = TRUE))
+median_result <- median_result %>% bind_rows()
+
+write_csv(median_result, here(DATA_DIR, 'median.csv'))
+```

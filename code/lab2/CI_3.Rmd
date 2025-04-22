@@ -31,7 +31,7 @@ data <- readRDS("data/processed/air_quality_trimmed.rds")
 # --- Параметри ---
 set.seed(100)
 test_mode <- TRUE
-sample_size <- if (test_mode) 10000 else nrow(data)
+sample_size <- if (test_mode) 10000 else 50000
 R_boot <- if (test_mode) 1000 else 2000
 
 # --- Вибір числових змінних і зменшення вибірки ---

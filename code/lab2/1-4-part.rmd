@@ -116,7 +116,7 @@ save_data_as_csv_and_latex(ci_means_df, "ci_means.csv", "ci_means.txt")
 ci_variance_df <- as_tibble(ci_variances, rownames = "variable") %>%
   rename(lower = Lower, variance = Variance, upper = Upper)
 
-save_data_as_csv_and_latex(format(ci_variance_df), "ci_variance.csv", "ci_variance.txt")
+save_data_as_csv_and_latex(ci_variance_df, "ci_variance.csv", "ci_variance.txt")
 ```
 
 
@@ -479,7 +479,7 @@ print(unique(df_daytime["daytime"]))
 
 daytime_summary <- summary_stats_grouped(df_daytime, "aqi", "daytime")
 daytime_diff <- add_differences_from_overall(daytime_summary, overall_stats$Mean_overall)
-save_data_as_csv_and_latex(format(daytime_diff,nsmall=3), "df_daytime_summary.csv", "df_daytime_summary.txt")
+save_data_as_csv_and_latex(daytime_diff, "df_daytime_summary.csv", "df_daytime_summary.txt")
 plot_difference_summary(daytime_diff, "daytime", 
                         "Різниця середнього AQI за часом доби від загального", 
                         "daytime_summary.png", path)
@@ -496,7 +496,7 @@ print(unique(df_seasonal["month"]))
 
 seasonal_summary <- summary_stats_grouped(df_seasonal, "aqi", "month")
 seasonal_diff <- add_differences_from_overall(seasonal_summary, overall_stats$Mean_overall)
-save_data_as_csv_and_latex(format(seasonal_diff,nsmall=3), "df_seasonal_summary.csv", "df_seasonal_summary.txt")
+save_data_as_csv_and_latex(seasonal_diff, "df_seasonal_summary.csv", "df_seasonal_summary.txt")
 plot_difference_summary(seasonal_diff, "month", 
                         "Різниця середнього AQI по місяцях", 
                         "seasonal_summary.png", path)
