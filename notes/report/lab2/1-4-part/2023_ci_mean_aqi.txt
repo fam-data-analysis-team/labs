@@ -1,5 +1,5 @@
 % latex table generated in R 4.4.2 by xtable 1.8-4 package
-% Tue Apr 22 16:44:18 2025
+% Tue Apr 22 17:57:51 2025
 \begin{table}[ht]
 \centering
 \begin{tabular}{rrlrrrrr}
@@ -13,7 +13,7 @@
   5 & 2023.00 & Hsinchu County & 17246.00 & 20.71 & 44.13 & 44.44 & 44.75 \\ 
   6 & 2023.00 & Hualien County & 8654.00 & 13.08 & 31.00 & 31.28 & 31.55 \\ 
   7 & 2023.00 & Kaohsiung City & 111857.00 & 29.38 & 58.65 & 58.83 & 59.00 \\ 
-  8 & 2023.00 & Keelung City & 8649.00 & 17.87 & 40.52 & 40.90 & 41.27 \\ 
+  8 & 2023.00 & Keelung City & 8649.00 & 17.88 & 40.52 & 40.90 & 41.27 \\ 
   9 & 2023.00 & Kinmen County & 8656.00 & 30.56 & 59.10 & 59.74 & 60.39 \\ 
   10 & 2023.00 & Lienchiang County & 8100.00 & 26.96 & 56.25 & 56.84 & 57.42 \\ 
   11 & 2023.00 & Miaoli County & 25894.00 & 20.64 & 44.34 & 44.59 & 44.84 \\ 
