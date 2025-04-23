@@ -16,89 +16,158 @@ library(forcats)
 library(here)
 
 # --- Зчитування даних ---
-data <- readRDS("data/processed/air_quality_trimmed.rds")
+df <- readRDS("data/processed/air_quality_trimmed.rds")
 
 # --- Параметри ---
-set.seed(100)
+set.seed(101)
 
-DATA_DIR <- here("notes", "report", "lab2", "2-5-part") 
+DATA_DIR <- here("notes", "report", "lab2", "2-5-part")
 
 dir.create(DATA_DIR, recursive = TRUE)
 ```
 
+# 2 частина:
 
 ```{r}
-sample_size <- 50000
-R_boot <- 2000 
+sample_size <- 200000
+R_boot <- 2000
 
 # --- Вибір числових змінних і зменшення вибірки ---
-numeric_data <- data %>%
+numeric_df <- df %>%
   select(where(is.numeric)) %>%
   slice_sample(n = sample_size)
 
 # --- Основна бутстреп-функція ---
-boot_ci_all <- function(var, fn) {
-  # tryCatch({
-    # Основна оцінка + інтервали norm/basic/perc/bca
-    boot_out <- boot(data = numeric_data[[var]], statistic = function(data, ind) {
-      fn(data[ind])
-    }, R = R_boot)
+boot_ci_median <- function(data) {
+  # Основна оцінка + інтервали norm/basic/perc
+  boot_out <- boot(data = data, statistic = function(d, ind) {
+    median(d[ind])
+  }, R = R_boot)
 
-    ci_all <- boot.ci(boot_out, type = c("norm", "basic", "perc", "bca"))
+  est <- boot_out$t0
+  se <- sd(boot_out$t)
 
-    boot_stat_with_var <- function (data, ind, estimate_var = TRUE) {
-      r <- fn(data[ind])
-    
-      if (estimate_var) {
-        boot_out2 <- boot(data[ind], statistic = boot_stat_with_var, R = 200, estimate_var = FALSE)
-       
-        return (c(r, var(boot_out2$t)))
-      } else {
-        return (r)
-      }
-    }
-    
-    boot_stud <- boot(data = numeric_data[[var]], statistic = boot_stat_with_var, R = R_boot)
-    ci_stud <- boot.ci(boot_stud, type = "stud")
-
-    # Формування результату
-    tibble(
-      Var = var,
-      Estimate = boot_out$t0,
-      Norm_L =  ci_all$normal[2],
-      Norm_U =  ci_all$normal[3],
-      Basic_L = ci_all$basic[4],
-      Basic_U = ci_all$basic[5],
-      Perc_L =  ci_all$percent[4],
-      Perc_U =  ci_all$percent[5],
-      Bca_L =   ci_all$bca[4],
-      Bca_U =   ci_all$bca[5],
-      Stud_L = if (!is.null(ci_stud$student)) round(ci_stud$student[4], 4) else NA_real_,
-      Stud_U = if (!is.null(ci_stud$student)) round(ci_stud$student[5], 4) else NA_real_
+  if (se == 0) {
+    return (
+      tibble(
+        Estimate = est,
+        Se = se,
+        Norm_L =  est,
+        Norm_U =  est,
+        Basic_L = est,
+        Basic_U = est,
+        Perc_L =  est,
+        Perc_U =  est,
+        # Bca_L = est,
+        # Bca_U = est,
+        # Bca_L =   ci_all$bca[4],
+        # Bca_U =   ci_all$bca[5]
+        # Stud_L = if (!is.null(ci_stud$student)) ci_stud$student[4] else NA_real_,
+        # Stud_U = if (!is.null(ci_stud$student)) ci_stud$student[5] else NA_real_
+      ) %>% mutate(across(where(is.numeric), round, digits = 4))
     )
-  # }, error = function(e) return(NULL))
+  }
+
+  ci_all <- boot.ci(boot_out, type = c("norm", "basic", "perc"))
+
+  # boot_stat_with_var <- function (data, ind, estimate_var = TRUE) {
+  #   r <- median(data[ind], na.rm = TRUE)
+# 
+  #   if (estimate_var) {
+  #     boot_out2 <- boot(
+  #       data[ind], statistic = boot_stat_with_var,
+  #       R = 200, estimate_var = FALSE)
+# 
+  #     return(c(r, var(boot_out2$t)))
+  #   } else {
+  #     return(r)
+  #   }
+  # }
+
+  # boot_stud <- boot(data = data, statistic = boot_stat_with_var, R = R_boot)
+  # ci_stud <- boot.ci(boot_stud, type = "stud")
+
+  # Формування результату
+  return (tibble(
+    Estimate = est,
+    Se = se,
+    Norm_L =  ci_all$normal[2],
+    Norm_U =  ci_all$normal[3],
+    Basic_L = ci_all$basic[4],
+    Basic_U = ci_all$basic[5],
+    Perc_L =  ci_all$percent[4],
+    Perc_U =  ci_all$percent[5]
+    # Bca_L =   ci_all$bca[4],
+    # Bca_U =   ci_all$bca[5]
+    # Stud_L = if (!is.null(ci_stud$student)) ci_stud$student[4] else NA_real_,
+    # Stud_U = if (!is.null(ci_stud$student)) ci_stud$student[5] else NA_real_
+  ) %>% mutate(across(where(is.numeric), round, digits = 4)))
 }
+```
 
-run_on_cluster <- function (fn) {
-  cl <- makeCluster(detectCores())
-  clusterExport(cl, varlist = c("numeric_data", "boot_ci_all", "R_boot"), envir = environment())
-  invisible(clusterEvalQ(cl, {
-    library(boot)
-    library(dplyr)
-    library(tibble)
-  }))
+```{r}
+vars <- numeric_df %>% names()
 
-  result <- parLapply(cl, vars, boot_ci_all, fn = fn)
+cl <- makeCluster(detectCores())
+clusterExport(cl, varlist = c("numeric_df", "boot_ci_median", "R_boot"), envir = environment())
+invisible(clusterEvalQ(cl, {
+  library(boot)
+  library(dplyr)
+  library(tibble)
+}))
 
-  stopCluster(cl)
-
-  return (result)
-}
-
-vars <- numeric_data %>% names()
-
-median_result <- run_on_cluster(fn = \(x) median(x, na.rm = TRUE))
+median_result <- parLapply(
+  cl,
+  vars,
+  \(var) boot_ci_median(numeric_df[[var]] %>% na.omit())
+    %>% mutate(Var = var, .before = Estimate)
+)
 median_result <- median_result %>% bind_rows()
 
+stopCluster(cl)
+
 write_csv(median_result, here(DATA_DIR, 'median.csv'))
+```
+
+# 5
+
+Медіана AQI впродовж доби:
+
+```{r}
+daytime_labels = c("00-03", "03-06", "06-09", "09-12", "12-15", "15-18", "18-21", "21-24")
+
+df_daytime <- df %>%
+  mutate(
+    hour_group = lubridate::hour(date) %/% 3,
+    daytime = factor(
+      hour_group,
+      levels = 0:7,
+      labels = daytime_labels
+    )
+  )
+```
+
+```{r}
+cl <- makeCluster(detectCores())
+clusterExport(cl, varlist = c("df_daytime", "boot_ci_median", "R_boot"), envir = environment())
+invisible(clusterEvalQ(cl, {
+  library(boot)
+  library(dplyr)
+  library(tibble)
+}))
+
+median_daytime_result <- parLapply(cl, daytime_labels, \(label) 
+  boot_ci_median((df_daytime %>% filter(daytime == label))$aqi %>% na.omit()) %>% 
+  mutate(daytime = label, .before = Estimate)
+)
+
+median_daytime_result <- median_daytime_result %>% bind_rows()
+
+stopCluster(cl)
+
+write_csv(median_daytime_result, here(DATA_DIR, 'median_daytime.csv'))
+```
+
+```{r}
+
 ```
