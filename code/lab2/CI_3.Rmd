@@ -24,6 +24,7 @@ library(ggplot2)
 library(stringr)
 library(tidyr)
 library(forcats)
+library(here)
 
 # --- Зчитування даних ---
 data <- readRDS("data/processed/air_quality_trimmed.rds")
@@ -34,6 +35,9 @@ test_mode <- TRUE
 sample_size <- if (test_mode) 10000 else 50000
 R_boot <- if (test_mode) 1000 else 2000
 
+```
+
+```{r}
 # --- Вибір числових змінних і зменшення вибірки ---
 numeric_data <- data %>%
   select(where(is.numeric)) %>%
@@ -135,6 +139,12 @@ if (nrow(final_results) > 0) {
 
 # --- ВІЗУАЛІЗАЦІЯ ---
 
+```
+
+```{r}
+final_results <- read_csv(here("notes", "report", "lab2", "3-part", "CI_spearman_all_TEST.csv"))
+plots_dir <- "plots/lab2/3-part"
+
 # 1
 if (nrow(final_results) > 0) {
   df_long <- final_results %>%
@@ -169,7 +179,7 @@ if (nrow(final_results) > 0) {
       color = "Тип інтервалу"
     ) +
     theme_minimal()
-  ggsave("ci_intervals_v1.png", plot = p, width = 10, height = 12, dpi = 300)
+  ggsave(here(plots_dir, "ci_intervals_v1.png"), plot = p, width = 10, height = 12, dpi = 300)
 }
 
 # 2
@@ -208,13 +218,13 @@ if (nrow(final_results) > 0) {
       color = "Тип інтервалу"
     ) +
     theme_minimal() +
-    facet_wrap(~ Type, scales = "free_y", ncol = 1) + # Додаємо секції для кожного типу інтервалу
+    facet_wrap(~ Type, scales = "free_y", ncol = 3) + # Додаємо секції для кожного типу інтервалу
     theme(legend.position = "none", # Вимикаємо легенду
           strip.text = element_text(size = 12, face = "bold"), # Розмір шрифта для заголовків
           axis.text.y = element_text(size = 8)) # Розмір шрифта на осі Y
 
   # Збереження графіку у PNG
-  ggsave("ci_intervals_v2.png", plot = p, width = 10, height = 12, dpi = 300)
+  ggsave(here(plots_dir, "ci_intervals_v2.png"), plot = p, width = 16, height = 12, dpi = 300)
 }
 
 ```
