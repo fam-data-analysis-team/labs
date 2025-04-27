@@ -58,34 +58,11 @@ boot_ci_median <- function(data) {
         Basic_U = est,
         Perc_L =  est,
         Perc_U =  est,
-        # Bca_L = est,
-        # Bca_U = est,
-        # Bca_L =   ci_all$bca[4],
-        # Bca_U =   ci_all$bca[5]
-        # Stud_L = if (!is.null(ci_stud$student)) ci_stud$student[4] else NA_real_,
-        # Stud_U = if (!is.null(ci_stud$student)) ci_stud$student[5] else NA_real_
-      ) %>% mutate(across(where(is.numeric), round, digits = 4))
+       ) %>% mutate(across(where(is.numeric), round, digits = 4))
     )
   }
 
   ci_all <- boot.ci(boot_out, type = c("norm", "basic", "perc"))
-
-  # boot_stat_with_var <- function (data, ind, estimate_var = TRUE) {
-  #   r <- median(data[ind], na.rm = TRUE)
-# 
-  #   if (estimate_var) {
-  #     boot_out2 <- boot(
-  #       data[ind], statistic = boot_stat_with_var,
-  #       R = 200, estimate_var = FALSE)
-# 
-  #     return(c(r, var(boot_out2$t)))
-  #   } else {
-  #     return(r)
-  #   }
-  # }
-
-  # boot_stud <- boot(data = data, statistic = boot_stat_with_var, R = R_boot)
-  # ci_stud <- boot.ci(boot_stud, type = "stud")
 
   # Формування результату
   return (tibble(
@@ -97,34 +74,36 @@ boot_ci_median <- function(data) {
     Basic_U = ci_all$basic[5],
     Perc_L =  ci_all$percent[4],
     Perc_U =  ci_all$percent[5]
-    # Bca_L =   ci_all$bca[4],
-    # Bca_U =   ci_all$bca[5]
-    # Stud_L = if (!is.null(ci_stud$student)) ci_stud$student[4] else NA_real_,
-    # Stud_U = if (!is.null(ci_stud$student)) ci_stud$student[5] else NA_real_
   ) %>% mutate(across(where(is.numeric), round, digits = 4)))
+}
+
+run_on_cluser <- function (x, vars, fn) {
+  cl <- makeCluster(detectCores())
+  clusterExport(cl, varlist = c(vars, c("boot_ci_median", "R_boot")), envir = environment())
+  invisible(clusterEvalQ(cl, {
+    library(boot)
+    library(dplyr)
+    library(tibble)
+  }))
+
+  result <- parLapply(cl, x, fn)
+
+  stopCluster(cl)
+
+  return(result)
 }
 ```
 
 ```{r}
 vars <- numeric_df %>% names()
 
-cl <- makeCluster(detectCores())
-clusterExport(cl, varlist = c("numeric_df", "boot_ci_median", "R_boot"), envir = environment())
-invisible(clusterEvalQ(cl, {
-  library(boot)
-  library(dplyr)
-  library(tibble)
-}))
-
-median_result <- parLapply(
-  cl,
+median_result <- run_on_cluser(
   vars,
+  c("numeric_df"),
   \(var) boot_ci_median(numeric_df[[var]] %>% na.omit())
     %>% mutate(Var = var, .before = Estimate)
 )
 median_result <- median_result %>% bind_rows()
-
-stopCluster(cl)
 
 write_csv(median_result, here(DATA_DIR, 'median.csv'))
 ```
@@ -148,26 +127,45 @@ df_daytime <- df %>%
 ```
 
 ```{r}
-cl <- makeCluster(detectCores())
-clusterExport(cl, varlist = c("df_daytime", "boot_ci_median", "R_boot"), envir = environment())
-invisible(clusterEvalQ(cl, {
-  library(boot)
-  library(dplyr)
-  library(tibble)
-}))
-
-median_daytime_result <- parLapply(cl, daytime_labels, \(label) 
+median_daytime_result <- run_on_cluser(daytime_labels, c("df_daytime"), \(label) 
   boot_ci_median((df_daytime %>% filter(daytime == label))$aqi %>% na.omit()) %>% 
   mutate(daytime = label, .before = Estimate)
 )
 
 median_daytime_result <- median_daytime_result %>% bind_rows()
 
-stopCluster(cl)
-
 write_csv(median_daytime_result, here(DATA_DIR, 'median_daytime.csv'))
 ```
 
-```{r}
+Медіана AQI впродовж року:
 
+```{r}
+df_month_grouped <- df %>% mutate(month = format(date, "%m"))
+```
+
+```{r}
+months <- df_month_grouped$month %>% unique() %>% sort()
+
+median_by_month <- function(var) {
+  median_month_result <- run_on_cluser(
+  months, 
+  c("df_month_grouped"), 
+  \(month_value) boot_ci_median(
+    (df_month_grouped %>% filter(month == month_value))[[var]] %>% na.omit()
+  ) %>% mutate(month = month_value, .before = Estimate))
+
+  median_month_result <- median_month_result %>% bind_rows()
+
+  write_csv(median_month_result, here(DATA_DIR, paste("median_month_", var, ".csv", sep="")))
+}
+
+median_by_month('aqi')
+```
+
+```{r}
+median_by_month("o3")
+```
+
+```{r}
+median_by_month("so2")
 ```
