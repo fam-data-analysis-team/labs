@@ -1,0 +1,99 @@
+```{r}
+library(dplyr)
+library(boot)
+library(readr)
+library(knitr)
+library(tibble)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(forcats)
+library(here)
+
+df <- readRDS(here("data", "processed", "air_quality_trimmed.rds"))
+
+set.seed(100)
+```
+
+Загальні параметри моделі:
+
+```{r}
+df <- df[df$so2 > 0, ]
+df <- df[df$co > 0, ]
+
+model <- lm(aqi ~ `pm2.5` + pm10 + I(o3 + o3^2) + I(log(so2)) + I(log(co)), df)
+
+summary(model)
+```
+
+Побудуємо графік для кожної змінної:
+
+```{r}
+vars <- list(
+  c("pm2.5", \(x) x),
+  c("pm10", \(x) x),
+  c("o3", \(x) x + x^2),
+  c("so2", \(x) log(x)),
+  c("co", \(x) log(x))
+)
+
+spline_df <- lapply(vars,
+  function (t) {
+    var = t[[1]]
+    f = t[[2]]
+    x <- df[[var]]
+
+    m <- lm(aqi ~ I(f(x)), df)
+
+    pred <- tibble(x = x, `f(x)` = f(x))
+    pred$y <- predict(m, pred)
+
+    return (pred)
+  }
+)
+
+spline_df <- spline_df %>% bind_rows(.id = "key")
+spline_df[spline_df$key == 1,]$key <- "pm2.5"
+spline_df[spline_df$key == 2,]$key <- "pm10"
+spline_df[spline_df$key == 3,]$key <- "o3"
+spline_df[spline_df$key == 4,]$key <- "so2"
+spline_df[spline_df$key == 5,]$key <- "co"
+
+# spline_df <- tibble(
+#   `pm2.5` = df$`pm2.5`,
+#   pm10 = df$pm10,
+#   o3 = df$o3,
+#   so2 = df$so2,
+#   co = df$co,
+#   `o3 + o3^2` = o3 + o3^2,
+#   `log(so2)` = log(so2),
+#   `log(co)` = log(co)
+# )
+# spline_df$prediction <- predict(model, spline_df)
+#
+# spline_df <- spline_df[c("pm2.5", "pm10", "o3", "so2", "co", "prediction")] %>%
+#   pivot_longer(!"prediction", names_to = "key", values_to = "value_s") %>%
+#   group_by(key) %>%
+#   group_modify(~ .x %>% distinct(value_s, .keep_all = TRUE)) %>%
+#   ungroup()
+#
+```
+
+```{r}
+long_df <- df[c("pm2.5", "pm10", "o3", "so2", "co", "aqi")] %>%
+  slice_sample(n = 100000) %>%
+  pivot_longer(!"aqi", names_to = "key", values_to = "value")
+
+p <- ggplot(long_df, aes(x = value, y = aqi)) +
+  geom_point() +
+  facet_wrap(~key, scales = "free") +
+  geom_line(aes(x = x, y = y), spline_df, color = "red") +
+  facet_wrap(~key, scales = "free")
+
+ggsave(
+  filename = here("plots", "lab3", "model_prediction_facet.png"),
+  plot = p,
+  width = 16, height = 10,
+  bg = "white",
+  dpi = 200)
+```
