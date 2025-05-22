@@ -43,6 +43,13 @@
 %Короткий підсумок ЛР 1-2 (якщо є свіжі погляди, можна ще зменшити/додати/змінити)
 
 \begin{frame}
+  \section{Набір даних}
+
+  \frametitle{Зміст}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
   \frametitle{Набір даних}
 
   Було вирішено дослідити якість повітря Тайваню. Уряд провінції намагається
@@ -73,13 +80,6 @@
 \end{frame}
 
 \begin{frame}
-  \section{Висновки EDA та гіпотез}
-
-  \frametitle{Зміст}
-  \tableofcontents[currentsection]
-\end{frame}
-
-\begin{frame}
   \frametitle{Висновки EDA}
    \begin{itemize}
 
@@ -90,14 +90,14 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Висновки з гіпотез та довірчих інтервалів}
-  \begin{itemize}
-  \item 
-  \item 
-
-  \end{itemize}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Висновки з гіпотез та довірчих інтервалів}
+%   \begin{itemize}
+%   \item 
+%   \item 
+% 
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}
   \section{Моделювання}
@@ -108,44 +108,45 @@
 
 \begin{frame}
   \frametitle{Питання для дослідження}
-  Як метеорологічні фактори (наприклад, швидкість вітру) та концентрації окремих 
-  забруднювачів впливають на Індекс якості повітря (AQI) 
-  враховуючи регіональні відмінності та ефект реформи року?
+  Як реформа покращення якості повітря вплинула на якість повітря?
+
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Питання для дослідження}
+
+  Даний набір даних є панельним. Для аналізу будемо використовувати модель з фіксованими ефектами.
 
   \begin{itemize}
     \item Залежна змінна: AQI
-    \item Незалежні змінні: windspeed, pm2.5, pm10, after-reform 
+    \item Незалежні змінні: after\_reform\footnotemark, windspeed
     \item Контрольні змінні:  
+    \item Фіксовані ефекти: sitename
   \end{itemize}
+
+  \footnotetext[1]{Довірнює 1, якщо дата після 17 грудня 2017 року, 0 в іншому випадку}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Пропущені дані по змінним}
-   
-\end{frame}
+% \begin{frame}
+%   \frametitle{Пропущені дані по змінним}
+%    
+% \end{frame}
 
 \begin{frame}
-  \frametitle{Моделювання(1)}
-   $$AQI \sim windspeed $$
-   $\beta_{windspeed}$: Очікується негативний знак. 
-  Сильніший вітер зазвичай сприяє кращому розсіюванню забруднювачів, 
-  що призводить до зниження AQI (покращення якості повітря).
-\end{frame}
+  \frametitle{Моделювання}
 
-\begin{frame}
-  \frametitle{Моделювання(2)}
-   $$AQI \sim windspeed + after\_reform $$
-   $\beta_{after\_reform}$:Очікується негативний знак. 
-   Метою реформи, ймовірно, було покращення якості повітря,
-   тому після її впровадження AQI мав би знизитися.
-\end{frame}
+   $$AQI \sim \beta_1 \, \text{after\_reform} + \beta_2 \, \text{windspeed} + \alpha $$
 
-\begin{frame}
-  \frametitle{Моделювання(3)}
-   $$AQI \sim windspeed + after\_reform + ... $$
-   $\beta_{...}$:Очікується позитивний знак. 
-   знак для кожного забруднювача. Вищі концентрації цих речовин 
-   безпосередньо погіршують якість повітря та підвищують AQI.
+  \begin{enumerate}
+    \item $\beta_1$: Очікується негативний знак. 
+    Метою реформи було покращення якості повітря,
+    тому після її впровадження AQI мав би знизитися.
+
+    \item $\beta_2$: Очікується негативний знак. 
+    Сильніший вітер зазвичай сприяє кращому розсіюванню забруднювачів, 
+    що призводить до зниження AQI (покращення якості повітря).
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}
