@@ -15,6 +15,17 @@
 \usepackage{xcolor}
 \usepackage{multicol} % Для багатостовпчикового тексту
 
+\usepackage{tabularray}
+\usepackage{float}
+\usepackage{codehigh}
+\usepackage[normalem]{ulem}
+
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+
 \usetheme{Madrid}
 
 % Прибираєм навігацію з кожного слайду
@@ -61,32 +72,32 @@
   \end{center}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Набір даних}
-
-  Загальний опис датасету:
-
-  \begin{enumerate}
-    \item Кількість рядків: 5\,882\,208
-    \item Кількість стовпців: 25
-
-    \begin{itemize}
-      \item Числові: 19
-      \item Факторні: 4
-      \item Дата: 1
-      \item Інші: 1
-    \end{itemize}
-  \end{enumerate}
-\end{frame}
+% Подумав, що напевно в цей раз немає сенсу повторювати, те що було в 2 попередніх лабах
+% \begin{frame}
+%   \frametitle{Набір даних}
+% 
+%   Загальний опис датасету:
+% 
+%   \begin{enumerate}
+%     \item Кількість рядків: 5\,882\,208
+%     \item Кількість стовпців: 25
+% 
+%     \begin{itemize}
+%       \item Числові: 19
+%       \item Факторні: 4
+%       \item Дата: 1
+%       \item Інші: 1
+%     \end{itemize}
+%   \end{enumerate}
+% \end{frame}
 
 \begin{frame}
   \frametitle{Висновки EDA}
-   \begin{itemize}
+  \begin{itemize}
+    \item Загальний рівень AQI по регіонам зменшується, тобто показники покращуються після початку реформи.
+    Більш явні зміни очікувано помітні через декілька років після реформи.
 
-  \item Загальний рівень AQI по регіонам зменшується, тобто показники покращуються після початку реформи.
-  Більш явні зміни помітні через декілька років, після початку, що є цілком логічним.
-  \item Якість повітря змінюється нерівномірно у містах.
-
+    \item Якість повітря змінюється нерівномірно у містах.
   \end{itemize}
 \end{frame}
 
@@ -108,9 +119,8 @@
 
 \begin{frame}
   \frametitle{Питання для дослідження}
-  Як реформа покращення якості повітря вплинула на якість повітря?
 
-  
+  Як реформа покращення якості повітря вплинула на якість повітря?
 \end{frame}
 
 \begin{frame}
@@ -122,10 +132,23 @@
     \item Залежна змінна: AQI
     \item Незалежні змінні: after\_reform\footnotemark, windspeed
     \item Контрольні змінні:  
-    \item Фіксовані ефекти: sitename
+    \item Фіксовані ефекти: sitename (Назва станції вимірювання)
   \end{itemize}
 
-  \footnotetext[1]{Довірнює 1, якщо дата після 17 грудня 2017 року, 0 в іншому випадку}
+  \footnotetext[1]{Дорівнює 1, якщо дата спостереження після \textit{17 грудня 2017 року}, 0 в іншому випадку}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Набір даних}
+
+  Для спрощення моделювання перетворимо початковий датасет таким чином:
+  
+  \begin{itemize}
+    \item Згрупуємо дані за датою (без часу)
+    \item Знайдемо медіану в кожній групі в числових змінних
+  \end{itemize}
+
+  Таким чином, з набору даних на 5\,882\,208 рядків отримуємо 231\,863 рядків, що значно пришвидшує створення моделі.
 \end{frame}
 
 % \begin{frame}
@@ -134,7 +157,14 @@
 % \end{frame}
 
 \begin{frame}
-  \frametitle{Моделювання}
+  \frametitle{Зміст}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Модель}
+
+  Структурна модель:
 
    $$AQI \sim \beta_1 \, \text{after\_reform} + \beta_2 \, \text{windspeed} + \alpha $$
 
@@ -150,38 +180,159 @@
 \end{frame}
 
 \begin{frame}
-  \subsection{Перевірка на стійкість}
-
-  \frametitle{Зміст}
-  \tableofcontents[currentsection]
-\end{frame}
-
-\begin{frame}
-  \frametitle{Перевірка на стійкість(1)}
+  \frametitle{Оцінка моделі}
    
+  \begin{table}
+    \centering
+    \begin{talltblr}[         %% tabularray outer open
+    entry=none,label=none,
+    note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+    ]                     %% tabularray outer close
+    {                     %% tabularray inner open
+    colspec={Q[]Q[]},
+    column{2}={}{halign=c,},
+    column{1}={}{halign=l,},
+    hline{6}={1,2}{solid, black, 0.05em},
+    }                     %% tabularray inner close
+    \toprule
+    & Model \\ \midrule %% TinyTableHeader
+    after\_reformTRUE & \num{-12.261}*** \\
+    & (\num{0.710}) \\
+    windspeed & \num{-0.507} \\
+    & (\num{0.476}) \\
+    Num.Obs. & \num{221582} \\
+    \bottomrule
+    \end{talltblr}
+  \end{table}
 \end{frame}
 
 \begin{frame}
-  \subsection{Оцінка якості моделі}
+  \frametitle{Оцінка якості моделей (1)}
+  
+  Розглянемо вплив поліномів та логаритмів
 
-  \frametitle{Зміст}
-  \tableofcontents[currentsection]
+  \begin{itemize}
+    \item $\log(\text{windspeed})$ -- модель 2
+    \item $\text{windspeed}^2$ -- модель 3
+    \item $\text{windspeed}^3$ -- модель 4
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Оцінка якості моделі(1)}
+  \frametitle{Оцінка якості моделей (2)}
+  
+  \includegraphics[height=2.8in]{plots/lab3/windspeed-aqi.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оцінка якості моделей (2)}
+
+  log(windspeed):
+  
+  \includegraphics[height=2.5in]{plots/lab3/log(windspeed)-aqi.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оцінка якості моделей (3)}
+
+  $windspeed^2$:
+
+  \includegraphics[height=2.5in]{plots/lab3/windspeed^2-aqi.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оцінка якості моделей (4)}
+  
+  $windspeed^3$:
+
+  \includegraphics[height=2.5in]{plots/lab3/windspeed^3-aqi.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оцінка якості моделей (5)}
+
+  \begin{table}
+    \centering
+    \resizebox{.9\textwidth}{!}{
+
+    \begin{talltblr}[         %% tabularray outer open
+    entry=none,label=none,
+    note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+    ]                     %% tabularray outer close
+    {                     %% tabularray inner open
+    colspec={Q[]Q[]Q[]Q[]Q[]},
+    column{2,3,4,5}={}{halign=c,},
+    column{1}={}{halign=l,},
+    hline{12}={1,2,3,4,5}{solid, black, 0.05em},
+    }                     %% tabularray inner close
+    \toprule
+    & 1 & 2 & 3 & 4 \\ \midrule %% TinyTableHeader
+    after\_reformTRUE & \num{-12.487}*** & \num{-12.581}*** & \num{-12.358}*** & \num{-12.313}*** \\
+    & (\num{1.082}) & (\num{1.032}) & (\num{1.089}) & (\num{1.085}) \\
+    windspeed & \num{-0.780} &  &  &  \\
+    & (\num{0.574}) &  &  &  \\
+    log(windspeed) &  & \num{-1.799} &  &  \\
+    &  & (\num{1.367}) &  &  \\
+    I(windspeed\textasciicircum{}2) &  &  & \num{-0.050} &  \\
+    &  &  & (\num{0.064}) &  \\
+    I(windspeed\textasciicircum{}3) &  &  &  & \num{-0.001} \\
+    &  &  &  & (\num{0.005}) \\
+    Num.Obs. & \num{221582} & \num{221339} & \num{221582} & \num{221582} \\
+    R2 & \num{0.134} & \num{0.134} & \num{0.133} & \num{0.132} \\
+    R2 Adj. & \num{0.134} & \num{0.133} & \num{0.133} & \num{0.132} \\
+    \bottomrule
+    \end{talltblr}
+    }
+  \end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Перевірка на значущість}
+
+  Перевіримо гіпотези на значущість:
+
+  \begin{center}
+    \begin{tabular}{cc}
+      \hline
+      Гіпотеза & p-value \\
+      \hline
+      after\_reform & $2\cdot10^{-16}$ \\
+      windspeed    & 0.1739 \\
+    \end{tabular}
+  \end{center}
+
+  Отже, можемо прибрати windspeed з моделі.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Кінцева модель}
    
+  \begin{table}
+    \centering
+    \begin{talltblr}[         %% tabularray outer open
+    entry=none,label=none,
+    note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+    ]                     %% tabularray outer close
+    {                     %% tabularray inner open
+    colspec={Q[]Q[]},
+    column{2}={}{halign=c,},
+    column{1}={}{halign=l,},
+    hline{4}={1,2}{solid, black, 0.05em},
+    }                     %% tabularray inner close
+    \toprule
+    & Model \\ \midrule %% TinyTableHeader
+    after\_reformTRUE & \num{-11.736}*** \\
+    & (\num{0.700}) \\
+    Num.Obs. & \num{231364} \\
+    R2 & \num{0.152} \\
+    R2 Adj. & \num{0.151} \\
+    \bottomrule
+    \end{talltblr}
+  \end{table}
 \end{frame}
 
 \begin{frame}
-  \section{Кінцева модель та її оцінка}
-
-  \frametitle{Зміст}
-  \tableofcontents[currentsection]
-\end{frame}
-
-\begin{frame}
-  \frametitle{Кінцева модель та її оцінка}
+  \frametitle{Інтерпретація}
    
 \end{frame}
 

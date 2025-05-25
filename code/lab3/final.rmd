@@ -1,4 +1,3 @@
-
 ```{r}
 library(dplyr)
 library(boot)
@@ -17,7 +16,7 @@ df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
 ```
 
 ```{r}
-model <- feols(aqi ~ after_reform + windspeed | sitename, data = df)
+model <- feols(aqi ~ after_reform | sitename, data = df)
 
 summary(model)
 modelsummary(
@@ -26,8 +25,4 @@ modelsummary(
   coef_omit = "factor", 
   output = "latex"
 )
-```
-
-```{r}
-predict(model, tibble(after_reform = c(FALSE, TRUE), county = "Changhua County"))
 ```

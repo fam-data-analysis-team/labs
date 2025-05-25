@@ -1,4 +1,3 @@
-
 ```{r}
 library(dplyr)
 library(boot)
@@ -12,22 +11,13 @@ library(forcats)
 library(here)
 library(fixest)
 library(modelsummary)
+library(lmtest)
 
 df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
 ```
 
 ```{r}
-model <- feols(aqi ~ after_reform + windspeed | sitename, data = df)
+model <- feols(aqi ~ after_reform + windspeed | county, data = df)
 
-summary(model)
-modelsummary(
-  list("Model" = model), 
-  stars = TRUE, 
-  coef_omit = "factor", 
-  output = "latex"
-)
-```
-
-```{r}
-predict(model, tibble(after_reform = c(FALSE, TRUE), county = "Changhua County"))
+coeftest(model, vcov. = vcov(model))
 ```
