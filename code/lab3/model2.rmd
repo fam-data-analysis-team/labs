@@ -33,7 +33,7 @@ counties <- counties$county
 df_counties <- df %>% subset(county %in% counties)
 ```
 
-Модель з бінарною змінною "виміряно в період з червеня по вересень":
+В лаб 2 було підтверджено, що найменшу медіану AQI має в період з червеня по вересень. Спробуємо використати ці знання, щоб зробити модель більш точною. Включимо у вираз бінарну змінну "виміряно в період з червеня по вересень":
 
 ```{r}
 model <- feols(aqi ~ reform_days + jun_sep | county, data = df)
@@ -54,7 +54,7 @@ modelsummary(
 coeftest(model, vcov. = vcov(model))
 ```
 
-Спробуємо візуалізувати модель з новим регресором. Тепер вона враховує сезонні зміни, але дуже грубо:
+Візуалізуємо модель з новим регресором. Тепер вона враховує сезонні зміни, але дуже грубо:
 
 ```{r}
 pred <- predict(model, df_counties)
@@ -69,7 +69,7 @@ ggsave(
   here(
     "plots",
     "lab3",
-    paste("model", MODEL_NUMBER, "reform-and-season-vs-aqi-bin.png", sep = '-', collapse = '')
+    paste("model", MODEL_NUMBER, "reform-and-season-vs-aqi.png", sep = '-', collapse = '')
   ),
   p,
   width = 17,

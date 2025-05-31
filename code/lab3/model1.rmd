@@ -33,7 +33,7 @@ counties <- counties$county
 df_counties <- df %>% subset(county %in% counties)
 ```
 
-Опис моделі та її коефіцієнти:
+Опис початкової моделі та її коефіцієнти:
 
 ```{r}
 model <- feols(aqi ~ reform_days | county, data = df)
