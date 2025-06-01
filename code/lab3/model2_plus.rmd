@@ -46,7 +46,7 @@ model_sqr <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) | county, data =
 # Візьмемо дані за один рік
 df_fixed_year <- df_counties %>% subset(year(date) == 2020)
 
-# Зафіксуємо старий регресор (як у лекції №12, слайд 84)
+# Зафіксуємо старий регресор на медіанному рівні (як у лекції №12, слайд 84)
 df_fixed_reform_days <- df_fixed_year %>% mutate(
   reform_days = median(reform_days)
 )
@@ -101,8 +101,13 @@ ggsave(
 Новий регресор краще передбачує сезонні зміни у вигляді квадратичного поліному.
 
 ```{r}
-modelsummary(list(
-  "1" = model,
-  "2" = model_sqr
-), stars = TRUE, output="latex", fmt = 6)
+modelsummary(
+  list(
+    "2.1" = model,
+    "2.2" = model_sqr
+  ),
+  stars = TRUE,
+  output="latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6)
 ```

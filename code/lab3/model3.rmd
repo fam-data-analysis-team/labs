@@ -44,7 +44,7 @@ model_log <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + I(log(windspee
 Побудуємо графіки відносно нового регресора:
 
 ```{r}
-# Зафіксуємо інші регресори (як у лекції №12, слайд 84)
+# Зафіксуємо інші регресори на медіанному рівні (як у лекції №12, слайд 84)
 df_fixed <- df_counties %>% mutate(
   reform_days = median(reform_days),
   jul_days = median(jul_days),
@@ -77,9 +77,14 @@ ggsave(
 Швидкість вітру слабко корелює з AQI.
 
 ```{r}
-modelsummary(list(
-  "1" = model,
-  "2" = model_sqr,
-  "3" = model_log
-), stars = TRUE, output="latex", fmt = 6)
+modelsummary(
+  list(
+    "3.1" = model,
+    "3.2" = model_sqr,
+    "3.3" = model_log
+  ),
+  stars = TRUE,
+  output="latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6)
 ```

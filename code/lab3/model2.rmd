@@ -46,6 +46,7 @@ modelsummary(
   list("Model" = model),
   stars = TRUE,
   output = "latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
   fmt = 6
 )
 ```
