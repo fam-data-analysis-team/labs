@@ -14,23 +14,63 @@ library(forcats)
 library(here)
 library(fixest)
 library(modelsummary)
-library(fastDummies) 
+library(fastDummies)
+library(FactoMineR)
+library(factoextra)
 
-df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
+df <- readRDS(here("data", "processed", "air_quality_tidy.rds"))
 ```
-
-
 
 # Аналіз головних компонентів (PCA)
 ```{r}
-
+df.num <- df[c('aqi', 'so2', 'co', 'o3', 'pm2.5', 'pm10', 'no2', 'nox', 'no', 'windspeed', 'winddirec')]
+df.pca <- PCA(df.num, graph = FALSE)
 ```
+
+Scree plot:
 
 ```{r}
+p <- fviz_screeplot(df.pca, addlabels = TRUE)
 
+ggsave(
+  plot = p, 
+  filename = here("plots", "lab4", "pca", "scree.png"), 
+  width = 16, height = 10,
+  bg = "white"
+)
 ```
 
 
+Графік проєкцій:
+
+```{r}
+plot_proj <- function(axes, name) {
+  p <- fviz_pca_var(df.pca, axes = axes, repel = TRUE)
+
+  ggsave(
+    plot = p, 
+    filename = here("plots", "lab4", "pca", name), 
+    width = 16, height = 10,
+    bg = "white"
+  )
+}
+```
 
 
+```{r}
+plot_proj(c(1, 2), "projection-1-2.png")
+plot_proj(c(1, 3), "projection-1-3.png")
+```
 
+Bi-plot:
+
+```{r}
+p <- fviz_pca_biplot(df.pca, axes = c(1, 2), geom = "point")
+
+ggsave(
+  plot = p, 
+  filename = here("plots", "lab4", "pca", "biplot.png"), 
+  width = 16, height = 10,
+  bg = "white"
+)
+```
