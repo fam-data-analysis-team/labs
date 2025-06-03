@@ -1,0 +1,26 @@
+```{r}
+library(tidyverse)
+
+df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
+model_df <- df %>% select(c(date, county, sitename, aqi, windspeed, winddirec))
+
+# Days since the reform
+reform_date <- as.Date("21-11-2017", "%d-%m-%Y")
+model_df$reform_days <- as.numeric(difftime(df$date, reform_date, units="days"))
+
+# Day of the year
+model_df$year_days <- yday(df$date)
+
+# Season
+# Binary (is measured in June-September)
+model_df$jun_sep <- 6 <= month(df$date) & month(df$date) <= 9
+# Linear (days to the nearest July 1st)
+july_this_year <- ymd(paste(year(df$date), "07", "01", sep = "-"))
+july_next_year <- ymd(paste(year(df$date) + 1, "07", "01", sep = "-"))
+model_df$jul_days <- pmin(
+  abs(as.numeric(df$date - july_this_year)),
+  abs(as.numeric(df$date - july_next_year))
+)
+
+saveRDS(model_df, here("data", "processed", "model_df.RDS"))
+```

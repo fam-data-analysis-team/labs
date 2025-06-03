@@ -1,0 +1,90 @@
+```{r}
+library(tidyverse)
+library(knitr)
+library(here)
+library(fixest)
+library(lmtest)
+library(modelsummary)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    panel.spacing = unit(2, "lines"),
+  )
+)
+
+MODEL_NUMBER = 3
+
+df <- readRDS(here("data", "processed", "model_df.rds"))
+
+counties <- df %>%
+  group_by(county) %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(aqi)) %>%
+  head(n = 8)
+
+counties <- counties$county
+
+df_counties <- df %>% subset(county %in% counties)
+```
+
+Спробуємо додати швидкість вітру.
+
+```{r}
+model <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + windspeed | county, data = df)
+model_sqr <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + windspeed + I(windspeed^2) | county, data = df)
+model_log <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + I(log(windspeed)) | county, data = df)
+```
+
+Побудуємо графіки відносно нового регресора:
+
+```{r}
+# Зафіксуємо інші регресори на медіанному рівні (як у лекції №12, слайд 84)
+df_fixed <- df_counties %>% mutate(
+  reform_days = median(reform_days),
+  jul_days = median(jul_days),
+)
+
+pred <- predict(model, df_fixed)
+pred_sqr <- predict(model_sqr, df_fixed)
+pred_log <- predict(model_log, df_fixed)
+
+p <- ggplot(df_fixed, aes(x = windspeed, y = aqi)) +
+  geom_point() +
+  geom_line(aes(y = pred_log), color = "blue", linewidth=1.25) +
+  geom_line(aes(y = pred_sqr), color = "green", linewidth=1.25) +
+  geom_line(aes(y = pred), color = "red", linewidth=1.25) +
+  facet_wrap(~county, ncol = 4) +
+  labs(x = "Швидкість вітру", y = "AQI")
+
+ggsave(
+  here(
+    "plots",
+    "lab3",
+    paste("model", MODEL_NUMBER, "windspeed-vs-aqi.png", sep = '-', collapse = '')
+  ),
+  p,
+  width = 17,
+  height = 10,
+  bg = "white")
+```
+
+Швидкість вітру слабко корелює з AQI.
+
+```{r}
+modelsummary(
+  list(
+    "3.1" = model,
+    "3.2" = model_sqr,
+    "3.3" = model_log
+  ),
+  stars = TRUE,
+  output="latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6)
+```

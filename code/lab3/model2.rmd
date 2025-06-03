@@ -1,0 +1,79 @@
+```{r}
+library(tidyverse)
+library(knitr)
+library(here)
+library(fixest)
+library(lmtest)
+library(modelsummary)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    panel.spacing = unit(2, "lines"),
+  )
+)
+
+MODEL_NUMBER = 2
+
+df <- readRDS(here("data", "processed", "model_df.rds"))
+
+counties <- df %>%
+  group_by(county) %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(aqi)) %>%
+  head(n = 8)
+
+counties <- counties$county
+
+df_counties <- df %>% subset(county %in% counties)
+```
+
+В лаб 2 було підтверджено, що найменшу медіану AQI має в період з червеня по вересень. Спробуємо використати ці знання, щоб зробити модель більш точною. Включимо у вираз бінарну змінну "виміряно в період з червеня по вересень":
+
+```{r}
+model <- feols(aqi ~ reform_days + jun_sep | county, data = df)
+
+summary(model)
+```
+
+```{r}
+modelsummary(
+  list("Model" = model),
+  stars = TRUE,
+  output = "latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6
+)
+```
+
+```{r}
+coeftest(model, vcov. = vcov(model))
+```
+
+Візуалізуємо модель з новим регресором. Тепер вона враховує сезонні зміни, але дуже грубо:
+
+```{r}
+pred <- predict(model, df_counties)
+
+p <- ggplot(df_counties, aes(x = reform_days, y = aqi)) +
+  geom_point() +
+  geom_line(aes(y = pred), color = "red", linewidth=1.25) +
+  facet_wrap(~county, ncol = 4) +
+  labs(x = "Днів з початку реформи", y = "AQI")
+
+ggsave(
+  here(
+    "plots",
+    "lab3",
+    paste("model", MODEL_NUMBER, "reform-and-season-vs-aqi.png", sep = '-', collapse = '')
+  ),
+  p,
+  width = 17,
+  height = 10,
+  bg = "white")
+```

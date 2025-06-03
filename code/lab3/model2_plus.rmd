@@ -1,0 +1,113 @@
+```{r}
+library(tidyverse)
+library(knitr)
+library(here)
+library(fixest)
+library(lmtest)
+library(modelsummary)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    panel.spacing = unit(2, "lines"),
+  )
+)
+
+MODEL_NUMBER = 2
+
+df <- readRDS(here("data", "processed", "model_df.rds"))
+
+counties <- df %>%
+  group_by(county) %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(aqi)) %>%
+  head(n = 8)
+
+counties <- counties$county
+
+df_counties <- df %>% subset(county %in% counties)
+```
+
+В лаб 2 також було підтверджено, що найменшу медіану AQI має в липні. Спробуємо додати змінну, що показує "відстань" (у днях) до найближчого липня. Розглянемо одразу випадки, коли регресор входить лінійно і у вигляді квадратичного поліному.
+
+```{r}
+model <- feols(aqi ~ reform_days + jul_days | county, data = df)
+model_sqr <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) | county, data = df)
+```
+
+Побудуємо графіки відносно нового регресора:
+
+```{r}
+# Візьмемо дані за один рік
+df_fixed_year <- df_counties %>% subset(year(date) == 2020)
+
+# Зафіксуємо старий регресор на медіанному рівні (як у лекції №12, слайд 84)
+df_fixed_reform_days <- df_fixed_year %>% mutate(
+  reform_days = median(reform_days)
+)
+
+pred <- predict(model, df_fixed_reform_days)
+pred_sqr <- predict(model_sqr, df_fixed_reform_days)
+
+p <- ggplot(df_fixed_reform_days, aes(x = jul_days, y = aqi)) +
+  geom_point() +
+  geom_line(aes(y = pred_sqr), color = "green", linewidth=1.25) +
+  geom_line(aes(y = pred), color = "red", linewidth=1.25) +
+  facet_wrap(~county, ncol = 4) +
+  labs(x = "Днів до найближчого липня", y = "AQI")
+
+ggsave(
+  here(
+    "plots",
+    "lab3",
+    paste("model", MODEL_NUMBER, "plus-jul_days-vs-aqi.png", sep = '-', collapse = '')
+  ),
+  p,
+  width = 17,
+  height = 10,
+  bg = "white")
+```
+
+Побудуємо графіки для обох регресорів одночасно:
+
+```{r}
+pred <- predict(model, df_counties)
+pred_sqr <- predict(model_sqr, df_counties)
+
+p <- ggplot(df_counties, aes(x = reform_days, y = aqi)) +
+  geom_point() +
+  geom_line(aes(y = pred_sqr), color = "green", linewidth=1.25) +
+  geom_line(aes(y = pred), color = "red", linewidth=1.25) +
+  facet_wrap(~county, ncol = 4) +
+  labs(x = "Днів з початку реформи", y = "AQI")
+
+ggsave(
+  here(
+    "plots",
+    "lab3",
+    paste("model", MODEL_NUMBER, "plus-reform-and-season-vs-aqi.png", sep = '-', collapse = '')
+  ),
+  p,
+  width = 17,
+  height = 10,
+  bg = "white")
+```
+
+Новий регресор краще передбачує сезонні зміни у вигляді квадратичного поліному.
+
+```{r}
+modelsummary(
+  list(
+    "2.1" = model,
+    "2.2" = model_sqr
+  ),
+  stars = TRUE,
+  output="latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6)
+```

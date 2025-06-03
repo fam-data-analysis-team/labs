@@ -1,0 +1,105 @@
+```{r}
+library(tidyverse)
+library(knitr)
+library(here)
+library(fixest)
+library(lmtest)
+library(modelsummary)
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    panel.spacing = unit(2, "lines"),
+  )
+)
+
+MODEL_NUMBER = 1
+
+df <- readRDS(here("data", "processed", "model_df.rds"))
+
+counties <- df %>%
+  group_by(county) %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(aqi)) %>%
+  head(n = 8)
+
+counties <- counties$county
+
+df_counties <- df %>% subset(county %in% counties)
+```
+
+Опис початкової моделі та її коефіцієнти:
+
+```{r}
+model <- feols(aqi ~ reform_days | county, data = df)
+
+summary(model)
+```
+
+```{r}
+modelsummary(
+  list("1" = model),
+  stars = TRUE,
+  output = "latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6
+)
+```
+
+```{r}
+coeftest(model, vcov. = vcov(model))
+```
+
+Перевіримо модель на стійкість додаючи логаритми та степені:
+
+```{r}
+model_sqr <- feols(aqi ~ reform_days + I(reform_days^2) | county, data = df)
+model_log <- feols(aqi ~ I(log(reform_days)) | county, data = df)
+```
+
+Бачимо, що застосовувати логарифм тут буде недоречно. Квадратичний поліном майже не відрізняється від лінійного графіку. І загалом всі три версії моделі, починаючи з 250 днів близькі одна до одної. Робимо висновок, що початкова модель є стійкою відносно маніпуляцій з присутнім регресором (?).
+
+```{r}
+pred <- predict(model, df_counties)
+pred_sqr <- predict(model_sqr, df_counties)
+pred_log <- predict(model_log, df_counties)
+
+p <- ggplot(df_counties, aes(x = reform_days, y = aqi)) +
+  geom_point() +
+  geom_line(aes(y = pred_log), color = "blue", linewidth=1.25) +
+  geom_line(aes(y = pred_sqr), color = "green", linewidth=1.25) +
+  geom_line(aes(y = pred), color = "red", linewidth=1.25) +
+  facet_wrap(~county, ncol = 4) +
+  labs(x = "Днів з початку реформи", y = "AQI")
+
+ggsave(
+  here(
+    "plots",
+    "lab3",
+    paste("model", MODEL_NUMBER, "reform-vs-aqi.png", sep = '-', collapse = '')
+  ),
+  p,
+  width = 17,
+  height = 10,
+  bg = "white")
+```
+
+Всі коефіцієнти є статистично значущими:
+
+```{r}
+modelsummary(
+  list(
+    "1.1" = model,
+    "1.2" = model_sqr,
+    "1.3" = model_log
+  ),
+  stars = TRUE,
+  output="latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6)
+```

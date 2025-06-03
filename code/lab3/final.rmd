@@ -1,28 +1,33 @@
 ```{r}
-library(dplyr)
-library(boot)
-library(readr)
+library(tidyverse)
 library(knitr)
-library(tibble)
-library(ggplot2)
-library(stringr)
-library(tidyr)
-library(forcats)
 library(here)
 library(fixest)
+library(lmtest)
 library(modelsummary)
 
-df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
+df <- readRDS(here("data", "processed", "model_df.rds"))
 ```
 
-```{r}
-model <- feols(aqi ~ after_reform | sitename, data = df)
+В результаті було побудовано 3 моделі:
 
-summary(model)
+```{r}
+model1 <- feols(aqi ~ reform_days | county, data = df)
+model2 <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) | county, data = df)
+model3 <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + windspeed | county, data = df)
+```
+
+Значення коефiцiєнтiв бiля ключових регресорiв між ними змiнюються не сильно, тому модель є стійкою.
+
+```{r}
 modelsummary(
-  list("Model" = model), 
-  stars = TRUE, 
-  coef_omit = "factor", 
-  output = "latex"
-)
+  list(
+    "1" = model1,
+    "2" = model2,
+    "3" = model3
+  ),
+  stars = TRUE,
+  output="latex",
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6)
 ```
