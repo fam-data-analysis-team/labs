@@ -1,0 +1,36 @@
+﻿
+
+```{r}
+library(np)
+library(dplyr)
+library(boot)
+library(readr)
+library(knitr)
+library(tibble)
+library(ggplot2)
+library(stringr)
+library(tidyr)
+library(forcats)
+library(here)
+library(fixest)
+library(modelsummary)
+library(fastDummies) 
+
+df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
+```
+
+
+
+# Аналіз головних компонентів (PCA)
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+
+
+

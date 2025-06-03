@@ -1,0 +1,199 @@
+```{r}
+library(np)           # Непараметрична регресія
+library(KernSmooth)   # Ядрова регресія
+library(mgcv)         # GAM моделі
+library(ggplot2)      # Графіки
+library(dplyr)        # Обробка даних
+library(gridExtra)    # Компонування графіків
+library(reshape2)     # Перетворення даних
+library(corrplot)     # Кореляційні графіки
+library(here)         # Для шляхів до файлів
+
+# Встановлення seed для відтворюваності
+set.seed(123)
+```
+
+```{r}
+# Завантаження даних
+df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
+df$year <- as.numeric(format(df$date, '%Y'))
+
+# Вибір топ-8 counties за середнім AQI
+counties <- df %>%
+  group_by(county) %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(aqi)) %>%
+  head(n = 8)
+
+counties <- counties$county
+
+# Фільтрування даних за обраними counties
+df_counties <- df %>% subset(county %in% counties)
+
+# Використання відфільтрованих даних для аналізу
+data <- df_counties
+
+print(paste("Загальна кількість спостережень:", nrow(data)))
+print(paste("Кількість унікальних counties:", length(unique(data$county))))
+print(paste("Кількість унікальних sitename:", length(unique(data$sitename))))
+print("Топ-8 counties за AQI:")
+print(counties)
+
+```
+
+## Підготовка даних для моделювання
+
+```{r}
+# Видалення NA значень та підготовка факторних змінних
+model_data <- data %>%
+  filter(!is.na(aqi), !is.na(windspeed), !is.na(after_reform)) %>%
+  mutate(
+    sitename = as.factor(sitename),
+    county = as.factor(county),
+    after_reform = as.factor(after_reform)
+  )
+
+# Для великих датасетів можна взяти вибірку для швидшого обчислення
+if(nrow(model_data) > 10000) {
+  cat("Використовуємо випадкову вибірку з", min(10000, nrow(model_data)), "спостережень для швидшого обчислення\n")
+  model_data <- model_data[sample(nrow(model_data), min(10000, nrow(model_data))), ]
+}
+
+cat("Розмір даних для моделювання:", nrow(model_data), "спостережень\n")
+```
+
+# 4.1.1 НЕПАРАМЕТРИЧНА РЕГРЕСІЯ
+## Модель 1: залежність від швидкості вітру (windspeed) непараметрично
+```{r}
+cat("\n--- Модель 1: Базова (windspeed непараметрично) ---\n")
+
+# Nadaraya-Watson оцінка
+bw_nw <- npregbw(aqi ~ windspeed, data = model_data, regtype = "lc")
+model_nw1 <- npreg(bw_nw)
+
+# Локальна лінійна регресія
+bw_ll <- npregbw(aqi ~ windspeed, data = model_data, regtype = "ll")
+model_ll1 <- npreg(bw_ll)
+
+cat("Nadaraya-Watson bandwidth:", bw_nw$bw, "\n")
+cat("Local Linear bandwidth:", bw_ll$bw, "\n")
+
+cat("Nadaraya-Watson bandwidth:", summary(bw_nw), "\n")
+cat("Local Linear bandwidth:", summary(bw_ll), "\n")
+```
+
+## Модель 1: залежність від швидкості вітру (windspeed) непараметрично
+```{r}
+cat("\n--- Модель 2: Базова (after-reform непараметрично) ---\n")
+
+# Nadaraya-Watson оцінка
+bw_nw <- npregbw(aqi ~ after_reform, data = model_data, regtype = "lc")
+model_nw1 <- npreg(bw_nw)
+
+# Локальна лінійна регресія
+bw_ll <- npregbw(aqi ~ after_reform, data = model_data, regtype = "ll")
+model_ll1 <- npreg(bw_ll)
+
+cat("Nadaraya-Watson bandwidth:", bw_nw$bw, "\n")
+cat("Local Linear bandwidth:", bw_ll$bw, "\n")
+
+cat("Nadaraya-Watson bandwidth:", summary(bw_nw), "\n")
+cat("Local Linear bandwidth:", summary(bw_ll), "\n")
+```
+
+
+```{r}
+# Багатовимірна ядрова регресія (всі змінні непараметрично)
+bw_multi <- npregbw(aqi ~ windspeed + after_reform, data = model_data, regtype = "ll")
+model_multi <- npreg(bw_multi)
+
+cat("Багатовимірна ядрова R-squared:", model_multi$R2, "\n")
+print(bw_multi$bw)
+```
+
+```{r}
+# 1. Створення сітки значень для прогнозування
+windspeed_grid <- with(model_data, data.frame(windspeed = seq(min(windspeed, na.rm = TRUE),
+                                                              max(windspeed, na.rm = TRUE),
+                                                              length.out = 200)))
+
+# 2. Отримання прогнозів від моделей
+aqi_pred_nw1_raw <- predict(model_nw1, newdata = windspeed_grid)
+aqi_pred_ll1_raw <- predict(model_ll1, newdata = windspeed_grid)
+aqi_pred_nw1 <- as.vector(aqi_pred_nw1_raw)
+aqi_pred_ll1 <- as.vector(aqi_pred_ll1_raw)
+
+# 3. Підготовка даних для ggplot2 з ІЛЮСТРАТИВНИМИ довірчими інтервалами
+
+# Для моделі Надарай-Ватсон (model_nw1)
+# Розрахунок залишків на оригінальних даних для оцінки масштабу помилки
+residuals_nw1 <- model_data$AQI - predict(model_nw1, newdata = model_data[, "windspeed", drop = FALSE])
+sd_res_nw1 <- sd(residuals_nw1, na.rm = TRUE)
+
+plot_df_nw1 <- data.frame(
+  windspeed = windspeed_grid$windspeed,
+  AQI_fit = aqi_pred_nw1,
+
+  ymin = aqi_pred_nw1 - sd_res_nw1,
+  ymax = aqi_pred_nw1 + sd_res_nw1,
+  model_type = "Надарай-Ватсон "
+)
+# AQI зазвичай невід'ємний
+plot_df_nw1$ymin <- pmax(0, plot_df_nw1$ymin)
+
+# Для моделі Локальної лінійної регресії (model_ll1)
+residuals_ll1 <- model_data$AQI - predict(model_ll1, newdata = model_data[, "windspeed", drop = FALSE])
+sd_res_ll1 <- sd(residuals_ll1, na.rm = TRUE)
+
+plot_df_ll1 <- data.frame(
+  windspeed = windspeed_grid$windspeed,
+  AQI_fit = aqi_pred_ll1,
+
+  ymin = aqi_pred_ll1 - sd_res_ll1,
+  ymax = aqi_pred_ll1 + sd_res_ll1,
+  model_type = "Локальна лінійна (м1)"
+)
+plot_df_ll1$ymin <- pmax(0, plot_df_ll1$ymin)
+
+
+combined_plot_data_styled <- rbind(plot_df_nw1, plot_df_ll1)
+
+color_local_linear_styled <- "tomato"
+color_nadaraya_watson_styled <- "darkturquoise"
+
+ggplot(combined_plot_data_styled, aes(x = windspeed, group = model_type)) +
+  geom_line(aes(y = AQI_fit, color = model_type), linewidth = 0.8) +
+  geom_ribbon(aes(ymin = ymin, ymax = ymax, fill = model_type), alpha = 0.25, show.legend = FALSE) +
+  scale_x_continuous(name = "Швидкість вітру (windspeed)") +
+  scale_y_continuous(name = "AQI") + 
+  scale_color_manual(
+    name = "Оцінка",
+    values = c("Локальна лінійна (м1)" = color_local_linear_styled,
+               "Надарай-Ватсон (м1)" = color_nadaraya_watson_styled)
+  ) +
+  scale_fill_manual(
+    name = "Оцінка",
+    values = c("Локальна лінійна (м1)" = color_local_linear_styled,
+               "Надарай-Ватсон (м1)" = color_nadaraya_watson_styled)
+  ) +
+  labs(title = "Залежність AQI від швидкості вітру") + 
+  theme_bw() +
+  theme(
+    plot.title = element_text(hjust = 0, face = "bold", size = 10), 
+    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold"),
+    legend.position = "right", 
+    panel.grid.major = element_line(colour = "grey90"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+
+
+
+
+
+
+
+

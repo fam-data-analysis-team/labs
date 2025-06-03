@@ -1,0 +1,134 @@
+```{r}
+library(np)           # Непараметрична регресія
+library(KernSmooth)   # Ядрова регресія
+library(mgcv)         # GAM моделі
+library(ggplot2)      # Графіки
+library(dplyr)        # Обробка даних
+library(gridExtra)    # Компонування графіків
+library(reshape2)     # Перетворення даних
+library(corrplot)     # Кореляційні графіки
+library(here)         # Для шляхів до файлів
+
+# Встановлення seed для відтворюваності
+set.seed(123)
+```
+
+```{r}
+# Завантаження даних
+df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
+df$year <- as.numeric(format(df$date, '%Y'))
+
+# Вибір топ-8 counties за середнім AQI
+counties <- df %>%
+  group_by(county) %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(aqi)) %>%
+  head(n = 8)
+
+counties <- counties$county
+
+# Фільтрування даних за обраними counties
+df_counties <- df %>% subset(county %in% counties)
+
+# Використання відфільтрованих даних для аналізу
+data <- df_counties
+
+print(paste("Загальна кількість спостережень:", nrow(data)))
+print(paste("Кількість унікальних counties:", length(unique(data$county))))
+print(paste("Кількість унікальних sitename:", length(unique(data$sitename))))
+print("Топ-8 counties за AQI:")
+print(counties)
+
+```
+
+## Підготовка даних для моделювання
+
+```{r}
+# Видалення NA значень та підготовка факторних змінних
+model_data <- data %>%
+  filter(!is.na(aqi), !is.na(windspeed), !is.na(after_reform)) %>%
+  mutate(
+    sitename = as.factor(sitename),
+    county = as.factor(county),
+    after_reform = as.factor(after_reform)
+  )
+
+# Для великих датасетів можна взяти вибірку для швидшого обчислення
+if(nrow(model_data) > 10000) {
+  cat("Використовуємо випадкову вибірку з", min(10000, nrow(model_data)), "спостережень для швидшого обчислення\n")
+  model_data <- model_data[sample(nrow(model_data), min(10000, nrow(model_data))), ]
+}
+
+cat("Розмір даних для моделювання:", nrow(model_data), "спостережень\n")
+```
+
+# МОДЕЛЬ 2: ЧАСТКОВО ЛІНІЙНА РЕГРЕСІЯ
+```{r}
+cat("\n--- Модель 2: З контролем after_reform ---\n")
+
+# Частково лінійна модель: windspeed непараметрично, after_reform лінійно
+model_plr2 <- gam(aqi ~ s(windspeed, bs = "cr") + after_reform, 
+                  data = model_data, method = "REML")
+
+summary(model_plr2)
+```
+
+```{r}
+cat("\n--- Модель 3: З фіксованими ефектами county ---\n")
+
+model_plr3 <- gam(aqi ~ s(windspeed, bs = "cr") + after_reform + county, 
+                  data = model_data, method = "REML")
+
+summary(model_plr3)
+```
+
+# МОДЕЛЬ 2: З контролем після реформи (частково лінійна)
+```{r}
+# Функція для створення графіка непараметричної залежності
+create_nonparam_plot <- function(model, var_name, title_suffix = "") {
+  # Створення сітки значень для прогнозування
+  var_range <- range(model_data[[var_name]], na.rm = TRUE)
+  new_data <- model_data[1, ]  # Базове спостереження
+  
+  # Фіксуємо інші змінні на медіанних/модальних значеннях
+  for (col in names(new_data)) {
+    if (col != var_name && is.numeric(new_data[[col]])) {
+      new_data[[col]] <- median(model_data[[col]], na.rm = TRUE)
+    } else if (col != var_name && is.factor(new_data[[col]])) {
+      new_data[[col]] <- names(sort(table(model_data[[col]]), decreasing = TRUE))[1]
+    }
+  }
+  
+  # Створення сітки для змінної інтересу
+  grid_values <- seq(var_range[1], var_range[2], length.out = 100)
+  pred_data <- do.call(rbind, lapply(grid_values, function(x) {
+    temp_data <- new_data
+    temp_data[[var_name]] <- x
+    temp_data
+  }))
+  
+  # Прогнозування
+  pred <- predict(model, pred_data, se.fit = TRUE)
+  
+  # Створення DataFrame для графіка
+  plot_data <- data.frame(
+    x = grid_values,
+    fit = pred$fit,
+    se = pred$se.fit,
+    lower = pred$fit - 1.96 * pred$se.fit,
+    upper = pred$fit + 1.96 * pred$se.fit
+  )
+  
+  # Створення графіка
+  ggplot(plot_data, aes(x = x, y = fit)) +
+    geom_line(color = "blue", size = 1) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "blue") +
+    geom_point(data = model_data, aes_string(x = var_name, y = "AQI"), 
+               alpha = 0.3, size = 0.5) +
+    labs(title = paste("Непараметрична залежність AQI від", var_name, title_suffix),
+         x = var_name,
+         y = "AQI") +
+    theme_minimal()
+}
+```
