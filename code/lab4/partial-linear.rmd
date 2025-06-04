@@ -9,14 +9,31 @@ library(reshape2)     # Перетворення даних
 library(corrplot)     # Кореляційні графіки
 library(here)         # Для шляхів до файлів
 
-# Встановлення seed для відтворюваності
-set.seed(123)
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    panel.spacing = unit(2, "lines"),
+  )
+)
+
+# Створення папки для збереження результатів
+output_path <- here("data", "models")
+if (!dir.exists(output_path)) {
+  dir.create(output_path, recursive = TRUE)
+}
 ```
 
+## Підготовка даних
 ```{r}
 # Завантаження даних
-df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
-df$year <- as.numeric(format(df$date, '%Y'))
+df <- readRDS(here("data", "processed", "model_df.rds"))
+
+# Фільтрування даних за NA
+df <- df %>% drop_na()
 
 # Вибір топ-8 counties за середнім AQI
 counties <- df %>%
@@ -29,106 +46,131 @@ counties <- df %>%
 counties <- counties$county
 
 # Фільтрування даних за обраними counties
-df_counties <- df %>% subset(county %in% counties)
+df <- df %>% subset(county %in% counties)
 
-# Використання відфільтрованих даних для аналізу
-data <- df_counties
+# Додавання колонки windspeed^2
+df$windspeed2 <- df$windspeed^2
 
-print(paste("Загальна кількість спостережень:", nrow(data)))
-print(paste("Кількість унікальних counties:", length(unique(data$county))))
-print(paste("Кількість унікальних sitename:", length(unique(data$sitename))))
-print("Топ-8 counties за AQI:")
+cat("Загальна кількість спостережень:", nrow(df), "\n")
+cat("Кількість унікальних counties:", length(unique(df$county)), "\n")
+cat("Кількість унікальних sitename:", length(unique(df$sitename)), "\n")
+cat("Топ-8 counties за AQI:\n")
 print(counties)
-
 ```
 
-## Підготовка даних для моделювання
-
+## Розділення на навчальну і тестову вибірки
 ```{r}
-# Видалення NA значень та підготовка факторних змінних
-model_data <- data %>%
-  filter(!is.na(aqi), !is.na(windspeed), !is.na(after_reform)) %>%
-  mutate(
-    sitename = as.factor(sitename),
-    county = as.factor(county),
-    after_reform = as.factor(after_reform)
-  )
+# Встановлення seed для відтворюваності
+set.seed(123)
 
-# Для великих датасетів можна взяти вибірку для швидшого обчислення
-if(nrow(model_data) > 10000) {
-  cat("Використовуємо випадкову вибірку з", min(10000, nrow(model_data)), "спостережень для швидшого обчислення\n")
-  model_data <- model_data[sample(nrow(model_data), min(10000, nrow(model_data))), ]
-}
+# Обираємо частину рядків у випадковому порядку
+df_smol <- sample_n(df, 10000)
+# df_smol <- sample_n(df, nrow(df))
 
-cat("Розмір даних для моделювання:", nrow(model_data), "спостережень\n")
+# Ділимо на навчальну і тестову частини
+bound <- floor(nrow(df_smol) * 0.7)
+df_train <- df_smol[1:bound, ]
+df_test <- df_smol[(bound+1):nrow(df_smol), ]
 ```
 
-# МОДЕЛЬ 2: ЧАСТКОВО ЛІНІЙНА РЕГРЕСІЯ
+## Оцінка моделі
 ```{r}
-cat("\n--- Модель 2: З контролем after_reform ---\n")
+# Частково лінійна модель:
+#   Параметрично: reform_days, windspeed, windspeed^2
+#   Непараметрично: jul_days
 
-# Частково лінійна модель: windspeed непараметрично, after_reform лінійно
-model_plr2 <- gam(aqi ~ s(windspeed, bs = "cr") + after_reform, 
-                  data = model_data, method = "REML")
+bw <- npplregbw(
+  aqi ~ reform_days + windspeed + windspeed2 | jul_days,
+  data = df_train, regtype = "ll")
 
-summary(model_plr2)
+model_nppl <- npplreg(bw)
+
+summary(model_nppl)
+
+save(model_nppl, file = here("data", "models", "model_nppl.rda"))
 ```
 
-```{r}
-cat("\n--- Модель 3: З фіксованими ефектами county ---\n")
-
-model_plr3 <- gam(aqi ~ s(windspeed, bs = "cr") + after_reform + county, 
-                  data = model_data, method = "REML")
-
-summary(model_plr3)
-```
-
-# МОДЕЛЬ 2: З контролем після реформи (частково лінійна)
+## Побудова графіків
 ```{r}
 # Функція для створення графіка непараметричної залежності
-create_nonparam_plot <- function(model, var_name, title_suffix = "") {
-  # Створення сітки значень для прогнозування
-  var_range <- range(model_data[[var_name]], na.rm = TRUE)
-  new_data <- model_data[1, ]  # Базове спостереження
+create_nonparam_plot <- function(data_train, data_test, x_name, y_name, model_nppl) {
   
-  # Фіксуємо інші змінні на медіанних/модальних значеннях
-  for (col in names(new_data)) {
-    if (col != var_name && is.numeric(new_data[[col]])) {
-      new_data[[col]] <- median(model_data[[col]], na.rm = TRUE)
-    } else if (col != var_name && is.factor(new_data[[col]])) {
-      new_data[[col]] <- names(sort(table(model_data[[col]]), decreasing = TRUE))[1]
+  # Фіксуємо інші змінні на медіанних значеннях
+  data_test_fixed <- data_test %>% arrange(!!sym(x_name))
+  for (col in names(data_test)) {
+    if (col == x_name || col == y_name) next
+    if (is.numeric(data_test[[col]])) {
+      data_test_fixed[[col]] <- median(data_test[[col]], na.rm = TRUE)
+    } else if (is.factor(data_test[[col]])) {
+      data_test_fixed[[col]] <- names(sort(table(data_test[[col]]), decreasing = TRUE))[1]
     }
   }
   
-  # Створення сітки для змінної інтересу
-  grid_values <- seq(var_range[1], var_range[2], length.out = 100)
-  pred_data <- do.call(rbind, lapply(grid_values, function(x) {
-    temp_data <- new_data
-    temp_data[[var_name]] <- x
-    temp_data
-  }))
-  
-  # Прогнозування
-  pred <- predict(model, pred_data, se.fit = TRUE)
+  # Перетворимо Y = Z*b + m(X) на Y - Z*b = m(X), тобто врахуємо параметричну частину моделі в її лівій частині.
+  data_train_sub <- data_train
+  for (col in names(data_test)) {
+    if (col == x_name || col == y_name) next
+    if (!(col %in% names(model_nppl$xcoef))) next
+    data_train_sub[[y_name]] = data_train_sub[[y_name]] - model_nppl$xcoef[col] * data_train_sub[[col]]
+  }
+
+  # Здійснимо непараметричну частину регресії
+  formula <- as.formula(paste(y_name, "~", x_name))
+  bw <- npregbw(formula, data = data_train_sub, regtype = "ll")
+  model_np <- npreg(bw)
+  pred <- predict(model_np, newdata = data_test_fixed, se.fit = TRUE)
   
   # Створення DataFrame для графіка
   plot_data <- data.frame(
-    x = grid_values,
-    fit = pred$fit,
-    se = pred$se.fit,
-    lower = pred$fit - 1.96 * pred$se.fit,
-    upper = pred$fit + 1.96 * pred$se.fit
+    x = data_test_fixed[[x_name]],
+    y_real = data_test_fixed[[y_name]],
+    y_fit = pred$fit,
+    ci_l = pred$fit - qnorm(0.975) * pred$se.fit,
+    ci_u = pred$fit + qnorm(0.975) * pred$se.fit
   )
-  
+
   # Створення графіка
-  ggplot(plot_data, aes(x = x, y = fit)) +
-    geom_line(color = "blue", size = 1) +
-    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.3, fill = "blue") +
-    geom_point(data = model_data, aes_string(x = var_name, y = "AQI"), 
-               alpha = 0.3, size = 0.5) +
-    labs(title = paste("Непараметрична залежність AQI від", var_name, title_suffix),
-         x = var_name,
-         y = "AQI") +
-    theme_minimal()
+  ggplot(plot_data, aes(x = x, y = y_real)) +
+    geom_point(alpha=0.1, size=2) +
+    geom_line(aes(x = x, y = y_fit), color = "blue", size = 1) +
+    geom_ribbon(aes(ymin = ci_l, ymax = ci_u), fill = "blue", alpha = 0.3) +
+    labs(title = "Частково лінійна модель", x = x_name, y = "AQI")
 }
+```
+
+```{r}
+load(here("data", "models", "model_nppl.rda"))
+p <- create_nonparam_plot(df_train, df_test, "jul_days", "aqi", model_nppl)
+
+ggsave(
+    here("plots","lab4", "nppl.png"),
+    p,
+    width = 15,
+    height = 10,
+    bg = "white")
+```
+
+## Таблиці
+```{r}
+nppl_to_modelsummary_compatible <- function(model_nppl) {
+  model_nppl_ti <- tibble(term = names(model_nppl$xcoef),
+                          estimate = model_nppl$xcoef,
+                          std.error = model_nppl$xcoeferr,
+                          p.value = 2*pnorm(-abs(estimate/std.error)))
+  model_nppl_gl <- data.frame(Num.Obs. = model_nppl$nobs)
+  mod_nppl <- list(tidy = model_nppl_ti, glance = model_nppl_gl)
+  class(mod_nppl) <- "modelsummary_list"
+  return(mod_nppl)
+}
+```
+
+```{r}
+load(here("data", "models", "model_nppl.rda"))
+modelsummary(
+  list("1" = nppl_to_modelsummary_compatible(model_nppl)),
+  stars = TRUE,
+  output = 'latex',
+  gof_omit = "^(?!Num\\.Obs\\.)",
+  fmt = 6
+)
 ```
