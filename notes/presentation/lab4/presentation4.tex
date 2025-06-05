@@ -1,4 +1,4 @@
-﻿\documentclass{beamer}
+\documentclass{beamer}
 
 
 \usepackage[utf8]{inputenc}   % Підтримка UTF-8
@@ -17,6 +17,7 @@
 \usepackage{xcolor}
 \usepackage{multicol} % Для багатостовпчикового тексту
 
+\usepackage{moresize} % Для додаткових опцій розміру тексту 
 \usepackage{tabularray}
 \usepackage{float}
 \usepackage{codehigh}
@@ -86,7 +87,7 @@
 \begin{frame}
   \frametitle{Питання для дослідження}
   Як реформа покращення якості повітря вплинула на якість повітря,
-  враховуючи можливі нелінійні залежності та взаємодії між факторами?
+  враховуючи можливі нелінійні залежності?
 \end{frame}
 
 % Описати, чи використовується той самий агрегований (по днях, медіани) датасет, що і в ЛР3.
@@ -96,13 +97,13 @@
   \begin{itemize}
     \item \textbf{Дані:} агреговані по днях з використанням медіанних значень для зменшення впливу викидів та шуму в погодинних даних.
     \item \textbf{Цільова змінна:} AQI (Air Quality Index).
-    \item \textbf{Основні регресори для непараметричного аналізу:}
+    \item \textbf{Основні регресори:}
         \begin{itemize}
             \item \texttt{reform\_days}: кількість днів з моменту початку реформи (для оцінки впливу реформи).
-            \item \texttt{windspeed}: швидкість вітру (для дослідження нелінійного впливу погодних умов).
-            \item \texttt{july\_days}: кількість днів з початку липня (для врахування сезонності).
+            \item \texttt{windspeed}: швидкість вітру (для дослідження впливу погодних умов).
+            \item \texttt{jul\_days}: кількість днів з початку липня (для врахування сезонності).
         \end{itemize}
-    \item \textbf{Розбиття датасету:} на тренувальний та тестовий (80\%/20\%) для оцінки якості моделей.
+    \item \textbf{Розбиття датасету:} на тренувальний та тестовий (70\%/30\%) для оцінки якості моделей.
   \end{itemize}
 \end{frame}
 
@@ -163,23 +164,113 @@
 
 \begin{frame}
   \frametitle{Розподіл регресорів}
+  
+  Непараметричні:
+  
+  \begin{itemize}
+    \item \texttt{jul\_days}: кількість днів до найближчого 1-го липня.
+  \end{itemize}
+  
+  Параметричні:
+  \begin{itemize}
+    \item \texttt{reform\_days}: кількість днів з початку реформи.
+    \item \texttt{windspeed}: швидкість вітру в м/с.
+    \item \texttt{county}\footnotemark: регіон, у якому проводилося вимірювання.
+  \end{itemize}
+  
+  \footnotetext[1]{Відсутня в моделі 2.1, наявна в моделі 2.2}
 
 \end{frame}
 
 \begin{frame}
   \frametitle{Оцінка регресорів}
 
-   \begin{center}
-    \includegraphics[height=2.8in]{plots/lab4/nppl.png}
-  \end{center}
+  \begin{table}
+  \centering
+  \begin{talltblr}[         %% tabularray outer open
+  entry=none,label=none,
+  note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+  ]                     %% tabularray outer close
+  {                     %% tabularray inner open
+  colspec={Q[]Q[]Q[]},
+  column{2,3}={}{halign=c,},
+  column{1}={}{halign=l,},
+  hline{22}={1,2,3}{solid, black, 0.05em},
+  }                     %% tabularray inner close
+  \toprule
+  & nppl (2.1) & nppl (2.2) \\ \midrule %% TinyTableHeader
+  reform\_days & \num{-0.009989}*** & \num{-0.010092}*** \\
+  & (\num{0.000342}) & (\num{0.000342}) \\
+  windspeed & \num{-2.758367}*** & \num{-3.229516}*** \\
+  & (\num{0.255418}) & (\num{0.281014}) \\
+  Num.Obs. & 7000 & 7000 \\
+  R2 & 0.479709 & 0.485264 \\
+  RMSE & 23.287205 & 23.110408 \\
+  \bottomrule
+  \end{talltblr}
+  \end{table} 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Оцінка регресорів}
+  
+  \begin{ssmall}
+  
+  \begin{table}
+  \centering
+  \begin{talltblr}[         %% tabularray outer open
+  entry=none,label=none,
+  note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+  ]                     %% tabularray outer close
+  {                     %% tabularray inner open
+  colspec={Q[]Q[]Q[]},
+  column{2,3}={}{halign=c,},
+  column{1}={}{halign=l,},
+  hline{22}={1,2,3}{solid, black, 0.05em},
+  }                     %% tabularray inner close
+  \toprule
+  & nppl (2.1) & nppl (2.2) \\ \midrule %% TinyTableHeader
+  Kaohsiung\_City &  & \num{7.409501} \\
+  &  & (\num{61.460824}) \\
+  Chiayi\_City &  & \num{4.498697} \\
+  &  & (\num{61.470944}) \\
+  Kinmen\_County &  & \num{10.172092} \\
+  &  & (\num{61.484341}) \\
+  Lienchiang\_County &  & \num{4.879358} \\
+  &  & (\num{61.496276}) \\
+  Chiayi\_County &  & \num{4.051747} \\
+  &  & (\num{61.465913}) \\
+  Yunlin\_County &  & \num{7.979392} \\
+  &  & (\num{61.464152}) \\
+  Tainan\_City &  & \num{4.716426} \\
+  &  & (\num{61.471446}) \\
+  Nantou\_County &  & \num{0.239960} \\
+  &  & (\num{61.458835}) \\
+  \bottomrule
+  \end{talltblr}
+  \end{table} 
+  
+  \end{ssmall}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Оцінка регресорів}
+
+   \begin{center}
+    \includegraphics[height=2.8in]{plots/lab4/partial_linear/nppl_vs_lin.png}
+  \end{center}
+\end{frame}
 
 \begin{frame}
   \section{Аналіз головних компонент}
 
   \frametitle{Зміст}
   \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+\frametitle{Аналіз головних компонент(Scree plot)}
+  \includegraphics[height=2.8in]{plots/lab4/pca/scree.png}
 \end{frame}
 
 \begin{frame}
@@ -198,11 +289,6 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Аналіз головних компонент(Scree plot)}
-  \includegraphics[height=2.8in]{plots/lab4/pca/scree.png}
-\end{frame}
-
-\begin{frame}
   \section{Порівняня результатів}
 
   \frametitle{Зміст}
@@ -211,7 +297,39 @@
 
 \begin{frame}
   \frametitle{Порівняння ЛР3 (параметрична) та ЛР4 (непараметрична)}
+
+  \begin{ssmall}
+
+  \begin{table}
+  \centering
+  \begin{talltblr}[         %% tabularray outer open
+  entry=none,label=none,
+  note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+  ]                     %% tabularray outer close
+  {                     %% tabularray inner open
+  colspec={Q[]Q[]Q[]Q[]Q[]},
+  column{2,3,4,5}={}{halign=c,},
+  column{1}={}{halign=l,},
+  hline{26}={1,2,3,4,5}{solid, black, 0.05em},
+  }                     %% tabularray inner close
+  \toprule
+  & lin & np (1) & nppl (2.1) & nppl (2.2) \\ \midrule %% TinyTableHeader
+  reform\_days & \num{-0.010081}*** &  & \num{-0.009989}*** & \num{-0.010092}*** \\
+  & (\num{0.000770}) &  & (\num{0.000342}) & (\num{0.000342}) \\
+  jul\_days & \num{0.755704}*** &  &  &  \\
+  & (\num{0.022698}) &  &  &  \\
+  I(jul\_days\textasciicircum{}2) & \num{-0.002156}*** &  &  &  \\
+  & (\num{0.000249}) &  &  &  \\
+  windspeed & \num{-3.155031}*** &  & \num{-2.758367}*** & \num{-3.229516}*** \\
+  & (\num{0.431494}) &  & (\num{0.255418}) & (\num{0.281014}) \\
+  Num.Obs. & \num{7000} & 7000 & 7000 & 7000 \\
+  R2 & \num{0.469} & 0.413244 & 0.479709 & 0.485264 \\
+  RMSE & \num{23.22} & 24.720406 & 23.287205 & 23.110408 \\
+  \bottomrule
+  \end{talltblr}
+  \end{table} 
   
+  \end{ssmall}
 \end{frame}
 
 \begin{frame}

@@ -1,15 +1,12 @@
 ```{r}
+library(tidyverse)
 library(np)           # Непараметрична регресія
 library(KernSmooth)   # Ядрова регресія
-library(mgcv)         # GAM моделі
-library(ggplot2)      # Графіки
-library(dplyr)        # Обробка даних
 library(gridExtra)    # Компонування графіків
 library(reshape2)     # Перетворення даних
-library(corrplot)     # Кореляційні графіки
 library(here)         # Для шляхів до файлів
-library(fixest)
-library(lmtest)
+library(fixest)       # Для FEOLS
+library(modelsummary) # Для оцінки якості
 
 theme_set(
   theme_minimal() +
@@ -136,16 +133,27 @@ if (file.exists(model_path)) {
 summary(model_nppl)
 ```
 
+### Завантаження попередніх моделей для порівняння
+```{r}
+load(file.path(models_path, "model_np_jul_days.rda"))
+model_lin <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + windspeed | county, data = df_train)
+```
+
 ## Побудова графіків
 ```{r}
 # Функція для створення графіка непараметричної залежності
-create_nonparam_plot <- function(data_train, data_test, x_name, y_name, model_nppl) {
+create_nonparam_plot <- function(
+    data_train, data_test, x_name, y_name, model_nppl, plot=NULL) {
   
   # Фіксуємо інші змінні на медіанних значеннях
   data_test_fixed <- data_test %>% arrange(!!sym(x_name))
   for (col in names(data_test)) {
-    if (col == x_name || col == y_name || !is.numeric(data_test[[col]])) next
-    data_test_fixed[[col]] <- median(data_test[[col]], na.rm = TRUE)
+    if (col == x_name || col == y_name) next
+    if (is.numeric(data_test[[col]])) {
+      data_test_fixed[[col]] <- median(data_test[[col]], na.rm = TRUE)
+    } else if (is.factor(data_test[[col]])) {
+      data_test_fixed[[col]] <- names(sort(table(data_test[[col]]), decreasing = TRUE))[1]
+    }
   }
   
   # Перетворимо Y = Z*b + m(X) на Y - Z*b = m(X), тобто врахуємо параметричну частину моделі в її лівій частині.
@@ -172,27 +180,37 @@ create_nonparam_plot <- function(data_train, data_test, x_name, y_name, model_np
   )
 
   # Створення графіка
-  ggplot(plot_data, aes(x = x, y = y_real)) +
-    geom_point(alpha=0.1, size=2) +
-    geom_line(aes(x = x, y = y_fit), color = "blue", size = 1) +
-    geom_ribbon(aes(ymin = ci_l, ymax = ci_u), fill = "blue", alpha = 0.3) +
-    labs(title = "Частково лінійна модель", x = x_name, y = "AQI")
+  if (is.null(plot)) {
+    # Лінійна модель для порівняння
+    pred_lin <- predict(model_lin, data_test_fixed)
+    
+    # Повертає базовий графік з лінійною і NPPL моделями
+    ggplot(plot_data, aes(x = x, y = y_real)) +
+      geom_point(alpha=0.1, size=2) +
+      geom_line(aes(y = pred_lin), color = "red", linewidth=1.25) +
+      geom_line(aes(y = y_fit), color = "blue", size = 1) +
+      geom_ribbon(aes(ymin = ci_l, ymax = ci_u), fill = "blue", alpha = 0.3) +
+      labs(title = "NPPL моделі 2.1 (зелена) і 2.2 (блакитна) VS лінійна (червона)", x = x_name, y = "AQI")
+  } else {
+    # Повертає попередній графік + графік для ще однієї NPPL моделі
+    plot + 
+      geom_line(aes(y = plot_data$y_fit), color = "green", size = 1) +
+      geom_ribbon(
+        aes(ymin = plot_data$ci_l, ymax = plot_data$ci_u),
+        fill = "green", alpha = 0.2)
+  }
 }
 ```
 
 ```{r}
 p <- create_nonparam_plot(df_train, df_test, "jul_days", "aqi", model_nppl)
+p <- create_nonparam_plot(df_train, df_test, "jul_days", "aqi", model_nppl_short, p)
 
-ggsave(file.path(plots_path, "nppl.png"), p,
+ggsave(file.path(plots_path, "nppl_vs_lin.png"), p,
        width = 15, height = 10, bg = "white")
 ```
 
 ## Таблиці
-### Завантаження попередніх моделей для порівняння
-```{r}
-load(file.path(models_path, "model_np_jul_days.rda"))
-model_lin <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + windspeed | county, data = df_train)
-```
 
 ### Функція для обчислення метрик
 ```{r}
