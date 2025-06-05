@@ -8,6 +8,8 @@ library(gridExtra)    # Компонування графіків
 library(reshape2)     # Перетворення даних
 library(corrplot)     # Кореляційні графіки
 library(here)         # Для шляхів до файлів
+library(fixest)
+library(lmtest)
 
 theme_set(
   theme_minimal() +
@@ -21,9 +23,14 @@ theme_set(
 )
 
 # Створення папки для збереження результатів
-output_path <- here("data", "models")
-if (!dir.exists(output_path)) {
-  dir.create(output_path, recursive = TRUE)
+models_path <- here("data", "models")
+if (!dir.exists(models_path)) {
+  dir.create(models_path, recursive = TRUE)
+}
+
+plots_path <- here("plots", "lab4", "partial_linear")
+if (!dir.exists(plots_path)) {
+  dir.create(plots_path, recursive = TRUE)
 }
 ```
 
@@ -48,8 +55,11 @@ counties <- counties$county
 # Фільтрування даних за обраними counties
 df <- df %>% subset(county %in% counties)
 
-# Додавання колонки windspeed^2
-df$windspeed2 <- df$windspeed^2
+# Перетворення факторної змінної county на фіктивні змінні (дорівнюють 0 або 1)
+county_names <- gsub(" ", "_", as.character(counties))  # Замінити пробіли на _
+for (i in seq_along(counties)) {
+  df[[county_names[i]]] <- as.numeric(df$county == counties[i])
+}
 
 cat("Загальна кількість спостережень:", nrow(df), "\n")
 cat("Кількість унікальних counties:", length(unique(df$county)), "\n")
@@ -75,19 +85,55 @@ df_test <- df_smol[(bound+1):nrow(df_smol), ]
 
 ## Оцінка моделі
 ```{r}
-# Частково лінійна модель:
-#   Параметрично: reform_days, windspeed, windspeed^2
-#   Непараметрично: jul_days
+# R - найкраща мова, тому сконструюємо формулу, щоб її скопіювати і вставити вручну:
 
-bw <- npplregbw(
-  aqi ~ reform_days + windspeed + windspeed2 | jul_days,
-  data = df_train, regtype = "ll")
+p_terms <- paste(c("reform_days", "windspeed", county_names), collapse = " + ")
+np_terms <- paste(c("jul_days"), collapse = " + ")
 
-model_nppl <- npplreg(bw)
+print(as.formula(paste("aqi ~", p_terms, "|", np_terms)))
+```
+
+```{r}
+model_path <- file.path(models_path, "model_nppl.rda")
+
+# Якщо є збережені моделі, завантажити їх з файлу
+if (file.exists(model_path)) {
+  cat("Завантаження з файлу:", model_path, "\n")
+  load(model_path)
+# Інакше, оцінити їх заново (~12 хв) і зберегти в файл
+} else {
+  cat("2.1 Частково лінійна Надарая-Вотсона (константна)...\n")
+  
+  # Частково лінійна модель:
+  #   Параметрично: reform_days, windspeed
+  #   Непараметрично: jul_days
+  
+  bw_nppl_short <- npplregbw(
+    aqi ~ reform_days + windspeed | jul_days,
+    data = df_train,
+    regtype = "lc",
+    ckertype = "gaussian")
+  model_nppl_short <- npplreg(bw_nppl_short)
+  
+  cat("2.2 Частково лінійна Надарая-Вотсона (константна)...\n")
+  
+  # Частково лінійна модель:
+  #   Параметрично: reform_days, windspeed, county
+  #   Непараметрично: jul_days
+  
+  bw_nppl <- npplregbw(
+    aqi ~ reform_days + windspeed + Kaohsiung_City + Chiayi_City +
+    Kinmen_County + Lienchiang_County + Chiayi_County + Yunlin_County +
+    Tainan_City + Nantou_County | jul_days,
+    data = df_train,
+    regtype = "lc",
+    ckertype = "gaussian")
+  model_nppl <- npplreg(bw_nppl)
+
+  save(bw_nppl, model_nppl, bw_nppl_short, model_nppl_short, file = model_path)
+}
 
 summary(model_nppl)
-
-save(model_nppl, file = here("data", "models", "model_nppl.rda"))
 ```
 
 ## Побудова графіків
@@ -98,20 +144,16 @@ create_nonparam_plot <- function(data_train, data_test, x_name, y_name, model_np
   # Фіксуємо інші змінні на медіанних значеннях
   data_test_fixed <- data_test %>% arrange(!!sym(x_name))
   for (col in names(data_test)) {
-    if (col == x_name || col == y_name) next
-    if (is.numeric(data_test[[col]])) {
-      data_test_fixed[[col]] <- median(data_test[[col]], na.rm = TRUE)
-    } else if (is.factor(data_test[[col]])) {
-      data_test_fixed[[col]] <- names(sort(table(data_test[[col]]), decreasing = TRUE))[1]
-    }
+    if (col == x_name || col == y_name || !is.numeric(data_test[[col]])) next
+    data_test_fixed[[col]] <- median(data_test[[col]], na.rm = TRUE)
   }
   
   # Перетворимо Y = Z*b + m(X) на Y - Z*b = m(X), тобто врахуємо параметричну частину моделі в її лівій частині.
   data_train_sub <- data_train
-  for (col in names(data_test)) {
-    if (col == x_name || col == y_name) next
-    if (!(col %in% names(model_nppl$xcoef))) next
-    data_train_sub[[y_name]] = data_train_sub[[y_name]] - model_nppl$xcoef[col] * data_train_sub[[col]]
+  for (col in names(model_nppl$xcoef)) {
+    z <- data_train_sub[[col]]
+    b <- model_nppl$xcoef[col]
+    data_train_sub[[y_name]] <- data_train_sub[[y_name]] - z * b
   }
 
   # Здійснимо непараметричну частину регресії
@@ -139,38 +181,115 @@ create_nonparam_plot <- function(data_train, data_test, x_name, y_name, model_np
 ```
 
 ```{r}
-load(here("data", "models", "model_nppl.rda"))
 p <- create_nonparam_plot(df_train, df_test, "jul_days", "aqi", model_nppl)
 
-ggsave(
-    here("plots","lab4", "nppl.png"),
-    p,
-    width = 15,
-    height = 10,
-    bg = "white")
+ggsave(file.path(plots_path, "nppl.png"), p,
+       width = 15, height = 10, bg = "white")
 ```
 
 ## Таблиці
+### Завантаження попередніх моделей для порівняння
 ```{r}
-nppl_to_modelsummary_compatible <- function(model_nppl) {
-  model_nppl_ti <- tibble(term = names(model_nppl$xcoef),
-                          estimate = model_nppl$xcoef,
-                          std.error = model_nppl$xcoeferr,
-                          p.value = 2*pnorm(-abs(estimate/std.error)))
-  model_nppl_gl <- data.frame(Num.Obs. = model_nppl$nobs)
+load(file.path(models_path, "model_np_jul_days.rda"))
+model_lin <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + windspeed | county, data = df_train)
+```
+
+### Функція для обчислення метрик
+```{r}
+calculate_metrics <- function(model, train_data, test_data) {
+  pred_train <- predict(model, newdata = train_data)
+  pred_test <- predict(model, newdata = test_data)
+  
+  list(
+    rmse_train = sqrt(mean((train_data$aqi - pred_train)^2, na.rm = TRUE)),
+    rmse_test = sqrt(mean((test_data$aqi - pred_test)^2, na.rm = TRUE)),
+    mae_test = mean(abs(test_data$aqi - pred_test), na.rm = TRUE),
+    r_squared = if(!is.null(model$R2)) model$R2 else NA
+  )
+}
+
+# Обчислення метрик для всіх моделей
+metrics_np <- calculate_metrics(model_np_jul_days, df_train, df_test)
+metrics_nppl <- calculate_metrics(model_nppl, df_train, df_test)
+metrics_nppl_short <- calculate_metrics(model_nppl_short, df_train, df_test)
+```
+
+### Функція для використання в modelsummary
+```{r}
+nppl_to_modelsummary_compatible <- function(model_nppl, metrics) {
+  model_nppl_ti <- tibble(
+    term = names(model_nppl$xcoef),
+    estimate = model_nppl$xcoef,
+    std.error = model_nppl$xcoeferr,
+    p.value = 2*pnorm(-abs(estimate/std.error)))
+  
+  model_nppl_gl <- data.frame(
+    Num.Obs. = model_nppl$nobs,
+    R2 = round(metrics$r_squared, 6),
+    RMSE = round(metrics$rmse_test, 6))
+  
   mod_nppl <- list(tidy = model_nppl_ti, glance = model_nppl_gl)
   class(mod_nppl) <- "modelsummary_list"
   return(mod_nppl)
 }
+
+create_npreg_summary <- function(model, bw_obj, metrics, method_name) {
+  model_tidy <- tibble(
+    term = paste(method_name, "(непараметрично)"),
+    estimate = NA_real_,
+    std.error = NA_real_,
+    p.value = NA_real_
+  )
+  
+  model_glance <- data.frame(
+    Num.Obs. = model$nobs,
+    R2 = round(metrics$r_squared, 6),
+    RMSE = round(metrics$rmse_test, 6)
+  )
+  
+  mod_list <- list(tidy = model_tidy, glance = model_glance)
+  class(mod_list) <- "modelsummary_list"
+  return(mod_list)
+}
 ```
 
+### Таблиця по nppl
 ```{r}
-load(here("data", "models", "model_nppl.rda"))
 modelsummary(
-  list("1" = nppl_to_modelsummary_compatible(model_nppl)),
+  list(
+    "nppl (2.1)" = nppl_to_modelsummary_compatible(model_nppl_short, metrics_nppl_short),
+    "nppl (2.2)" = nppl_to_modelsummary_compatible(model_nppl, metrics_nppl)
+  ),
   stars = TRUE,
   output = 'latex',
-  gof_omit = "^(?!Num\\.Obs\\.)",
+  gof_omit = "^(?!Num\\.Obs\\.|R2$|RMSE$)",
+  fmt = 6
+)
+```
+
+### Порівняльна таблиця
+
+Порівняємо лінійну модель з лаб 3, непараметричну модель (1) та частково лінійні моделі без врахування county (2.1) і з ним (2.2).
+
+Коефіцієнти біля reform_days і windspeed майже не змінюються, що свідчить про стійкість.
+
+У моделі np відсутні лінійні коефіцієнти, тому що вона повністю параметрична.
+
+Похибка (RMSE) залишається приблизно на рівні 23.2, отже, використання непараметричної регресії не сильно покращило результат (з 23.22 RMSE зменшилось до 23.11). Проте, можна припустити, що якщо обробити весь датасет, не обмежуючись 10К рядками, різниця буде більшою.
+
+(З цієї таблиці можна прибрати рядки, що відповідають county, і заллишити їх тільки в попередній)
+
+```{r}
+modelsummary(
+  list(
+    "lin" = model_lin,
+    "np (1)" = create_npreg_summary(model_np_jul_days, bw_np_jul_days, metrics_np, "NW"),
+    "nppl (2.1)" = nppl_to_modelsummary_compatible(model_nppl_short, metrics_nppl_short),
+    "nppl (2.2)" = nppl_to_modelsummary_compatible(model_nppl, metrics_nppl)
+  ),
+  stars = TRUE,
+  output = 'latex',
+  gof_omit = "^(?!Num\\.Obs\\.|R2$|RMSE$)",
   fmt = 6
 )
 ```
