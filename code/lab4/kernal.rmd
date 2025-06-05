@@ -9,6 +9,8 @@ library(latex2exp)   # Для LaTeX в підписах графіків
 library(modelsummary) # Для таблиць
 library(viridis)
 library(gridExtra)
+library(knitr)
+library(kableExtra)
 
 theme_set(
   theme_minimal() +
@@ -27,8 +29,8 @@ if (!dir.exists(output_path)) {
 }
 
 plots_path <- here("plots", "lab4","kernal")
-if (!dir.exists(output_path)) {
-  dir.create(output_path, recursive = TRUE)
+if (!dir.exists(plots_path)) {
+  dir.create(plots_path, recursive = TRUE)
 }
 
 set.seed(123)
@@ -94,17 +96,10 @@ ggsave(file.path(plots_path, "seasonal_change_median_line.png"),
 ```
 
 ```{r}
-cat("\n--- Оцінка моделі (AQI ~ jul_days) ---\n")
-model_path <- file.path(output_path, "model_np_jul_days.rda")
-```
-
-```{r}
-cat("1. Надарая-Вотсона (константна)...\n")
+cat("1. Надарая-Вотсона...\n")
 bw_nw <- npregbw(aqi ~ jul_days, data = df_train, regtype = "lc", ckertype = "gaussian")
 model_nw <- npreg(bw_nw)
-```
 
-```{r}
 cat("2. Локально лінійна...\n")
 bw_ll <- npregbw(aqi ~ jul_days, data = df_train, regtype = "ll", ckertype = "gaussian")
 model_ll <- npreg(bw_ll)
@@ -149,12 +144,11 @@ metrics_ll <- calculate_metrics(model_ll, df_train, df_test)
 ## Порівняльна таблиця результатів
 ```{r}
 cat("\n--- Порівняльна таблиця ---\n")
-
 results_table <- data.frame(
   Метод = c("Надарая-Вотсона", "Локально лінійна"),
   Тип = c("Константна (LC)", "Лінійна (LL)"),
   Bandwidth = c(round(bw_nw$bw, 4), round(bw_ll$bw, 4)),
-  R_squared = c(round(metrics_nw$r_squared, 4), 
+  R_squared = c(round(metrics_nw$r_squared, 4),
                 round(metrics_ll$r_squared, 4)),
   RMSE_train = c(round(metrics_nw$rmse_train, 3),
                  round(metrics_ll$rmse_train, 3)),
@@ -164,7 +158,14 @@ results_table <- data.frame(
                round(metrics_ll$mae_test, 3))
 )
 
-print(results_table)
+latex_table_1 <- kable(results_table, 
+                       format = "latex", 
+                       booktabs = TRUE,
+                       caption = "Порівняння методів ядерної регресії",
+                       col.names = c("Метод", "Тип", "Bandwidth (h)", 
+                                   "R²", "RMSE (навч.)", "RMSE (тест)", "MAE (тест)"))
+
+cat(latex_table_1)
 ```
 
 # Функція для modelsummary
@@ -200,139 +201,56 @@ model_summaries <- list(
 
 modelsummary(
   model_summaries,
-  output = 'markdown',
+  output = 'latex',
   gof_omit = "^(?!Num\\.Obs\\.|R\\.squared|Bandwidth|RMSE|MAE)",
   fmt = 4,
   title = "Порівняння методів непараметричної регресії"
 )
 ```
 
-## Графік порівняння bandwidth
-```{r}
-bw_comparison <- data.frame(
-  Method = c("Надарая-Вотсона", "Локально лінійна"),
-  Bandwidth = c(bw_nw$bw, bw_ll$bw),
-  RMSE_test = c(metrics_nw$rmse_test, metrics_ll$rmse_test)
-)
-
-p_bw <- ggplot(bw_comparison, aes(x = Bandwidth, y = RMSE_test, color = Method)) +
-  geom_point(size = 4) +
-  geom_text(aes(label = Method), hjust = -0.1, vjust = 0.5) +
-  labs(title = "Bandwidth vs RMSE для різних методів",
-       x = "Bandwidth (h)", y = "RMSE (тест)") +
-  theme(legend.position = "none")
-
-ggsave(file.path(plots_path, "bandwidth_comparison.png"),
-       p_bw, width = 10, height = 6, bg = "white")
-
-print(p_bw)
-
-# Збереження моделей
-save(model_nw, bw_nw, model_ll, bw_ll, 
-     file = file.path(output_path, "npreg_models_comparison.rda"))
-```
-
 # Побудова графіка для моделі 
 ```{r}
 load(file.path(output_path, "npreg_models_comparison.rda"))
 
-# Функція для створення простої візуалізації ядерної регресії
-create_simple_regression_plot <- function(df_data, model, title, x_col, y_col) {
-  
-  x_range <- range(df_data[[x_col]], na.rm = TRUE)
-  x_seq <- seq(x_range[1], x_range[2], length.out = 300)
-  
-  newdata <- data.frame(x_seq)
-  names(newdata) <- x_col
-  smooth_pred <- predict(model, newdata = newdata)
-  
-  ggplot() +
-    geom_point(data = df_data, 
-               aes_string(x = x_col, y = y_col), 
-               color = "gray60", alpha = 0.5, size = 0.8) +
-    geom_line(data = data.frame(x = x_seq, y = smooth_pred),
-              aes(x = x, y = y),
-              color = "#0066CC", size = 2) +
-    labs(title = title,
-         x = x_col, 
-         y = y_col) +
-    theme_minimal() +
-    theme(
-      plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-      axis.title = element_text(size = 12),
-      axis.text = element_text(size = 10),
-      panel.grid.minor = element_blank(),
-      panel.background = element_rect(fill = "white", color = NA),
-      plot.background = element_rect(fill = "white", color = NA)
-    )
-}
+x_col_plot <- "jul_days"  
+y_col_plot <- "aqi"   
+df_all_plot <- rbind(df_train, df_test)
 
-x_col <- "jul_days"  
-y_col <- "aqi"  
+x_range_plot <- range(df_all_plot[[x_col_plot]], na.rm = TRUE)
+x_seq_plot <- seq(x_range_plot[1], x_range_plot[2], length.out = 300)
+plot_newdata <- setNames(data.frame(x_seq_plot), x_col_plot) 
 
-df_all <- rbind(df_train, df_test)
+nw_pred_plot <- predict(model_nw, newdata = plot_newdata)
+ll_pred_plot <- predict(model_ll, newdata = plot_newdata)
 
-plot_nw <- create_simple_regression_plot(
-  df_all, model_nw, 
-  paste("Ядерна регресія Надарая-Вотсона (h =", round(bw_nw, 4), ")"),
-  x_col, y_col
-)
+pred_df_nw <- data.frame(x_values = x_seq_plot, y_values = nw_pred_plot, 
+                         method = paste0("Надарая-Вотсона (h=", round(bw_nw$bw, 3), ")"))
+pred_df_ll <- data.frame(x_values = x_seq_plot, y_values = ll_pred_plot, 
+                         method = paste0("Локально лінійна (h=", round(bw_ll$bw, 3), ")"))
+pred_df_combined <- rbind(pred_df_nw, pred_df_ll)
 
-plot_ll <- create_simple_regression_plot(
-  df_all, model_ll,
-  paste("Локально лінійна регресія (h =", round(bw_ll, 4), ")"),
-  x_col, y_col
-)
-
-comparison_plot <- ggplot() +
-  geom_point(data = df_all, 
-             aes_string(x = x_col, y = y_col), 
-             color = "gray60", alpha = 0.5, size = 0.8) +
-  { x_range <- range(df_all[[x_col]], na.rm = TRUE)
-    x_seq <- seq(x_range[1], x_range[2], length.out = 300)
-    
-    newdata <- data.frame(x_seq)
-    names(newdata) <- x_col
-    nw_pred <- predict(model_nw, newdata = newdata)
-    ll_pred <- predict(model_ll, newdata = newdata)
-    list(
-      geom_line(data = data.frame(x = x_seq, y = nw_pred),
-                aes(x = x, y = y, color = "Надарая-Вотсона"),
-                size = 2),
-      geom_line(data = data.frame(x = x_seq, y = ll_pred),
-                aes(x = x, y = y, color = "Локально лінійна"),
-                size = 2))
-  } + scale_color_manual(
-    name = "Метод",
-    values = c("Надарая-Вотсона" = "blue", 
-               "Локально лінійна" = "red")) +
-  labs(title = "Порівняння методів ядерної регресії",
-       x = x_col, y = y_col) +
-  
+comparison_regression_plot <- ggplot(df_all_plot, aes(x = .data[[x_col_plot]], y = .data[[y_col_plot]])) +
+  geom_point(color = "gray70", alpha = 0.4, size = 0.9) +
+  geom_line(data = pred_df_combined, aes(x = x_values, y = y_values, color = method), linewidth = 1.5) +
+  scale_color_manual(
+    name = "Метод регресії (ширина вікна h):",
+    values = setNames(c("#0072B2", "#D55E00"), 
+                      c(pred_df_nw$method[1], pred_df_ll$method[1])) # Динамічне присвоєння назв для кольорів
+  ) +
+  labs(title = paste("Порівняння методів ядерної регресії: AQI від", x_col_plot))
   theme_minimal() +
+  base_regression_theme_elements +
   theme(
-    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
-    axis.title = element_text(size = 12),
-    axis.text = element_text(size = 10),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(b = 20)),
     legend.position = "bottom",
-    legend.title = element_text(size = 12),
+    legend.title = element_text(size = 11, face = "bold"),
     legend.text = element_text(size = 10),
-    panel.grid.minor = element_blank(),
-    panel.background = element_rect(fill = "white", color = NA),
-    plot.background = element_rect(fill = "white", color = NA)
+    legend.background = element_rect(fill="white", color = "grey80"),
+    legend.margin = margin(t = 10, unit = "pt")
   )
 
-ggsave(file.path(plots_path, "npreg_comparison.png"),
-       comparison_plot, width = 12, height = 8, bg = "white", dpi = 300)
+ggsave(file.path(plots_path, "npreg_comparison_final.png"),
+       comparison_regression_plot, width = 12, height = 8, bg = "white", dpi = 300)
 
-#print(plot_nw)
-#print(plot_ll)
-#print(comparison_plot)
 ```
 
-```{r}
-cat("Найкращий метод за RMSE:", 
-    results_table$Метод[which.min(results_table$RMSE_test)], "\n")
-cat("Найкращий метод за R²:", 
-    results_table$Метод[which.max(results_table$R_squared)], "\n")
-```
