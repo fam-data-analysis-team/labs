@@ -1,199 +1,338 @@
 ```{r}
-library(np)           # Непараметрична регресія
-library(KernSmooth)   # Ядрова регресія
-library(mgcv)         # GAM моделі
-library(ggplot2)      # Графіки
-library(dplyr)        # Обробка даних
-library(gridExtra)    # Компонування графіків
-library(reshape2)     # Перетворення даних
-library(corrplot)     # Кореляційні графіки
-library(here)         # Для шляхів до файлів
+library(tidyverse)
+library(np)          # Для непараметричної регресії
+library(ggplot2)     # Графіки
+library(dplyr)       # Обробка даних
+library(here)        # Для шляхів до файлів
+library(lubridate)   # Для роботи з датами
+library(latex2exp)   # Для LaTeX в підписах графіків
+library(modelsummary) # Для таблиць
+library(viridis)
+library(gridExtra)
 
-# Встановлення seed для відтворюваності
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    panel.spacing = unit(2, "lines")
+  )
+)
+
+output_path <- here("data", "models")
+if (!dir.exists(output_path)) {
+  dir.create(output_path, recursive = TRUE)
+}
+
+plots_path <- here("plots", "lab4","kernal")
+if (!dir.exists(output_path)) {
+  dir.create(output_path, recursive = TRUE)
+}
+
 set.seed(123)
 ```
 
 ```{r}
-# Завантаження даних
-df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
-df$year <- as.numeric(format(df$date, '%Y'))
+df <- readRDS(here("data", "processed", "model_df.rds"))
 
-# Вибір топ-8 counties за середнім AQI
+# Фільтрування та відбір топ-8 counties
+df <- df %>% drop_na()
+
 counties <- df %>%
   group_by(county) %>%
-  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
-  ungroup() %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE), .groups = 'drop') %>%
   arrange(desc(aqi)) %>%
-  head(n = 8)
+  head(n = 8) %>%
+  pull(county)
 
-counties <- counties$county
+df <- df %>% 
+  filter(county %in% counties) %>%
+  mutate(county = as.factor(county),
+         sitename = as.factor(sitename))
 
-# Фільтрування даних за обраними counties
-df_counties <- df %>% subset(county %in% counties)
-
-# Використання відфільтрованих даних для аналізу
-data <- df_counties
-
-print(paste("Загальна кількість спостережень:", nrow(data)))
-print(paste("Кількість унікальних counties:", length(unique(data$county))))
-print(paste("Кількість унікальних sitename:", length(unique(data$sitename))))
-print("Топ-8 counties за AQI:")
+cat("Загальна кількість спостережень:", nrow(df), "\n")
+cat("Топ-8 counties за AQI:\n")
 print(counties)
 
 ```
 
 ## Підготовка даних для моделювання
+```{r}
+cat("\n--- Розділення на навчальну і тестову вибірки ---\n")
+df_smol <- sample_n(df, min(nrow(df), 10000))
+
+bound <- floor(nrow(df_smol) * 0.7)
+df_train <- df_smol[1:bound, ]
+df_test <- df_smol[(bound+1):nrow(df_smol), ]
+
+cat("Розмір навчальної вибірки:", nrow(df_train), "\n")
+cat("Розмір тестової вибірки:", nrow(df_test), "\n")
+```
+
+## Сезонна динаміка AQI
+```{r}
+df_seasonal <- df %>%
+  mutate(month = lubridate::month(date, label = TRUE)) %>% 
+  mutate(aqi_median = median(aqi, na.rm = TRUE), .by = month)
+
+seasonal_plot <- df_seasonal %>% 
+  ggplot(aes(x = month, y = aqi, fill = aqi_median)) +
+  geom_boxplot(aes(fill = aqi_median), alpha = 0.7, outlier.shape = NA) +
+  geom_line(data = df_seasonal, aes(x = month, y = aqi_median, group = 1),
+            color = "red", linewidth = 1.2) +
+  geom_point(data = df_seasonal, aes(x = month, y = aqi_median),
+             color = "red", size = 2.5) +
+  labs(title = "Розподіл AQI по місяцях", x = "Місяць", y = "AQI") + 
+  scale_fill_viridis(option = "viridis", name = "Медіана", direction = -1)
+
+print(seasonal_plot)
+
+ggsave(file.path(plots_path, "seasonal_change_median_line.png"),
+       seasonal_plot, bg = "white", width = 15, height = 10)
+```
 
 ```{r}
-# Видалення NA значень та підготовка факторних змінних
-model_data <- data %>%
-  filter(!is.na(aqi), !is.na(windspeed), !is.na(after_reform)) %>%
-  mutate(
-    sitename = as.factor(sitename),
-    county = as.factor(county),
-    after_reform = as.factor(after_reform)
-  )
+cat("\n--- Оцінка моделі (AQI ~ jul_days) ---\n")
+model_path <- file.path(output_path, "model_np_jul_days.rda")
+```
 
-# Для великих датасетів можна взяти вибірку для швидшого обчислення
-if(nrow(model_data) > 10000) {
-  cat("Використовуємо випадкову вибірку з", min(10000, nrow(model_data)), "спостережень для швидшого обчислення\n")
-  model_data <- model_data[sample(nrow(model_data), min(10000, nrow(model_data))), ]
+```{r}
+cat("1. Надарая-Вотсона (константна)...\n")
+bw_nw <- npregbw(aqi ~ jul_days, data = df_train, regtype = "lc", ckertype = "gaussian")
+model_nw <- npreg(bw_nw)
+```
+
+```{r}
+cat("2. Локально лінійна...\n")
+bw_ll <- npregbw(aqi ~ jul_days, data = df_train, regtype = "ll", ckertype = "gaussian")
+model_ll <- npreg(bw_ll)
+```
+
+```{r}
+if (file.exists(model_path)) {
+  load(model_path)
+} else {
+  bw_np_jul_days <- npregbw(aqi ~ jul_days, 
+                            data = df_train, 
+                            regtype = "lc", 
+                            ckertype = "gaussian")
+  model_np_jul_days <- npreg(bw_np_jul_days)
+  save(model_np_jul_days, bw_np_jul_days, file = model_path)
 }
 
-cat("Розмір даних для моделювання:", nrow(model_data), "спостережень\n")
+print(summary(model_np_jul_days))
+cat("Оптимальна ширина вікна h:", bw_np_jul_days$bw, "\n")
 ```
 
-# 4.1.1 НЕПАРАМЕТРИЧНА РЕГРЕСІЯ
-## Модель 1: залежність від швидкості вітру (windspeed) непараметрично
+## Функція для обчислення метрик
 ```{r}
-cat("\n--- Модель 1: Базова (windspeed непараметрично) ---\n")
-
-# Nadaraya-Watson оцінка
-bw_nw <- npregbw(aqi ~ windspeed, data = model_data, regtype = "lc")
-model_nw1 <- npreg(bw_nw)
-
-# Локальна лінійна регресія
-bw_ll <- npregbw(aqi ~ windspeed, data = model_data, regtype = "ll")
-model_ll1 <- npreg(bw_ll)
-
-cat("Nadaraya-Watson bandwidth:", bw_nw$bw, "\n")
-cat("Local Linear bandwidth:", bw_ll$bw, "\n")
-
-cat("Nadaraya-Watson bandwidth:", summary(bw_nw), "\n")
-cat("Local Linear bandwidth:", summary(bw_ll), "\n")
-```
-
-## Модель 1: залежність від швидкості вітру (windspeed) непараметрично
-```{r}
-cat("\n--- Модель 2: Базова (after-reform непараметрично) ---\n")
-
-# Nadaraya-Watson оцінка
-bw_nw <- npregbw(aqi ~ after_reform, data = model_data, regtype = "lc")
-model_nw1 <- npreg(bw_nw)
-
-# Локальна лінійна регресія
-bw_ll <- npregbw(aqi ~ after_reform, data = model_data, regtype = "ll")
-model_ll1 <- npreg(bw_ll)
-
-cat("Nadaraya-Watson bandwidth:", bw_nw$bw, "\n")
-cat("Local Linear bandwidth:", bw_ll$bw, "\n")
-
-cat("Nadaraya-Watson bandwidth:", summary(bw_nw), "\n")
-cat("Local Linear bandwidth:", summary(bw_ll), "\n")
-```
-
-
-```{r}
-# Багатовимірна ядрова регресія (всі змінні непараметрично)
-bw_multi <- npregbw(aqi ~ windspeed + after_reform, data = model_data, regtype = "ll")
-model_multi <- npreg(bw_multi)
-
-cat("Багатовимірна ядрова R-squared:", model_multi$R2, "\n")
-print(bw_multi$bw)
-```
-
-```{r}
-# 1. Створення сітки значень для прогнозування
-windspeed_grid <- with(model_data, data.frame(windspeed = seq(min(windspeed, na.rm = TRUE),
-                                                              max(windspeed, na.rm = TRUE),
-                                                              length.out = 200)))
-
-# 2. Отримання прогнозів від моделей
-aqi_pred_nw1_raw <- predict(model_nw1, newdata = windspeed_grid)
-aqi_pred_ll1_raw <- predict(model_ll1, newdata = windspeed_grid)
-aqi_pred_nw1 <- as.vector(aqi_pred_nw1_raw)
-aqi_pred_ll1 <- as.vector(aqi_pred_ll1_raw)
-
-# 3. Підготовка даних для ggplot2 з ІЛЮСТРАТИВНИМИ довірчими інтервалами
-
-# Для моделі Надарай-Ватсон (model_nw1)
-# Розрахунок залишків на оригінальних даних для оцінки масштабу помилки
-residuals_nw1 <- model_data$AQI - predict(model_nw1, newdata = model_data[, "windspeed", drop = FALSE])
-sd_res_nw1 <- sd(residuals_nw1, na.rm = TRUE)
-
-plot_df_nw1 <- data.frame(
-  windspeed = windspeed_grid$windspeed,
-  AQI_fit = aqi_pred_nw1,
-
-  ymin = aqi_pred_nw1 - sd_res_nw1,
-  ymax = aqi_pred_nw1 + sd_res_nw1,
-  model_type = "Надарай-Ватсон "
-)
-# AQI зазвичай невід'ємний
-plot_df_nw1$ymin <- pmax(0, plot_df_nw1$ymin)
-
-# Для моделі Локальної лінійної регресії (model_ll1)
-residuals_ll1 <- model_data$AQI - predict(model_ll1, newdata = model_data[, "windspeed", drop = FALSE])
-sd_res_ll1 <- sd(residuals_ll1, na.rm = TRUE)
-
-plot_df_ll1 <- data.frame(
-  windspeed = windspeed_grid$windspeed,
-  AQI_fit = aqi_pred_ll1,
-
-  ymin = aqi_pred_ll1 - sd_res_ll1,
-  ymax = aqi_pred_ll1 + sd_res_ll1,
-  model_type = "Локальна лінійна (м1)"
-)
-plot_df_ll1$ymin <- pmax(0, plot_df_ll1$ymin)
-
-
-combined_plot_data_styled <- rbind(plot_df_nw1, plot_df_ll1)
-
-color_local_linear_styled <- "tomato"
-color_nadaraya_watson_styled <- "darkturquoise"
-
-ggplot(combined_plot_data_styled, aes(x = windspeed, group = model_type)) +
-  geom_line(aes(y = AQI_fit, color = model_type), linewidth = 0.8) +
-  geom_ribbon(aes(ymin = ymin, ymax = ymax, fill = model_type), alpha = 0.25, show.legend = FALSE) +
-  scale_x_continuous(name = "Швидкість вітру (windspeed)") +
-  scale_y_continuous(name = "AQI") + 
-  scale_color_manual(
-    name = "Оцінка",
-    values = c("Локальна лінійна (м1)" = color_local_linear_styled,
-               "Надарай-Ватсон (м1)" = color_nadaraya_watson_styled)
-  ) +
-  scale_fill_manual(
-    name = "Оцінка",
-    values = c("Локальна лінійна (м1)" = color_local_linear_styled,
-               "Надарай-Ватсон (м1)" = color_nadaraya_watson_styled)
-  ) +
-  labs(title = "Залежність AQI від швидкості вітру") + 
-  theme_bw() +
-  theme(
-    plot.title = element_text(hjust = 0, face = "bold", size = 10), 
-    axis.title = element_text(face = "bold"),
-    legend.title = element_text(face = "bold"),
-    legend.position = "right", 
-    panel.grid.major = element_line(colour = "grey90"),
-    panel.grid.minor = element_blank()
+calculate_metrics <- function(model, train_data, test_data) {
+  pred_train <- predict(model, newdata = train_data)
+  pred_test <- predict(model, newdata = test_data)
+  
+  list(
+    rmse_train = sqrt(mean((train_data$aqi - pred_train)^2, na.rm = TRUE)),
+    rmse_test = sqrt(mean((test_data$aqi - pred_test)^2, na.rm = TRUE)),
+    mae_test = mean(abs(test_data$aqi - pred_test), na.rm = TRUE),
+    r_squared = if(!is.null(model$R2)) model$R2 else NA
   )
+}
+
+# Обчислення метрик для всіх моделей
+metrics_nw <- calculate_metrics(model_nw, df_train, df_test)
+metrics_ll <- calculate_metrics(model_ll, df_train, df_test)
+
 ```
 
+## Порівняльна таблиця результатів
+```{r}
+cat("\n--- Порівняльна таблиця ---\n")
 
+results_table <- data.frame(
+  Метод = c("Надарая-Вотсона", "Локально лінійна"),
+  Тип = c("Константна (LC)", "Лінійна (LL)"),
+  Bandwidth = c(round(bw_nw$bw, 4), round(bw_ll$bw, 4)),
+  R_squared = c(round(metrics_nw$r_squared, 4), 
+                round(metrics_ll$r_squared, 4)),
+  RMSE_train = c(round(metrics_nw$rmse_train, 3),
+                 round(metrics_ll$rmse_train, 3)),
+  RMSE_test = c(round(metrics_nw$rmse_test, 3),
+                round(metrics_ll$rmse_test, 3)),
+  MAE_test = c(round(metrics_nw$mae_test, 3),
+               round(metrics_ll$mae_test, 3))
+)
 
+print(results_table)
+```
 
+# Функція для modelsummary
+```{r}
+create_npreg_summary <- function(model, bw_obj, metrics, method_name) {
+  model_tidy <- tibble(
+    term = paste(method_name, "(непараметрично)"),
+    estimate = NA_real_,
+    std.error = NA_real_,
+    p.value = NA_real_
+  )
+  
+  model_glance <- data.frame(
+    Num.Obs. = length(model$eval),
+    R.squared = metrics$r_squared,
+    Bandwidth = bw_obj$bw,
+    RMSE.test = metrics$rmse_test,
+    MAE.test = metrics$mae_test
+  )
+  
+  mod_list <- list(tidy = model_tidy, glance = model_glance)
+  class(mod_list) <- "modelsummary_list"
+  return(mod_list)
+}
+```
 
+```{r}
+# Створення об'єднаної таблиці для modelsummary
+model_summaries <- list(
+  "Надарая-Вотсона" = create_npreg_summary(model_nw, bw_nw, metrics_nw, "NW"),
+  "Локально лінійна" = create_npreg_summary(model_ll, bw_ll, metrics_ll, "LL")
+)
 
+modelsummary(
+  model_summaries,
+  output = 'markdown',
+  gof_omit = "^(?!Num\\.Obs\\.|R\\.squared|Bandwidth|RMSE|MAE)",
+  fmt = 4,
+  title = "Порівняння методів непараметричної регресії"
+)
+```
 
+## Графік порівняння bandwidth
+```{r}
+bw_comparison <- data.frame(
+  Method = c("Надарая-Вотсона", "Локально лінійна"),
+  Bandwidth = c(bw_nw$bw, bw_ll$bw),
+  RMSE_test = c(metrics_nw$rmse_test, metrics_ll$rmse_test)
+)
 
+p_bw <- ggplot(bw_comparison, aes(x = Bandwidth, y = RMSE_test, color = Method)) +
+  geom_point(size = 4) +
+  geom_text(aes(label = Method), hjust = -0.1, vjust = 0.5) +
+  labs(title = "Bandwidth vs RMSE для різних методів",
+       x = "Bandwidth (h)", y = "RMSE (тест)") +
+  theme(legend.position = "none")
 
+ggsave(file.path(plots_path, "bandwidth_comparison.png"),
+       p_bw, width = 10, height = 6, bg = "white")
+
+print(p_bw)
+
+# Збереження моделей
+save(model_nw, bw_nw, model_ll, bw_ll, 
+     file = file.path(output_path, "npreg_models_comparison.rda"))
+```
+
+# Побудова графіка для моделі 
+```{r}
+load(file.path(output_path, "npreg_models_comparison.rda"))
+
+# Функція для створення простої візуалізації ядерної регресії
+create_simple_regression_plot <- function(df_data, model, title, x_col, y_col) {
+  
+  x_range <- range(df_data[[x_col]], na.rm = TRUE)
+  x_seq <- seq(x_range[1], x_range[2], length.out = 300)
+  
+  newdata <- data.frame(x_seq)
+  names(newdata) <- x_col
+  smooth_pred <- predict(model, newdata = newdata)
+  
+  ggplot() +
+    geom_point(data = df_data, 
+               aes_string(x = x_col, y = y_col), 
+               color = "gray60", alpha = 0.5, size = 0.8) +
+    geom_line(data = data.frame(x = x_seq, y = smooth_pred),
+              aes(x = x, y = y),
+              color = "#0066CC", size = 2) +
+    labs(title = title,
+         x = x_col, 
+         y = y_col) +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+      axis.title = element_text(size = 12),
+      axis.text = element_text(size = 10),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", color = NA),
+      plot.background = element_rect(fill = "white", color = NA)
+    )
+}
+
+x_col <- "jul_days"  
+y_col <- "aqi"  
+
+df_all <- rbind(df_train, df_test)
+
+plot_nw <- create_simple_regression_plot(
+  df_all, model_nw, 
+  paste("Ядерна регресія Надарая-Вотсона (h =", round(bw_nw, 4), ")"),
+  x_col, y_col
+)
+
+plot_ll <- create_simple_regression_plot(
+  df_all, model_ll,
+  paste("Локально лінійна регресія (h =", round(bw_ll, 4), ")"),
+  x_col, y_col
+)
+
+comparison_plot <- ggplot() +
+  geom_point(data = df_all, 
+             aes_string(x = x_col, y = y_col), 
+             color = "gray60", alpha = 0.5, size = 0.8) +
+  { x_range <- range(df_all[[x_col]], na.rm = TRUE)
+    x_seq <- seq(x_range[1], x_range[2], length.out = 300)
+    
+    newdata <- data.frame(x_seq)
+    names(newdata) <- x_col
+    nw_pred <- predict(model_nw, newdata = newdata)
+    ll_pred <- predict(model_ll, newdata = newdata)
+    list(
+      geom_line(data = data.frame(x = x_seq, y = nw_pred),
+                aes(x = x, y = y, color = "Надарая-Вотсона"),
+                size = 2),
+      geom_line(data = data.frame(x = x_seq, y = ll_pred),
+                aes(x = x, y = y, color = "Локально лінійна"),
+                size = 2))
+  } + scale_color_manual(
+    name = "Метод",
+    values = c("Надарая-Вотсона" = "blue", 
+               "Локально лінійна" = "red")) +
+  labs(title = "Порівняння методів ядерної регресії",
+       x = x_col, y = y_col) +
+  
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10),
+    legend.position = "bottom",
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+
+ggsave(file.path(plots_path, "npreg_comparison.png"),
+       comparison_plot, width = 12, height = 8, bg = "white", dpi = 300)
+
+#print(plot_nw)
+#print(plot_ll)
+#print(comparison_plot)
+```
+
+```{r}
+cat("Найкращий метод за RMSE:", 
+    results_table$Метод[which.min(results_table$RMSE_test)], "\n")
+cat("Найкращий метод за R²:", 
+    results_table$Метод[which.max(results_table$R_squared)], "\n")
+```
