@@ -110,6 +110,22 @@ if (file.exists(model_path)) {
 summary(model_nppl_ar)
 ```
 
+## Графіки
+```{r}
+# df_fixed <- df %>% mutate(windspeed = median(windspeed))
+# pred <- predict(model_nppl_ar, newdata = df_fixed, se.fit = FALSE)
+
+p <- ggplot(df_fixed, aes(x = reform_days, y = aqi)) +
+  geom_point() +
+  geom_line(aes(y = pred), color = "green", linewidth=1) +
+  geom_vline(xintercept = 0, color = "red", linewidth=1.25) +
+  facet_wrap(~county, ncol = 4) +
+  labs(x = "Днів з початку реформи", y = "AQI")
+
+ggsave(file.path(plots_path, "nppl_w_after_reform.png"), p,
+       width = 15, height = 10, bg = "white")
+```
+
 ## Таблиці
 
 ### Функція для обчислення метрик
