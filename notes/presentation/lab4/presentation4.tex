@@ -1,4 +1,4 @@
-\documentclass{beamer}
+﻿\documentclass{beamer}
 
 
 \usepackage[utf8]{inputenc}   % Підтримка UTF-8
@@ -16,6 +16,7 @@
 \usepackage{csquotes}
 \usepackage{xcolor}
 \usepackage{multicol} % Для багатостовпчикового тексту
+\usepackage{caption}
 
 \usepackage{moresize} % Для додаткових опцій розміру тексту 
 \usepackage{tabularray}
@@ -135,6 +136,32 @@
   %\end{itemize}
 \end{frame}
 
+%\begin{frame}
+%  \frametitle{Ядрова регресія}
+%  
+%  \begin{center}
+%    \includegraphics[height=2.8in]{plots/lab4/kernal/npreg_comparison_final_final.png}
+%  \end{center}
+% 
+%  %\begin{itemize}
+%  %  \item \textbf{Локальна поліноміальна регресія (Local Polynomial Regression):}
+%  %  Узагальнення оцінки Надарая-Вотсона. Замість локального усереднення $Y_i$, вона апроксимує функцію регресії $m(x)$ локальним поліномом степеня $p$.
+%  %  Для локально-лінійної регресії ($p=1$), оцінка $\hat{\beta}_0$ в точці $x$ є оцінкою $m(x)$:
+%  %  $$ (\hat{\beta}_0, \hat{\beta}_1) = \arg\min_{\beta_0, \beta_1} \sum_{i=1}^{n} \left(Y_i - \beta_0 - \beta_1(X_i - x)\right)^2 K_h(X_i - x) $$
+%  %  Тоді $\hat{m}_h(x) = \hat{\beta}_0$.
+%  %  Локальні поліноми вищих порядків можуть краще адаптуватися до кривизни функції та зменшувати зміщення на границях.
+%  %\end{itemize}
+%\end{frame}
+
+\begin{frame}
+  \frametitle{Ядрова регресія}
+  
+  \begin{center}
+    \includegraphics[height=2.8in]{plots/lab4/kernal/npreg_comparison_final_10.png}
+  \end{center}
+ 
+\end{frame}
+
 \begin{frame}
   \frametitle{Ядрова регресія}
   
@@ -142,29 +169,41 @@
     \includegraphics[height=2.8in]{plots/lab4/kernal/npreg_comparison_final.png}
   \end{center}
  
-  %\begin{itemize}
-  %  \item \textbf{Локальна поліноміальна регресія (Local Polynomial Regression):}
-  %  Узагальнення оцінки Надарая-Вотсона. Замість локального усереднення $Y_i$, вона апроксимує функцію регресії $m(x)$ локальним поліномом степеня $p$.
-  %  Для локально-лінійної регресії ($p=1$), оцінка $\hat{\beta}_0$ в точці $x$ є оцінкою $m(x)$:
-  %  $$ (\hat{\beta}_0, \hat{\beta}_1) = \arg\min_{\beta_0, \beta_1} \sum_{i=1}^{n} \left(Y_i - \beta_0 - \beta_1(X_i - x)\right)^2 K_h(X_i - x) $$
-  %  Тоді $\hat{m}_h(x) = \hat{\beta}_0$.
-  %  Локальні поліноми вищих порядків можуть краще адаптуватися до кривизни функції та зменшувати зміщення на границях.
-  %\end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Оцінка моделі}
-  \resizebox{\textwidth}{!}{ 
-    \begin{tabular}{llrrrrr}
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{l l r r r r r}
       \toprule
-    Метод & Тип & Bandwidth & R\_squared & RMSE\_train & RMSE\_test & MAE\_test \\
+      Розмір вибірки & Метод & Bandwidth (h) & $R^2$ & RMSE (навч.) & RMSE (тест) & MAE (тест) \\
+      \midrule 
+      10 тис. & Надарая-Вотсона & 1.0499 & 0.4094 & 24.369 & 24.706 & 19.112 \\
+      10 тис. & Локально лінійна & 1.0346 & 0.4096 & 24.364 & 24.709 & 19.117 \\
       \midrule
-    Надарая-Вотсона & Константна (LC) & 1.83 & 0.41 & 24.52 & 24.57 & 19.08 \\
-      Локально лінійна & Лінійна (LL) & 1.94 & 0.41 & 24.53 & 24.58 & 19.08 \\
+      40 тис. & Надарая-Вотсона & 0.6874 & 0.4103 & 24.375 & 24.670 & 19.087 \\
+      40 тис. & Локально лінійна & 0.6887 & 0.4103 & 24.375 & 24.670 & 19.087 \\
       \bottomrule
-    \end{tabular}
+    \end{tabular}%
   }
 \end{frame}
+
+\begin{frame}
+  \frametitle{Підсумок моделі}
+  \begin{columns}[T] 
+  \begin{column}{0.48\textwidth} 
+  \includegraphics[width=\textwidth]{plots/lab4/kernal/10.jpg}
+  \captionof{figure}{Summary 10 тисяч}
+  \end{column}
+  \hfill
+  \begin{column}{0.48\textwidth} 
+  \includegraphics[width=\textwidth]{plots/lab4/kernal/40.jpg}
+  \captionof{figure}{Summary 40 тисяч}
+  \end{column}
+  \end{columns}
+ 
+\end{frame}
+
 
 \begin{frame}
   \frametitle{Висновок}
@@ -172,7 +211,6 @@
     \item Обидві моделі показали майже однакову якість за всіма метриками. 
     \item $ R^2 = 0.41 $ вказує на те, що моделі мають обмежену здатність пояснювати варіацію у даних.
     \item Вибір між ними може залежати не стільки від якості, скільки від стійкості до шуму чи переваг у теоретичних властивостях.
-    Локально-лінійна модель зазвичай краще працює на краях діапазону або коли дані мають локальну зміну тренду.
   \end{itemize}
 \end{frame}
 
@@ -349,8 +387,6 @@
   \begin{itemize}
     \item Виявили ключові фактори, що визначають якість повітря,
      звівши складний набір даних до двох основних вимірів.
-    \item  Перша головна компонента представляє "загальне забруднення" від спалювання (PM, NOx, CO),
-     яке сильно зростає при низькій швидкості вітру.
     \item Результати показують, що забруднювачі від транспорту/промисловості(домішки) діють спільно,
      а швидкість вітру є вирішальним фактором їх розсіювання.
   \end{itemize}

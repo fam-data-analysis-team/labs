@@ -63,7 +63,7 @@ print(counties)
 ## Підготовка даних для моделювання
 ```{r}
 cat("\n--- Розділення на навчальну і тестову вибірки ---\n")
-df_smol <- sample_n(df, min(nrow(df), 10000))
+df_smol <- sample_n(df, min(nrow(df), 40000))
 
 bound <- floor(nrow(df_smol) * 0.7)
 df_train <- df_smol[1:bound, ]
@@ -106,19 +106,11 @@ model_ll <- npreg(bw_ll)
 ```
 
 ```{r}
-if (file.exists(model_path)) {
-  load(model_path)
-} else {
-  bw_np_jul_days <- npregbw(aqi ~ jul_days, 
-                            data = df_train, 
-                            regtype = "lc", 
-                            ckertype = "gaussian")
-  model_np_jul_days <- npreg(bw_np_jul_days)
-  save(model_np_jul_days, bw_np_jul_days, file = model_path)
-}
+cat("1. Надарая-Вотсона...\n")
+summary(model_nw)
 
-print(summary(model_np_jul_days))
-cat("Оптимальна ширина вікна h:", bw_np_jul_days$bw, "\n")
+cat("2. Локально лінійна...\n")
+summary(model_ll)
 ```
 
 ## Функція для обчислення метрик
@@ -161,7 +153,7 @@ results_table <- data.frame(
 latex_table_1 <- kable(results_table, 
                        format = "latex", 
                        booktabs = TRUE,
-                       caption = "Порівняння методів ядерної регресії",
+                       caption = "Порівняння методів ядрової регресії",
                        col.names = c("Метод", "Тип", "Bandwidth (h)", 
                                    "R²", "RMSE (навч.)", "RMSE (тест)", "MAE (тест)"))
 
@@ -170,22 +162,20 @@ cat(latex_table_1)
 
 # Функція для modelsummary
 ```{r}
-create_npreg_summary <- function(model, bw_obj, metrics, method_name) {
+create_npreg_summary <- function(model, bw_obj, metrics, method_name_short) {
   model_tidy <- tibble(
-    term = paste(method_name, "(непараметрично)"),
+    term = paste(method_name_short, "(непараметрично)"),
     estimate = NA_real_,
-    std.error = NA_real_,
-    p.value = NA_real_
+     std.error = NA_real_,
+      p.value = NA_real_
   )
-  
   model_glance <- data.frame(
-    Num.Obs. = length(model$eval),
-    R.squared = metrics$r_squared,
+    Num.Obs.Train = length(model$eval),
+    R.squared = metrics$r_squared, 
     Bandwidth = bw_obj$bw,
     RMSE.test = metrics$rmse_test,
     MAE.test = metrics$mae_test
   )
-  
   mod_list <- list(tidy = model_tidy, glance = model_glance)
   class(mod_list) <- "modelsummary_list"
   return(mod_list)
@@ -194,23 +184,32 @@ create_npreg_summary <- function(model, bw_obj, metrics, method_name) {
 
 ```{r}
 # Створення об'єднаної таблиці для modelsummary
-model_summaries <- list(
-  "Надарая-Вотсона" = create_npreg_summary(model_nw, bw_nw, metrics_nw, "NW"),
-  "Локально лінійна" = create_npreg_summary(model_ll, bw_ll, metrics_ll, "LL")
+model_summaries_list <- list(
+  "Надарая-Вотсона (NW)" = create_npreg_summary(model_nw, bw_nw, metrics_nw, "NW"),
+  "Локально лінійна (LL)" = create_npreg_summary(model_ll, bw_ll, metrics_ll, "LL")
 )
 
 modelsummary(
-  model_summaries,
-  output = 'latex',
-  gof_omit = "^(?!Num\\.Obs\\.|R\\.squared|Bandwidth|RMSE|MAE)",
-  fmt = 4,
-  title = "Порівняння методів непараметричної регресії"
+  model_summaries_list, output = 'markdown',
+  gof_map = list(
+    list("raw" = "Num.Obs.Train", "clean" = "Спостереження (навч.)", "fmt" = 0),
+    list("raw" = "Bandwidth", "clean" = "Ширина вікна (h)", "fmt" = 4),
+    list("raw" = "R.squared", "clean" = "R-квадрат (розрах.)", "fmt" = 4),
+    list("raw" = "RMSE.test", "clean" = "RMSE (тест)", "fmt" = 3),
+    list("raw" = "MAE.test", "clean" = "MAE (тест)", "fmt" = 3)
+  ),
+  title = "Порівняння методів непараметричної регресії (AQI ~ jul_days)"
 )
+```
+
+```{r}
+save(model_nw, bw_nw, model_ll, bw_ll, metrics_nw, metrics_ll, file = file.path(output_path, "npreg_models_comparison_final_40.rda"))
+
 ```
 
 # Побудова графіка для моделі 
 ```{r}
-load(file.path(output_path, "npreg_models_comparison.rda"))
+load(file.path(output_path, "npreg_models_comparison_final.rda"))
 
 x_col_plot <- "jul_days"  
 y_col_plot <- "aqi"   
@@ -237,7 +236,7 @@ comparison_regression_plot <- ggplot(df_all_plot, aes(x = .data[[x_col_plot]], y
     values = setNames(c("#0072B2", "#D55E00"), 
                       c(pred_df_nw$method[1], pred_df_ll$method[1])) # Динамічне присвоєння назв для кольорів
   ) +
-  labs(title = paste("Порівняння методів ядерної регресії: AQI від", x_col_plot))
+  labs(title = paste("Порівняння методів ядрової регресії: AQI від", x_col_plot))
   theme_minimal() +
   base_regression_theme_elements +
   theme(
@@ -249,7 +248,7 @@ comparison_regression_plot <- ggplot(df_all_plot, aes(x = .data[[x_col_plot]], y
     legend.margin = margin(t = 10, unit = "pt")
   )
 
-ggsave(file.path(plots_path, "npreg_comparison_final.png"),
+ggsave(file.path(plots_path, "npreg_comparison_final_final.png"),
        comparison_regression_plot, width = 12, height = 8, bg = "white", dpi = 300)
 
 ```
