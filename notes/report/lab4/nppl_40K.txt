@@ -1,0 +1,40 @@
+\begin{table}
+\centering
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]},
+column{2,3}={}{halign=c,},
+column{1}={}{halign=l,},
+hline{22}={1,2,3}{solid, black, 0.05em},
+}                     %% tabularray inner close
+\toprule
+& nppl (2.1) & nppl (2.2) \\ \midrule %% TinyTableHeader
+reform\_days & \num{-0.009674}*** & \num{-0.009785}*** \\
+& (\num{0.000171}) & (\num{0.000170}) \\
+windspeed & \num{-2.879123}*** & \num{-3.331529}*** \\
+& (\num{0.124990}) & (\num{0.137090}) \\
+Kaohsiung\_City &  & \num{0.027682} \\
+&  & (\num{68.812162}) \\
+Chiayi\_City &  & \num{-0.795015} \\
+&  & (\num{68.810613}) \\
+Kinmen\_County &  & \num{2.500518} \\
+&  & (\num{68.815175}) \\
+Lienchiang\_County &  & \num{0.112811} \\
+&  & (\num{68.816008}) \\
+Chiayi\_County &  & \num{-3.632232} \\
+&  & (\num{68.817228}) \\
+Yunlin\_County &  & \num{-0.412974} \\
+&  & (\num{68.811072}) \\
+Tainan\_City &  & \num{-3.125755} \\
+&  & (\num{68.813605}) \\
+Nantou\_County &  & \num{-7.831008} \\
+&  & (\num{68.811485}) \\
+Num.Obs. & 28000 & 28000 \\
+R2 & 0.475586 & 0.48199 \\
+RMSE & 23.242617 & 23.099704 \\
+\bottomrule
+\end{talltblr}
+\end{table}
