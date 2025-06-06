@@ -166,8 +166,8 @@ create_npreg_summary <- function(model, bw_obj, metrics, method_name_short) {
   model_tidy <- tibble(
     term = paste(method_name_short, "(непараметрично)"),
     estimate = NA_real_,
-     std.error = NA_real_,
-      p.value = NA_real_
+    std.error = NA_real_,
+    p.value = NA_real_
   )
   model_glance <- data.frame(
     Num.Obs.Train = length(model$eval),
@@ -209,7 +209,7 @@ save(model_nw, bw_nw, model_ll, bw_ll, metrics_nw, metrics_ll, file = file.path(
 
 # Побудова графіка для моделі 
 ```{r}
-load(file.path(output_path, "npreg_models_comparison_final.rda"))
+load(file.path(output_path, "npreg_models_comparison_final_40.rda"))
 
 x_col_plot <- "jul_days"  
 y_col_plot <- "aqi"   
@@ -248,7 +248,7 @@ comparison_regression_plot <- ggplot(df_all_plot, aes(x = .data[[x_col_plot]], y
     legend.margin = margin(t = 10, unit = "pt")
   )
 
-ggsave(file.path(plots_path, "npreg_comparison_final_final.png"),
+ggsave(file.path(plots_path, "npreg_comparison_final_40.png"),
        comparison_regression_plot, width = 12, height = 8, bg = "white", dpi = 300)
 
 ```
