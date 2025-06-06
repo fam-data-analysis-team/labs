@@ -135,8 +135,9 @@ summary(model_nppl)
 
 ### Завантаження попередніх моделей для порівняння
 ```{r}
-load(file.path(models_path, "model_np_jul_days.rda"))
 model_lin <- feols(aqi ~ reform_days + jul_days + I(jul_days^2) + windspeed | county, data = df_train)
+load(file.path(models_path, "model_np_jul_days.rda"))
+load(file.path(models_path, "model_nppl_w_after_reform.rda"))
 ```
 
 ## Побудова графіків
@@ -230,6 +231,7 @@ calculate_metrics <- function(model, train_data, test_data) {
 metrics_np <- calculate_metrics(model_np_jul_days, df_train, df_test)
 metrics_nppl <- calculate_metrics(model_nppl, df_train, df_test)
 metrics_nppl_short <- calculate_metrics(model_nppl_short, df_train, df_test)
+load(file.path(models_path, "metrics_nppl_w_after_reform.rda"))  # metrics_nppl_ar
 ```
 
 ### Функція для використання в modelsummary
@@ -303,7 +305,8 @@ modelsummary(
     "lin" = model_lin,
     "np (1)" = create_npreg_summary(model_np_jul_days, bw_np_jul_days, metrics_np, "NW"),
     "nppl (2.1)" = nppl_to_modelsummary_compatible(model_nppl_short, metrics_nppl_short),
-    "nppl (2.2)" = nppl_to_modelsummary_compatible(model_nppl, metrics_nppl)
+    "nppl (2.2)" = nppl_to_modelsummary_compatible(model_nppl, metrics_nppl),
+    "nppl (3)" = nppl_to_modelsummary_compatible(model_nppl_ar, metrics_nppl_ar)
   ),
   stars = TRUE,
   output = 'latex',

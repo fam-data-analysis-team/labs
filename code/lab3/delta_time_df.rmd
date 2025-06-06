@@ -2,7 +2,7 @@
 library(tidyverse)
 
 df <- readRDS(here("data", "processed", "air_quality_smooth.rds"))
-model_df <- df %>% select(c(date, county, sitename, aqi, windspeed, winddirec))
+model_df <- df %>% select(c(date, county, sitename, aqi, windspeed, winddirec, after_reform))
 
 # Days since the reform
 reform_date <- as.Date("21-11-2017", "%d-%m-%Y")

@@ -1,0 +1,188 @@
+```{r}
+library(tidyverse)
+library(np)           # Непараметрична регресія
+library(KernSmooth)   # Ядрова регресія
+library(gridExtra)    # Компонування графіків
+library(reshape2)     # Перетворення даних
+library(here)         # Для шляхів до файлів
+library(fixest)       # Для FEOLS
+library(modelsummary) # Для оцінки якості
+
+theme_set(
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),
+    plot.title = element_text(margin = margin(0, 0, 30, 0), hjust = 0.5),
+    axis.title.x = element_text(margin = margin(20, 0, 0, 0)),
+    axis.title.y = element_text(margin = margin(0, 10, 0, 0)),
+    panel.spacing = unit(2, "lines"),
+  )
+)
+
+# Створення папки для збереження результатів
+models_path <- here("data", "models")
+if (!dir.exists(models_path)) {
+  dir.create(models_path, recursive = TRUE)
+}
+
+plots_path <- here("plots", "lab4", "partial_linear")
+if (!dir.exists(plots_path)) {
+  dir.create(plots_path, recursive = TRUE)
+}
+```
+
+## Підготовка даних
+```{r}
+# Завантаження даних
+df <- readRDS(here("data", "processed", "model_df.rds"))
+
+# Фільтрування даних за NA
+df <- df %>% drop_na()
+
+# Вибір топ-8 counties за середнім AQI
+counties <- df %>%
+  group_by(county) %>%
+  summarize(aqi = mean(aqi, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(aqi)) %>%
+  head(n = 8)
+
+counties <- counties$county
+
+# Фільтрування даних за обраними counties
+df <- df %>% subset(county %in% counties)
+
+# Перетворення after_reform на числову
+df$after_reform <- as.numeric(df$after_reform)
+
+cat("Загальна кількість спостережень:", nrow(df), "\n")
+cat("Кількість унікальних counties:", length(unique(df$county)), "\n")
+cat("Кількість унікальних sitename:", length(unique(df$sitename)), "\n")
+cat("Топ-8 counties за AQI:\n")
+print(counties)
+```
+
+## Розділення на навчальну і тестову вибірки
+```{r}
+# Встановлення seed для відтворюваності
+set.seed(123)
+
+# Обираємо частину рядків у випадковому порядку
+df_smol <- df %>% 
+  group_by(after_reform) %>% 
+  sample_n(5000)
+# df_smol <- sample_n(df, nrow(df))
+
+# Ділимо на навчальну і тестову частини
+bound <- floor(nrow(df_smol) * 0.7)
+df_train <- df_smol[1:bound, ]
+df_test <- df_smol[(bound+1):nrow(df_smol), ]
+
+print(table(df_smol$after_reform))
+```
+
+## Оцінка моделі
+```{r}
+model_path <- file.path(models_path, "model_nppl_w_after_reform.rda")
+
+# Якщо є збережені моделі, завантажити їх з файлу
+if (file.exists(model_path)) {
+  cat("Завантаження з файлу:", model_path, "\n")
+  load(model_path)
+# Інакше, оцінити їх заново (~12 хв на 10К рядків) і зберегти в файл
+} else {
+  cat("3. Частково лінійна Надарая-Вотсона (константна)...\n")
+  
+  # Частково лінійна модель:
+  #   Параметрично: after_reform, windspeed
+  #   Непараметрично: jul_days
+  
+  bw_nppl_ar <- npplregbw(
+    aqi ~ after_reform + windspeed | jul_days,
+    data = df_train,
+    regtype = "lc",
+    ckertype = "gaussian")
+  model_nppl_ar <- npplreg(bw_nppl_ar)
+
+  save(bw_nppl_ar, model_nppl_ar, file = model_path)
+}
+
+summary(model_nppl_ar)
+```
+
+## Таблиці
+
+### Функція для обчислення метрик
+```{r}
+calculate_metrics <- function(model, train_data, test_data) {
+  pred_train <- predict(model, newdata = train_data)
+  pred_test <- predict(model, newdata = test_data)
+  
+  list(
+    rmse_train = sqrt(mean((train_data$aqi - pred_train)^2, na.rm = TRUE)),
+    rmse_test = sqrt(mean((test_data$aqi - pred_test)^2, na.rm = TRUE)),
+    mae_test = mean(abs(test_data$aqi - pred_test), na.rm = TRUE),
+    r_squared = if(!is.null(model$R2)) model$R2 else NA
+  )
+}
+
+# Обчислення метрик для всіх моделей
+metrics_nppl_ar <- calculate_metrics(model_nppl_ar, df_train, df_test)
+
+metrics_path <- file.path(models_path, "metrics_nppl_w_after_reform.rda")
+save(metrics_nppl_ar, file = metrics_path)
+```
+
+### Функція для використання в modelsummary
+```{r}
+nppl_to_modelsummary_compatible <- function(model_nppl, metrics) {
+  model_nppl_ti <- tibble(
+    term = names(model_nppl$xcoef),
+    estimate = model_nppl$xcoef,
+    std.error = model_nppl$xcoeferr,
+    p.value = 2*pnorm(-abs(estimate/std.error)))
+  
+  model_nppl_gl <- data.frame(
+    Num.Obs. = model_nppl$nobs,
+    R2 = round(metrics$r_squared, 6),
+    RMSE = round(metrics$rmse_test, 6))
+  
+  mod_nppl <- list(tidy = model_nppl_ti, glance = model_nppl_gl)
+  class(mod_nppl) <- "modelsummary_list"
+  return(mod_nppl)
+}
+
+create_npreg_summary <- function(model, bw_obj, metrics, method_name) {
+  model_tidy <- tibble(
+    term = paste(method_name, "(непараметрично)"),
+    estimate = NA_real_,
+    std.error = NA_real_,
+    p.value = NA_real_
+  )
+  
+  model_glance <- data.frame(
+    Num.Obs. = model$nobs,
+    R2 = round(metrics$r_squared, 6),
+    RMSE = round(metrics$rmse_test, 6)
+  )
+  
+  mod_list <- list(tidy = model_tidy, glance = model_glance)
+  class(mod_list) <- "modelsummary_list"
+  return(mod_list)
+}
+```
+
+### Таблиця по nppl
+```{r}
+load(metrics_path)  # loads metrics_nppl_ar
+
+modelsummary(
+  list(
+    "nppl (3)" = nppl_to_modelsummary_compatible(model_nppl_ar, metrics_nppl_ar)
+  ),
+  stars = TRUE,
+  output = 'latex',
+  gof_omit = "^(?!Num\\.Obs\\.|R2$|RMSE$)",
+  fmt = 6
+)
+```

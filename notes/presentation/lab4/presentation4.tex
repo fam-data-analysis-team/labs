@@ -1,4 +1,4 @@
-﻿\documentclass{beamer}
+\documentclass{beamer}
 
 
 \usepackage[utf8]{inputenc}   % Підтримка UTF-8
@@ -224,7 +224,7 @@
   reform\_days & \num{-0.009989}*** & \num{-0.010092}*** \\
   & (\num{0.000342}) & (\num{0.000342}) \\
   windspeed & \num{-2.758367}*** & \num{-3.229516}*** \\
-  & (\num{0.255418}) & (\num{0.281014}) \\
+  & (\num{0.255418}) & (\num{0.281014}) \\ \midrule
   Num.Obs. & 7000 & 7000 \\
   R2 & 0.479709 & 0.485264 \\
   RMSE & 23.287205 & 23.110408 \\
@@ -284,6 +284,35 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Регресор after\_reform замість reform\_days}
+  
+  \begin{table}
+  \centering
+  \begin{talltblr}[         %% tabularray outer open
+  entry=none,label=none,
+  note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+  ]                     %% tabularray outer close
+  {                     %% tabularray inner open
+  colspec={Q[]Q[]},
+  column{2}={}{halign=c,},
+  column{1}={}{halign=l,},
+  hline{6}={1,2}{solid, black, 0.05em},
+  }                     %% tabularray inner close
+  \toprule
+  & nppl (3) \\ \midrule %% TinyTableHeader
+  after\_reform & \num{-17.638269}*** \\
+  & (\num{0.631408}) \\
+  windspeed & \num{-3.195055}*** \\
+  & (\num{0.254649}) \\
+  Num.Obs. & 7000 \\
+  R2 & 0.5449 \\
+  RMSE & 25.503944 \\
+  \bottomrule
+  \end{talltblr}
+  \end{table} 
+\end{frame}
+
+\begin{frame}
   \section{Аналіз головних компонент}
 
   \frametitle{Зміст}
@@ -331,9 +360,9 @@
 
 \begin{frame}
   \frametitle{Порівняння ЛР3 (параметрична) та ЛР4 (непараметрична)}
-
+  
   \begin{ssmall}
-
+  
   \begin{table}
   \centering
   \begin{talltblr}[         %% tabularray outer open
@@ -341,27 +370,29 @@
   note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
   ]                     %% tabularray outer close
   {                     %% tabularray inner open
-  colspec={Q[]Q[]Q[]Q[]Q[]},
-  column{2,3,4,5}={}{halign=c,},
+  colspec={Q[]Q[]Q[]Q[]Q[]Q[]},
+  column{2,3,4,5,6}={}{halign=c,},
   column{1}={}{halign=l,},
-  hline{26}={1,2,3,4,5}{solid, black, 0.05em},
+  hline{28}={1,2,3,4,5,6}{solid, black, 0.05em},
   }                     %% tabularray inner close
   \toprule
-  & lin & np (1) & nppl (2.1) & nppl (2.2) \\ \midrule %% TinyTableHeader
-  reform\_days & \num{-0.010081}*** &  & \num{-0.009989}*** & \num{-0.010092}*** \\
-  & (\num{0.000770}) &  & (\num{0.000342}) & (\num{0.000342}) \\
-  jul\_days & \num{0.755704}*** &  &  &  \\
-  & (\num{0.022698}) &  &  &  \\
-  I(jul\_days\textasciicircum{}2) & \num{-0.002156}*** &  &  &  \\
-  & (\num{0.000249}) &  &  &  \\
-  windspeed & \num{-3.155031}*** &  & \num{-2.758367}*** & \num{-3.229516}*** \\
-  & (\num{0.431494}) &  & (\num{0.255418}) & (\num{0.281014}) \\
-  Num.Obs. & \num{7000} & 7000 & 7000 & 7000 \\
-  R2 & \num{0.469} & 0.413244 & 0.479709 & 0.485264 \\
-  RMSE & \num{23.22} & 24.720406 & 23.287205 & 23.110408 \\
+  & lin & np (1) & nppl (2.1) & nppl (2.2) & nppl (3) \\ \midrule %% TinyTableHeader
+  reform\_days & \num{-0.010081}*** &  & \num{-0.009989}*** & \num{-0.010092}*** &  \\
+  & (\num{0.000770}) &  & (\num{0.000342}) & (\num{0.000342}) &  \\
+  jul\_days & \num{0.755704}*** &  &  &  &  \\
+  & (\num{0.022698}) &  &  &  &  \\
+  I(jul\_days\textasciicircum{}2) & \num{-0.002156}*** &  &  &  &  \\
+  & (\num{0.000249}) &  &  &  &  \\
+  windspeed & \num{-3.155031}*** &  & \num{-2.758367}*** & \num{-3.229516}*** & \num{-3.195055}*** \\
+  & (\num{0.431494}) &  & (\num{0.255418}) & (\num{0.281014}) & (\num{0.254649}) \\
+  after\_reform &  &  &  &  & \num{-17.638269}*** \\
+  &  &  &  &  & (\num{0.631408}) \\ \midrule
+  Num.Obs. & \num{7000} & 7000 & 7000 & 7000 & 7000 \\
+  R2 & \num{0.469} & 0.413244 & 0.479709 & 0.485264 & 0.5449 \\
+  RMSE & \num{23.22} & 24.720406 & 23.287205 & 23.110408 & 25.503944 \\
   \bottomrule
   \end{talltblr}
-  \end{table} 
+  \end{table}
   
   \end{ssmall}
 \end{frame}
